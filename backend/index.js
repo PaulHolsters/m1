@@ -6,6 +6,9 @@ const mongoose = require('mongoose')
 const appserver = express()
 const {ApolloServer} = require('apollo-server-express')
 
+const Gear = require('./core/types/Gear')
+const Price = require('./core/types/Price')
+
 const App = require("./core/App.js")
 
 const app = new App( {
@@ -24,16 +27,19 @@ const app = new App( {
                     type:Price,
                     label:'basis prijs',
                     ref:'basePrice',
+                    // constraints bepalen ENKEL welke data toegelaten is in de database en deels in de frontend
+                    // niet HOE validatie moet gebeuren en slechts deels WELKE validatie in een front end formulier
                     constraints:{
+                        // elke constraint resulteert in een bepaalde validatie, vandaar dat currency 'EUR' hier niet thuishoort!
                         required: true,
-                        currency: 'EUR',
-                        cents: false
+                        cents: false // indien false dan enkel gehele bedragen toegestaan zonder bv. eurocent
                     }
                 },
                 {
                     type:Date,
                     label:'aangemaakt op',
-                    default: new Date()
+                    ref:'creationDate',
+                    default: new Date() // ook hier het formaat wordt bepaald in de frontend component, in de backend is dit steeds een datetime
                 }
             ]
         }
@@ -95,7 +101,11 @@ const app = new App( {
         {
             type:'form', ref:'newProductForm', configuration:{
                 action:'create',
-                concept:'product'
+                concept:'product',
+                formats: [
+                    {ref: 'basePrice',format:'EUR'},{ref: 'creationDate',format:'datetime'}
+                ],
+                validation:'onsubmit'
             }
         },
         {
@@ -112,7 +122,11 @@ const app = new App( {
         {
             type:'form', ref:'editProductForm', configuration:{
                 action:'edit',
-                concept:'product'
+                concept:'product',
+                formats: [
+                    {ref: 'basePrice',format:'EUR'},{ref: 'creationDate',format:'datetime'}
+                ],
+                validation:'onsubmit'
             }
         },
         {
@@ -124,7 +138,9 @@ const app = new App( {
         {
             type:'prompt', ref:'deleteProductPrompt', configuration:{
                 action:'delete',
-                concept:'product'
+                concept:'product',
+                header: 'Verwijderen product',
+                message:'Bent u zeker dat u dit product definitief wil verwijderen?'
             }
         },
     ],
