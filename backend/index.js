@@ -1,4 +1,8 @@
 'use strict'
+// todo
+//  deze versie wordt in eerste instantie geschreven met de gedachte dat de
+//  gebruiker van Mouldit geen fouten maakt,
+//  een gebruiker van Mouldit wordt vanaf nu een "dev" genoemd
 const http = require("http")
 const port = Number(process.env.PORT || 5000)
 const express = require('express')
@@ -6,8 +10,8 @@ const mongoose = require('mongoose')
 const appserver = express()
 const {ApolloServer} = require('apollo-server-express')
 
-const Gear = require('./core/types/Gear')
-const Price = require('./core/types/Price')
+const Gear = require('./core/types/mouldit/Gear')
+const Price = require('./core/types/mouldit/Price')
 
 const App = require("./core/App.js")
 
@@ -32,14 +36,17 @@ const app = new App( {
                     constraints:{
                         // elke constraint resulteert in een bepaalde validatie, vandaar dat currency 'EUR' hier niet thuishoort!
                         required: true,
-                        cents: false // indien false dan enkel gehele bedragen toegestaan zonder bv. eurocent
+                        // indien false dan enkel gehele bedragen toegestaan zonder bv. eurocent
+                        cents: false
                     }
                 },
                 {
                     type:Date,
                     label:'aangemaakt op',
                     ref:'creationDate',
-                    default: new Date() // ook hier het formaat wordt bepaald in de frontend component, in de backend is dit steeds een datetime
+                    // ook hier het formaat wordt bepaald in de frontend component, in de backend is dit steeds een datetime
+                    // voor een gewone datum zal de tijd dan overal 0 zijn
+                    default: new Date()
                 }
             ]
         }
@@ -84,14 +91,18 @@ const app = new App( {
     users:[],
     components:[
         {
-            type:'menu', ref:'menu', configuration:{
+            type:'menu',
+            ref:'menu',
+            configuration:{
                 menuItems:[
                     {label: 'Producten', component:'productCards'}
                 ]
             }
         },
         {
-            type:'cards', ref:'productCards', configuration:{
+            type:'cards',
+            ref:'productCards',
+            configuration:{
                 cards:[
                     {label: 'Nieuw product', component:'newProductForm'},
                     {label: 'Overzicht producten', component:'productsOverview'},
@@ -99,11 +110,20 @@ const app = new App( {
             }
         },
         {
-            type:'form', ref:'newProductForm', configuration:{
+            type:'form',
+            ref:'newProductForm',
+            configuration:{
                 action:'create',
                 concept:'product',
                 formats: [
-                    {ref: 'basePrice',format:'EUR'},{ref: 'creationDate',format:'datetime'}
+                    {
+                        ref: 'basePrice',
+                        format:'EUR'
+                    },
+                    {
+                        ref: 'creationDate',
+                        format:'datetime'
+                    }
                 ],
                 validation:'onsubmit'
             }
@@ -113,9 +133,18 @@ const app = new App( {
                 action:'get',
                 concept:'product',
                 actionMenu:[
-                    {label:'aanpassen',component:'editProductForm'},
-                    {label:'bekijken',component:'detailsProductSummary'},
-                    {label:'verwijderen',component: 'deleteProductPrompt'}
+                    {
+                        label:'aanpassen',
+                        component:'editProductForm'
+                    },
+                    {
+                        label:'bekijken',
+                        component:'detailsProductSummary'
+                    },
+                    {
+                        label:'verwijderen',
+                        component: 'deleteProductPrompt'
+                    }
                 ]
             }
         },
@@ -124,19 +153,30 @@ const app = new App( {
                 action:'edit',
                 concept:'product',
                 formats: [
-                    {ref: 'basePrice',format:'EUR'},{ref: 'creationDate',format:'datetime'}
+                    {
+                        ref: 'basePrice',
+                        format:'EUR'
+                    },
+                    {
+                        ref: 'creationDate',
+                        format:'datetime'
+                    }
                 ],
                 validation:'onsubmit'
             }
         },
         {
-            type:'summary', ref:'detailsProductSummary', configuration:{
+            type:'summary',
+            ref:'detailsProductSummary',
+            configuration:{
                 action:'getDetailsOf',
                 concept:'product'
             }
         },
         {
-            type:'prompt', ref:'deleteProductPrompt', configuration:{
+            type:'prompt',
+            ref:'deleteProductPrompt',
+            configuration:{
                 action:'delete',
                 concept:'product',
                 header: 'Verwijderen product',
@@ -145,7 +185,6 @@ const app = new App( {
         },
     ],
 })
-
 
 async function startApolloServer() {
     const httpServer = http.createServer(appserver);

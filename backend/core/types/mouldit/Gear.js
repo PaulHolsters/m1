@@ -3,7 +3,7 @@
 // daarom heeft een type een methode die 1 primitief datatype teruggeeft en dezelfde naam heeft als de klasse
 // de ref en label zijn gelijk aan de klasse naam, maar dan beginnend met een kleine letter
 // van de laatste regel kan afgeweken worden door een getRef en getLabel methode te voorzien
-module.exports = class Model{
+module.exports = class Gear{
     // de referentie en het label zijn per definitie gelijk aan de klassenaam maar dan met kleine letter
     static get name(){
         // todo voeg nog letters als ö é etc. toe
