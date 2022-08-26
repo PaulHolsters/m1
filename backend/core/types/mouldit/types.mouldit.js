@@ -4,7 +4,6 @@ const Price = require('./Price')
 module.exports = {
     Gear:{
         name: Gear.name,
-        capitalized: Gear.capitalized,
         UIControl: Gear.UIControl
     },
     Price:{
