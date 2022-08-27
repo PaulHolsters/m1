@@ -2,21 +2,27 @@ const MoulditFunctions = require("./Mouldit.Functions");
 const mongoose = require("mongoose");
 
 module.exports = class DocumentObj {
-/********************************************   attributes  ******************************************************/
+    /********************************************   attributes  ******************************************************/
     schema
-    constructor(attr,app) {
+
+    constructor(attr, app) {
         this.schema = {}
-        for ( let i = 0; i < attr.length; i++) {
-            if(MoulditFunctions.isMongooseType(attr[i].type)){
+        for (let i = 0; i < attr.length; i++) {
+            if (MoulditFunctions.isMongooseType(attr[i].type)) {
                 this.schema[attr[i].ref] = {type: attr[i].type}
-            } else if(MoulditFunctions.isMoulditType(attr[i])){
+            } else if (MoulditFunctions.isMoulditType(attr[i])) {
                 this.schema[attr[i].ref] = {type: MoulditFunctions.getTypeOf(attr[i])}
-            } else if(MoulditFunctions.isChildConcept(attr[i],app)){
+                for (let [k,v] in Object.entries(MoulditFunctions.getConstraintsOf(attr[i]))) {
+                    if(MoulditFunctions.isMongooseConstraint(k)){
+                        this.schema[attr[i].ref][k] = v
+                    }
+                }
+            } else if (MoulditFunctions.isChildConcept(attr[i], app)) {
                 this.schema[attr[i].type] = {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: attr[i].type
                 }
-            } else if(MoulditFunctions.isChildListConcept(attr[i],app)){
+            } else if (MoulditFunctions.isChildListConcept(attr[i], app)) {
                 this.schema[attr[i].type] = {
                     type: [mongoose.Schema.Types.ObjectId],
                     ref: attr[i].type[0]
@@ -48,11 +54,22 @@ module.exports = class DocumentObj {
                 een type Gear dat behalve een naam nog andere attributen heeft. Ik moet dan wel nog uitzoeken hoe je deze
                 andere attributen zet als gebruiker indien je van de standaard waarde zou willen afwijken.
             */
+            for (let [k,v] in Object.entries(attr[i].constraints)) {
+                if(MoulditFunctions.isMongooseConstraint(k)){
+                    this.schema[attr[i].ref][k] = v
+                }
+            }
+            // toevoegen van constraints horende bij BT of CT
+
         }
     }
 
-/********************************************   getters and setters  *********************************************/
-    get schema(){
+    /********************************************   getters and setters  *********************************************/
+    get schema() {
         return this.schema
     }
+
+    /********************************************   private methods  *************************************************/
+
+
 }

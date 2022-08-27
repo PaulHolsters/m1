@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = require("./Schema");
 const generalFunctions = require("./General.Functions");
+const MoulditFunctions = require("./Mouldit.Functions");
 
 module.exports = class Model {
 /********************************************   attributes  ******************************************************/
@@ -8,6 +9,14 @@ module.exports = class Model {
     #schema
     constructor(concept,app) {
         this.#schema = new mongoose.Schema(new Schema(concept.attr, app, concept.constraints).schema, {})
+        for (let i=0;i<concept.attr.length;i++){
+            for (let [k,v] in Object.entries(concept.attr[i].constraints)) {
+                if(!MoulditFunctions.isMongooseConstraint(k)){
+                    this.#schema.path(concept.attr[i].ref).validate()
+                }
+            }
+        }
+
         this.model = mongoose.model(generalFunctions.capitalizeFirst(concept.name.ref.singular), this.#schema)
     }
 

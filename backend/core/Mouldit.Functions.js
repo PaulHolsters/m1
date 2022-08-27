@@ -34,6 +34,10 @@ module.exports = class MoulditFunctions{
         return undefined
     }
 
+    static getConstraintsOf(attr){
+        if(moulditTypes.hasOwnProperty(attr.type.toString())) return moulditTypes[attr.type.toString()][attr.type.toString()].values()[0]
+    }
+
     static isMongooseConstraint(constraint){
         return (
             constraint === 'required' ||
