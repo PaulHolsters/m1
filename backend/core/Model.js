@@ -9,6 +9,7 @@ module.exports = class Model {
     #schema
     constructor(concept,app) {
         this.#schema = new mongoose.Schema(new Schema(concept.attr, app, concept.constraints).schema, {})
+        this.model = mongoose.model(generalFunctions.capitalizeFirst(concept.name.ref.singular), this.#schema)
         for (let i=0;i<concept.attr.length;i++){
             for (let [k,v] in Object.entries(concept.attr[i].constraints)) {
                 if(!MoulditFunctions.isMongooseConstraint(k)){
@@ -16,8 +17,6 @@ module.exports = class Model {
                 }
             }
         }
-
-        this.model = mongoose.model(generalFunctions.capitalizeFirst(concept.name.ref.singular), this.#schema)
     }
 
 /********************************************   getters and setters  *********************************************/

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 module.exports = class GeneralFunctions{
 
     static capitalizeFirst(word){
