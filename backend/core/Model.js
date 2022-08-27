@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = require("./Schema");
-const generalFunctions = require("./Functions.General");
+const generalFunctions = require("./General.Functions");
 
 module.exports = class Model {
 /********************************************   attributes  ******************************************************/

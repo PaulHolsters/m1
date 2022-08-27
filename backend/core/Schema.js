@@ -1,10 +1,27 @@
+const MoulditFunctions = require("./Mouldit.Functions");
+const mongoose = require("mongoose");
 
 module.exports = class DocumentObj {
 /********************************************   attributes  ******************************************************/
     schema
     constructor(attr,app) {
         this.schema = {}
-        for (let i = 0; i < attr.length; i++) {
+        for ( let i = 0; i < attr.length; i++) {
+            if(MoulditFunctions.isMongooseType(attr[i].type)){
+                this.schema[attr[i].ref] = {type: attr[i].type}
+            } else if(MoulditFunctions.isMoulditType(attr[i])){
+                this.schema[attr[i].ref] = {type: MoulditFunctions.getTypeOf(attr[i])}
+            } else if(MoulditFunctions.isChildConcept(attr[i],app)){
+                this.schema[attr[i].type] = {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: attr[i].type
+                }
+            } else if(MoulditFunctions.isChildListConcept(attr[i],app)){
+                this.schema[attr[i].type] = {
+                    type: [mongoose.Schema.Types.ObjectId],
+                    ref: attr[i].type[0]
+                }
+            }
             /*
             er zijn 5 types attributen:
             - MT: Mongoose types
@@ -31,7 +48,6 @@ module.exports = class DocumentObj {
                 een type Gear dat behalve een naam nog andere attributen heeft. Ik moet dan wel nog uitzoeken hoe je deze
                 andere attributen zet als gebruiker indien je van de standaard waarde zou willen afwijken.
             */
-
         }
     }
 
