@@ -17,8 +17,19 @@ module.exports = class Model {
                     this.#schema.path(concept.attr[i].ref).validate(MoulditConstraints[k]([app,concept,concept.attr[i],this.model],v))
                 }
             }
+            if(MoulditFunctions.isChildListConcept(concept.attr[i],app)){
+                this.#schema.path(concept.attr[i].ref)
+                    .validate(MoulditConstraints
+                        .checkChildListId([app,concept,concept.attr[i],this.model],true))
+            }
+            if(MoulditFunctions.isChildConcept(concept.attr[i],app)){
+                this.#schema.path(concept.attr[i].ref)
+                    .validate(MoulditConstraints
+                        .checkChildId([app,concept,concept.attr[i],this.model],true))
+            }
         }
         // todo
+
     }
 
 /********************************************   getters and setters  *********************************************/

@@ -121,19 +121,30 @@ module.exports = class MoulditConstraints{
         }
     }
 
-    static checkChildId(arr,val) {
+    static checkChildListId(arr,val) {
         if(val){
             return async function (v) {
-                const arr = await arr[3].find({}, {_id: 1}).exec()
+                const arrDb = await arr[3].find({}, {_id: 1}).exec()
                 let ok = true
                 v.forEach(id => {
                     let includes = false
-                    arr.forEach(obj => {
+                    arrDb.forEach(obj => {
                         if (obj._id.toString() === id.toString()) includes = true
                     })
                     if (!includes) ok = false
                 })
                 return ok
+            }
+        }
+    }
+
+    static checkChildId(arr,val) {
+        if(val){
+            return async function (v) {
+                const arrDb = await arr[3].find({}, {_id: 1}).exec()
+                return arrDb.find(obj=>{
+                    return obj._id.toString() === v.toString()
+                }) !== undefined
             }
         }
     }
