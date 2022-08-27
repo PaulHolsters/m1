@@ -13,6 +13,7 @@ module.exports = class Model {
         for (let i=0;i<concept.attr.length;i++){
             for (let [k,v] in Object.entries(concept.attr[i].constraints)) {
                 if(!MoulditFunctions.isMongooseConstraint(k)){
+                    // todo afwerken
                     this.#schema.path(concept.attr[i].ref).validate()
                 }
             }
