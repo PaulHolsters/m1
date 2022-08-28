@@ -34,15 +34,20 @@ module.exports = class MoulditFunctions{
         return undefined
     }
 
-    static getGQLTypeOf(attr){
+    static getGQLTypeOf(attr,app){
         if(this.isMongooseType(attr)){
             if(attr.type.name === 'Number') return 'Int'
             return attr.type.name
         }
-        if(this.getTypeOf(attr) === 'Number'){
+        if(this.isMoulditType(attr) && this.getTypeOf(attr) === 'Number'){
             return 'Int'
         }
-        return this.getTypeOf(attr)
+        if(this.isMoulditType(attr)){
+            return this.getTypeOf(attr)
+        }
+        if(this.isChildConcept(attr)) return 'ID'
+        if(this.isChildListConcept(attr,app)) return '[ID]'
+        throw new Error('type not implemented')
     }
 
     static getRef(attr){

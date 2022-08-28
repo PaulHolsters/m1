@@ -5,8 +5,8 @@ const {gql} = require("apollo-server-express")
 const {GraphQLScalarType, Kind} = require("graphql");
 const Model = require("./Model");
 const MoulditFunctions = require("./Mouldit.Functions");
-const mongoose = require("mongoose");
 const GeneralFunctions = require("./General.Functions");
+const GQLFunctions = require("./Mouldit.GQL");
 
 module.exports = class App {
     /********************************************   attributes  ******************************************************/
@@ -46,6 +46,10 @@ module.exports = class App {
 
     get models() {
         return [...this.#concepts.values()]
+    }
+
+    get actions(){
+        return [...this.#actions]
     }
 
     get GQLstr() {
@@ -92,6 +96,20 @@ module.exports = class App {
             }
             this.#GQLstr += '\n}\n'
         })
+        this.#GQLstr += 'type Mutation{'
+        this.actions.filter(action=>{
+            return GQLFunctions.getQueryTypeOf(action) === 'Mutation'
+        }).forEach(action=>{
+            this.#GQLstr += '\n'+GQLFunctions.createAndGetGQLFor(action,this.concepts,this)
+        })
+        this.#GQLstr += '\n}\ntype Query{'
+        this.actions.filter(action=>{
+            return GQLFunctions.getQueryTypeOf(action) === 'Query'
+        }).forEach(action=>{
+            this.#GQLstr += '\n'+GQLFunctions.createAndGetGQLFor(action,this.concepts,this)
+        })
+        this.#GQLstr += '\n}\n'
+        console.log(this.GQLstr)
         return this.GQLstr
     }
 
