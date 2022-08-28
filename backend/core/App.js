@@ -4,18 +4,24 @@
 const {gql} = require("apollo-server-express")
 const {GraphQLScalarType, Kind} = require("graphql");
 const Model = require("./Model");
+const MoulditFunctions = require("./Mouldit.Functions");
+const mongoose = require("mongoose");
+const GeneralFunctions = require("./General.Functions");
 
 module.exports = class App {
-/********************************************   attributes  ******************************************************/
+    /********************************************   attributes  ******************************************************/
     #concepts
     #actions
     #users
     #components
+    #GQLstr
+
     constructor(configObj) {
         this.#concepts = new Map()
         this.#actions = []
         this.#users = []
         this.#components = []
+        this.#GQLstr = ''
         configObj.concepts.forEach(concept => {
             this.#concepts.set(concept, null)
         })
@@ -33,17 +39,21 @@ module.exports = class App {
         })
     }
 
-/********************************************   getters and setters  *********************************************/
-    get concepts(){
+    /********************************************   getters and setters  *********************************************/
+    get concepts() {
         return [...this.#concepts.keys()]
     }
 
-    get models(){
+    get models() {
         return [...this.#concepts.values()]
     }
 
-/********************************************   public methods  **************************************************/
-    generate(){
+    get GQLstr() {
+        return this.#GQLstr
+    }
+
+    /********************************************   public methods  **************************************************/
+    generate() {
         const typeDefs = this.#generateGQLStr()
         const resolvers = this.#generateResolverObj()
         return {
@@ -63,13 +73,30 @@ module.exports = class App {
                                         ],*/
         }
     }
-/********************************************   private methods  *************************************************/
-    #generateGQLStr(){
 
+    /********************************************   private methods  *************************************************/
+    #generateGQLStr() {
+        this.#GQLstr += `\nscalar Date\n`
+        this.concepts.forEach(concept => {
+            this.#GQLstr += '\ntype ' + GeneralFunctions.capitalizeFirst(concept.name.ref.singular) + '{'
+            this.#GQLstr += '\n   ' + 'id' + ': ' + 'ID!'
+            for (let i = 0; i < concept.attr.length; i++) {
+                if (MoulditFunctions.isChildConcept(concept.attr[i], this)) {
+                    this.#GQLstr += '\n   ' + concept.attr[i].ref + ': ' + GeneralFunctions.capitalizeFirst(concept.attr[i].type)
+                } else if (MoulditFunctions.isChildListConcept(concept.attr[i], this)) {
+                    this.#GQLstr += '\n   ' + concept.attr[i].ref + ': [' + GeneralFunctions.capitalizeFirst(concept.attr[i].type) + ']'
+                } else{
+                    // Mongoose or Mouldit type
+                    this.#GQLstr += '\n   ' + MoulditFunctions.getRef(concept.attr[i]) + ': ' + MoulditFunctions.getGQLTypeOf(concept.attr[i])
+                }
+            }
+            this.#GQLstr += '\n}\n'
+        })
+        return this.GQLstr
     }
 
-    #generateResolverObj(){
-
+    #generateResolverObj() {
+        // todo next
     }
 
 }

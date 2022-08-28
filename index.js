@@ -10,10 +10,10 @@ const mongoose = require('mongoose')
 const appserver = express()
 const {ApolloServer} = require('apollo-server-express')
 
-const Gear = require('./core/types/mouldit/Gear')
-const Price = require('./core/types/mouldit/Price')
+const Gear = require('./backend/core/types/mouldit/Gear')
+const Price = require('./backend/core/types/mouldit/Price')
 
-const App = require("./core/App.js")
+const App = require("./backend/core/App.js")
 
 const app = new App( {
     concepts: [
@@ -21,7 +21,7 @@ const app = new App( {
             name:{ref:{singular:'product',plural:'products'},label:{singular:'product',plural:'products'}},
             attr:[
                 {
-                    type:Gear.name,
+                    type:Gear,
                     label:'product',
                     constraints:{
                         capitals: ['first']

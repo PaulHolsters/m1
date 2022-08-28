@@ -30,12 +30,32 @@ module.exports = class MoulditFunctions{
     }
 
     static getTypeOf(attr){
-        if(moulditTypes.hasOwnProperty(attr.type.toString())) return moulditTypes[attr.type.toString()][attr.type.toString()].keys()[0]
+        if(moulditTypes.hasOwnProperty(attr.type.name)) return [...moulditTypes[attr.type.name][attr.type.name].keys()][0].name
         return undefined
     }
 
+    static getGQLTypeOf(attr){
+        if(this.isMongooseType(attr)){
+            if(attr.type.name === 'Number') return 'Int'
+            return attr.type.name
+        }
+        if(this.getTypeOf(attr) === 'Number'){
+            return 'Int'
+        }
+        return this.getTypeOf(attr)
+    }
+
+    static getRef(attr){
+        if(!attr.ref && this.isMoulditType(attr)){
+            return moulditTypes[attr.type.name].ref
+        }
+        if(attr.ref) return attr.ref
+        throw new Error('no reference exists for this attribute')
+    }
+
     static getConstraintsOf(attr){
-        if(moulditTypes.hasOwnProperty(attr.type.toString())) return moulditTypes[attr.type.toString()][attr.type.toString()].values()[0]
+        if(moulditTypes.hasOwnProperty(attr.type.name)) return [...moulditTypes[attr.type.name][attr.type.name].values()][0]
+        return undefined
     }
 
     static isMongooseConstraint(constraint){

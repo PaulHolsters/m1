@@ -5,6 +5,10 @@ module.exports = class Price {
         return type.set(Number, constraints)
     }
 
+    static get ref(){
+        return 'price'
+    }
+
     static get UIControl(){
         return 'money'
     }

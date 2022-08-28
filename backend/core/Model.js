@@ -12,9 +12,11 @@ module.exports = class Model {
         this.#schema = new mongoose.Schema(new Schema(concept.attr, app, concept.constraints).schema, {})
         this.#model = mongoose.model(generalFunctions.capitalizeFirst(concept.name.ref.singular), this.#schema)
         for (let i=0;i<concept.attr.length;i++){
-            for (let [k,v] in Object.entries(concept.attr[i].constraints)) {
-                if(!MoulditFunctions.isMongooseConstraint(k) && MoulditConstraints.validate.hasOwnProperty(k)){
-                    this.#schema.path(concept.attr[i].ref).validate(MoulditConstraints[k]([app,concept,concept.attr[i],this.model],v))
+            if(concept.attr[i].hasOwnProperty('constraints')){
+                for (let [k,v] in Object.entries(concept.attr[i].constraints)) {
+                    if(!MoulditFunctions.isMongooseConstraint(k) && MoulditConstraints.validate.hasOwnProperty(k)){
+                        this.#schema.path(concept.attr[i].ref).validate(MoulditConstraints[k]([app,concept,concept.attr[i],this.model],v))
+                    }
                 }
             }
             if(MoulditFunctions.isChildListConcept(concept.attr[i],app)){
@@ -28,8 +30,6 @@ module.exports = class Model {
                         .checkChildId([app,concept,concept.attr[i],this.model],true))
             }
         }
-        // todo
-
     }
 
 /********************************************   getters and setters  *********************************************/

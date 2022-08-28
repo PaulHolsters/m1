@@ -3,11 +3,13 @@ const Price = require('./Price')
 
 module.exports = {
     Gear:{
-        Gear: Gear.name,
+        Gear: Gear.gear,
+        ref: Gear.ref,
         UIControl: Gear.UIControl
     },
     Price:{
         Price: Price.price,
+        ref: Price.ref,
         currency: Price.currency,
         cents:Price.cents,
         isInt:Price.isInt,
