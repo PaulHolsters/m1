@@ -192,6 +192,7 @@ async function startApolloServer() {
     const server = new ApolloServer(app.generate());
     await server.start()
     await server.applyMiddleware({app:appserver})
+    console.log(`mongodb+srv://${process.env.MONGO_ATLAS_USER}:` + process.env.MONGO_ATLAS_PW + `${process.env.MONGO_ATLAS_DB}`)
     await mongoose.connect(`mongodb+srv://${process.env.MONGO_ATLAS_USER}:` + process.env.MONGO_ATLAS_PW + `${process.env.MONGO_ATLAS_DB}`,
         {
             useNewUrlParser: true,

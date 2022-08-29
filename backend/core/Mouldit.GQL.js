@@ -6,12 +6,19 @@ module.exports = class GQLFunctions{
     static createAndGetGQLFor(action,concepts,app){
         if (this.getQueryTypeOf(action)=== 'Mutation') {
             let params
-            for (let concept in action.concepts){
+            for (let concept of action.concepts){
                 const fullConcept = concepts.find(cpt=>{
                     return cpt.name.ref.singular === concept
                 })
                 switch (action.name) {
                     case 'create':
+                        params = `(`
+                        for (let i = 0; i < fullConcept.attr.length; i++) {
+                            if (i + 1 === fullConcept.attr.length) params += `${MoulditFunctions.getRef(fullConcept.attr[i])}: ${MoulditFunctions.getGQLTypeOf(fullConcept.attr[i],app)})`
+                            else params += `${MoulditFunctions.getRef(fullConcept.attr[i])}: ${MoulditFunctions.getGQLTypeOf(fullConcept.attr[i],app)}, `
+                        }
+                        break
+                    case 'edit':
                         params = `(`
                         for (let i = 0; i < fullConcept.attr.length; i++) {
                             if (i + 1 === fullConcept.attr.length) params += `${MoulditFunctions.getRef(fullConcept.attr[i])}: ${MoulditFunctions.getGQLTypeOf(fullConcept.attr[i],app)})`
@@ -38,7 +45,7 @@ module.exports = class GQLFunctions{
             }
         } else {
             // query actions
-            for (let concept in action.concepts){
+            for (let concept of action.concepts){
                 const fullConcept = concepts.find(cpt=>{
                     return cpt.name.ref.singular === concept
                 })
