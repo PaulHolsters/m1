@@ -7,6 +7,7 @@ const Model = require("./Model");
 const MoulditFunctions = require("./Mouldit.Functions");
 const GeneralFunctions = require("./General.Functions");
 const GQLFunctions = require("./Mouldit.GQL");
+const Resolver = require("./Resolver");
 
 module.exports = class App {
     /********************************************   attributes  ******************************************************/
@@ -15,7 +16,8 @@ module.exports = class App {
     #users
     #components
     #GQLstr
-
+    #resolvers
+    #startupData
     constructor(configObj) {
         this.#concepts = new Map()
         this.#actions = []
@@ -54,6 +56,14 @@ module.exports = class App {
 
     get GQLstr() {
         return this.#GQLstr
+    }
+
+    get resolvers() {
+        return {...this.#resolvers}
+    }
+
+    get startupData() {
+        return {...this.#startupData}
     }
 
     /********************************************   public methods  **************************************************/
@@ -109,12 +119,75 @@ module.exports = class App {
             this.#GQLstr += '\n'+GQLFunctions.createAndGetGQLFor(action,this.concepts,this)
         })
         this.#GQLstr += '\n}\n'
-        console.log(this.GQLstr)
         return this.GQLstr
     }
 
     #generateResolverObj() {
-        // todo next
+        const dateScalar = new GraphQLScalarType({
+            name: 'Date',
+            description: 'Date custom scalar type',
+            serialize(value) {
+                return Intl.DateTimeFormat('en-GB').format(value); // Convert outgoing Date to string for JSON
+            },
+            parseValue(value) {
+                return new Date(value); // Convert incoming string to Date
+            },
+            parseLiteral(ast) {
+                if (ast.kind === Kind.STRING) {
+                    return new Date(ast.value); // Convert hard-coded AST string to Date
+                }
+                return null; // Invalid hard-coded value (not a string)
+            },
+        });
+        this.#resolvers = {
+            Date: dateScalar
+        }
+        this.actions.forEach(action=>{
+            // voor elke actie moet er natuurlijk een resolver zijn
+            // en zo'n resolver moet er per concept zijn voor zo'n actie
+            if(action.hasOwnProperty('concepts') && action.concepts.length>0){
+                action.concepts.forEach(conceptRef=>{
+                    const concept = this.concepts.find(concept=>{
+                        return concept.name.ref.singular === conceptRef
+                    })
+                    if(concept){
+                        const model = this.#concepts.get(concept)
+                        const resolver = new Resolver(action, model, concept).resolver
+                        if (resolver.hasOwnProperty('Mutation')) {
+                            if (this.#resolvers.hasOwnProperty('Mutation')) {
+                                this.#resolvers['Mutation'][Object.keys(resolver['Mutation'])[0]] = Object.values(resolver['Mutation'])[0]
+                            } else {
+                                this.#resolvers['Mutation'] = resolver['Mutation']
+                            }
+                        } else {
+                            if (this.#resolvers.hasOwnProperty('Query')) {
+                                this.#resolvers['Query'][Object.keys(resolver['Query'])[0]] = Object.values(resolver['Query'])[0]
+                            } else {
+                                this.#resolvers['Query'] = resolver['Query']
+                            }
+                        }
+                    }
+                })
+            } else{
+                // in de toekomst echter moet het mogelijk zijn om acties aan te maken zonder dat de actie
+                // geassocieerd is met een bepaald concept (todo is dat ooit nodig?)
+                // indien er acties moeten kunnen bestaan zonder een geassocieerd concept
+                // dan moet dit weerspiegeld zijn in het configObject m.a.w. concepts moet dan leeg zijnj of onbestaande voor
+                // deze actie
+
+            }
+            this.#startupData = this.#getStartupData()
+            if(this.#startupData){
+                this.#resolvers['Query']['getStartupData'] = (function () {
+                    return this.startupData
+                }).bind(this)
+            }
+            return this.#resolvers
+        })
+    }
+
+    #getStartupData() {
+
     }
 
 }
