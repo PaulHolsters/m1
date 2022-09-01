@@ -64,6 +64,7 @@ module.exports = class Resolver {
                             resource._doc['id'] = id
                             return resource._doc
                         }).catch(err=>{
+                            console.log(err)
                             return null
                         })
                     }).bind(this)

@@ -193,7 +193,7 @@ module.exports = class App {
 
     #getStartupData() {
         // wat heeft de frontend nodig dat niet al in het configObject zit?
-
+        // todo
     }
 
 }
