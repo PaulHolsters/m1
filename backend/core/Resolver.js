@@ -57,8 +57,15 @@ module.exports = class Resolver {
                     }).bind(this)
                     break
                 case 'getDetailsOf':
-                    (actionFunc = function () {
-                        return model.find()
+                    (actionFunc = function (_, data) {
+                        return model.findById({_id:data.id},{__v:0}).then(resource=>{
+                            const id = resource._doc._id
+                            delete resource._doc._id
+                            resource._doc['id'] = id
+                            return resource._doc
+                        }).catch(err=>{
+                            return null
+                        })
                     }).bind(this)
                     break
             }

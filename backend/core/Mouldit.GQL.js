@@ -49,6 +49,7 @@ module.exports = class GQLFunctions{
                 const fullConcept = concepts.find(cpt=>{
                     return cpt.name.ref.singular === concept
                 })
+                if(action.name === 'getDetailsOf') return `${action.name}${GeneralFunctions.capitalizeFirst(fullConcept.name.ref.singular)}(id: ID): ${GeneralFunctions.capitalizeFirst(fullConcept.name.ref.singular)}`
                 if (MoulditActions.hasOwnProperty(GeneralFunctions.capitalizeFirst(action.name)) && MoulditActions[GeneralFunctions.capitalizeFirst(action.name)].plurality === 'singular') {
                     if (MoulditActions[GeneralFunctions.capitalizeFirst(action.name)].returnType === 'object') {
                         return `${action.name}${GeneralFunctions.capitalizeFirst(fullConcept.name.ref.singular)}: ${GeneralFunctions.capitalizeFirst(fullConcept.name.ref.singular)}`
