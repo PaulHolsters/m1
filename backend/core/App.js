@@ -91,6 +91,10 @@ module.exports = class App {
     /********************************************   private methods  *************************************************/
     #generateGQLStr() {
         this.#GQLstr += `\nscalar Date\n`
+        this.#GQLstr += `type Result{
+            statusCode: Int!
+            msg: String
+        }\n`
         this.concepts.forEach(concept => {
             this.#GQLstr += '\ntype ' + GeneralFunctions.capitalizeFirst(concept.name.ref.singular) + '{'
             this.#GQLstr += '\n   ' + 'id' + ': ' + 'ID!'

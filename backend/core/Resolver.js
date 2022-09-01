@@ -34,7 +34,18 @@ module.exports = class Resolver {
                     break
                 case 'delete':
                     actionFunc = async function (_, data) {
-                        return model.deleteOne({_id:data})
+                        return model.deleteOne({_id:data.id}).then(result=>{
+                            return {
+                                statusCode: 200,
+                                msg: `${model.modelName} deleted successfully`
+                            }
+                        }).catch(err => {
+                            console.log(err)
+                            return {
+                                statusCode: 500,
+                                msg: `${model.modelName} could not be deleted`
+                            }
+                        })
                     }
                     break
             }

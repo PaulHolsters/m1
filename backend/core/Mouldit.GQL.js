@@ -27,7 +27,7 @@ module.exports = class GQLFunctions{
                         break
                     case 'delete':
                         params = `(id: ID)`
-                        break
+                        return `${action.name}${GeneralFunctions.capitalizeFirst(fullConcept.name.ref.singular)}${params}: Result`
                 }
                 if (MoulditActions.hasOwnProperty(GeneralFunctions.capitalizeFirst(action.name)) && MoulditActions[GeneralFunctions.capitalizeFirst(action.name)].plurality === 'singular') {
                     if (MoulditActions[GeneralFunctions.capitalizeFirst(action.name)].returnType === 'object') {
