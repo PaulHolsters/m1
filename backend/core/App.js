@@ -119,6 +119,7 @@ module.exports = class App {
             this.#GQLstr += '\n'+GQLFunctions.createAndGetGQLFor(action,this.concepts,this)
         })
         this.#GQLstr += '\n}\n'
+        console.log(this.GQLstr)
         return this.GQLstr
     }
 
@@ -174,19 +175,20 @@ module.exports = class App {
                 // indien er acties moeten kunnen bestaan zonder een geassocieerd concept
                 // dan moet dit weerspiegeld zijn in het configObject m.a.w. concepts moet dan leeg zijnj of onbestaande voor
                 // deze actie
-
             }
-            this.#startupData = this.#getStartupData()
-            if(this.#startupData){
-                this.#resolvers['Query']['getStartupData'] = (function () {
-                    return this.startupData
-                }).bind(this)
-            }
-            return this.#resolvers
         })
+        this.#startupData = this.#getStartupData()
+        if(this.#startupData){
+            this.#resolvers['Query']['getStartupData'] = (function () {
+                return this.startupData
+            }).bind(this)
+        }
+        console.log(this.resolvers)
+        return this.#resolvers
     }
 
     #getStartupData() {
+        // wat heeft de frontend nodig dat niet al in het configObject zit?
 
     }
 

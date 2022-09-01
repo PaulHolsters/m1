@@ -11,10 +11,12 @@ module.exports = class DocumentObj {
             if (MoulditFunctions.isMongooseType(attr[i])) {
                 this.schema[attr[i].ref] = {type: attr[i].type}
             } else if (MoulditFunctions.isMoulditType(attr[i])) {
-                this.schema[attr[i].ref] = {type: MoulditFunctions.getTypeOf(attr[i])}
+                let key
+                attr[i].hasOwnProperty('ref') ? key = attr[i].ref : key = MoulditFunctions.getRef(attr[i])
+                this.schema[key] = {type: MoulditFunctions.getTypeOf(attr[i])}
                 for (let [k,v] in Object.entries(MoulditFunctions.getConstraintsOf(attr[i]))) {
                     if(MoulditFunctions.isMongooseConstraint(k)){
-                        this.schema[attr[i].ref][k] = v
+                        this.schema[key][k] = v
                     }
                 }
             } else if (MoulditFunctions.isChildConcept(attr[i], app)) {

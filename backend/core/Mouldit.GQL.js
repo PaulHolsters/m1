@@ -19,14 +19,14 @@ module.exports = class GQLFunctions{
                         }
                         break
                     case 'edit':
-                        params = `(`
+                        params = `(id: ID, `
                         for (let i = 0; i < fullConcept.attr.length; i++) {
                             if (i + 1 === fullConcept.attr.length) params += `${MoulditFunctions.getRef(fullConcept.attr[i])}: ${MoulditFunctions.getGQLTypeOf(fullConcept.attr[i],app)})`
                             else params += `${MoulditFunctions.getRef(fullConcept.attr[i])}: ${MoulditFunctions.getGQLTypeOf(fullConcept.attr[i],app)}, `
                         }
                         break
                     case 'delete':
-                        params = `(_id: ID)`
+                        params = `(id: ID)`
                         break
                 }
                 if (MoulditActions.hasOwnProperty(GeneralFunctions.capitalizeFirst(action.name)) && MoulditActions[GeneralFunctions.capitalizeFirst(action.name)].plurality === 'singular') {
