@@ -8,11 +8,11 @@ module.exports = class DocumentObj {
     constructor(attr, app) {
         this.schema = {}
         for (let i = 0; i < attr.length; i++) {
+            let key
+            attr[i].hasOwnProperty('ref') ? key = attr[i].ref : key = MoulditFunctions.getRef(attr[i])
             if (MoulditFunctions.isMongooseType(attr[i])) {
                 this.schema[attr[i].ref] = {type: attr[i].type}
             } else if (MoulditFunctions.isMoulditType(attr[i])) {
-                let key
-                attr[i].hasOwnProperty('ref') ? key = attr[i].ref : key = MoulditFunctions.getRef(attr[i])
                 this.schema[key] = {type: MoulditFunctions.getTypeOf(attr[i])}
                 for (let [k,v] in Object.entries(MoulditFunctions.getConstraintsOf(attr[i]))) {
                     if(MoulditFunctions.isMongooseConstraint(k)){
@@ -59,12 +59,13 @@ module.exports = class DocumentObj {
             if(attr[i].hasOwnProperty('constraints')){
                 for (let [k,v] in Object.entries(attr[i].constraints)) {
                     if(MoulditFunctions.isMongooseConstraint(k)){
-                        this.schema[attr[i].ref][k] = v
+                        this.schema[key][k] = v
                     }
                 }
             }
-            // todo toevoegen van default value
-
+            if(attr[i].hasOwnProperty('default')){
+                this.schema[key]['default'] = attr[i].default
+            }
         }
     }
 
