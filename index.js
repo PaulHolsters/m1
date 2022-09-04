@@ -101,6 +101,7 @@ const app = new App( {
         },
         {
             type:'cards',
+            route:'producten',
             ref:'productCards',
             configuration:{
                 cards:[
@@ -111,6 +112,7 @@ const app = new App( {
         },
         {
             type:'form',
+            route:'product/nieuw',
             ref:'newProductForm',
             configuration:{
                 action:'create',
@@ -129,7 +131,10 @@ const app = new App( {
             }
         },
         {
-            type:'overview', ref:'productsOverview', configuration:{
+            type:'overview',
+            route:'producten/overzicht',
+            ref:'productsOverview',
+            configuration:{
                 action:'get',
                 concept:'product',
                 actionMenu:[
@@ -145,11 +150,15 @@ const app = new App( {
                         label:'verwijderen',
                         component: 'deleteProductPrompt'
                     }
-                ]
+                ],
+                columns:['gearName', 'basePrice', 'creationDate']
             }
         },
         {
-            type:'form', ref:'editProductForm', configuration:{
+            type:'form',
+            route:'product/aanpassen',
+            ref:'editProductForm',
+            configuration:{
                 action:'edit',
                 concept:'product',
                 formats: [
@@ -167,6 +176,7 @@ const app = new App( {
         },
         {
             type:'summary',
+            route:'product/samenvatting',
             ref:'detailsProductSummary',
             configuration:{
                 action:'getDetailsOf',
@@ -180,7 +190,8 @@ const app = new App( {
                 action:'delete',
                 concept:'product',
                 header: 'Verwijderen product',
-                message:'Bent u zeker dat u dit product definitief wil verwijderen?'
+                question:'Bent u zeker dat u dit product definitief wil verwijderen?',
+                buttons:{yes:'Ja',no:'nee'}
             }
         },
     ],
