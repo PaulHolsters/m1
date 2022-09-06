@@ -233,15 +233,15 @@ module.exports = class App {
                     components.push(component)
                     break
                 case 'overview':
-                    // todo fix bug columns don't get created
                     if (component.configuration.hasOwnProperty('columns')) {
+                        const newColumns = []
                         component.configuration.columns.forEach(column => {
-                                column = {
+                                newColumns.push({
                                     ref: column, label: this.#getLabel(component.configuration.concept, column)
-                                }
+                                })
                             }
                         )
-                        console.log('columns are',component.configuration.columns)
+                        component.configuration.columns = newColumns
                     }
                     if (component.configuration.hasOwnProperty('actionMenu')) {
                         component.configuration.actionMenu.forEach(menuItem => {
