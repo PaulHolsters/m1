@@ -164,11 +164,11 @@ const app = new App( {
                 formats: [
                     {
                         ref: 'basePrice',
-                        format:'EUR'
+                        format:{currency:'EUR', cents:{show:false,allowed:false}}
                     },
                     {
                         ref: 'creationDate',
-                        format:'datetime'
+                        format:{time:{show:true,timeFormat:'HH:MM:SS:mmm', hourFormat:'24'},date:{show:true,dateFormat:'dd/mm/yyyy'}}
                     }
                 ],
                 validation:'onsubmit'

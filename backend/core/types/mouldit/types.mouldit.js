@@ -5,14 +5,12 @@ module.exports = {
     Gear:{
         Gear: Gear.gear,
         ref: Gear.ref,
-        UIControl: Gear.UIControl
+        staticConstraints: Gear.staticConstraints
     },
     Price:{
         Price: Price.price,
         ref: Price.ref,
-        currency: Price.currency,
-        cents:Price.cents,
-        isInt:Price.isInt,
-        UIControl:Price.UIControl
+        staticConstraints: Price.staticConstraints,
+        optionalConstraints: Price.optionalConstraints
     },
 }

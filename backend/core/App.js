@@ -308,7 +308,7 @@ module.exports = class App {
                             }
                         }
                     }
-                    console.log(component)
+                    delete component.configuration.concept
                     components.push(component)
                     break
                 case 'form':

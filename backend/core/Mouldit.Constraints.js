@@ -10,6 +10,20 @@ module.exports = class MoulditConstraints{
         checkChildId:this.checkChildId,
         capitals:this.capitals,
         maxDecimals:this.maxDecimals,
+        minDecimals:this.minDecimals,
+        decimals:this.decimals,
+        cents:this.cents
+    }
+
+    static cents(allowed){
+        if (allowed === false) {
+            return function (v) {
+                return Math.trunc(v) === v
+            }
+        }
+        return function (v) {
+            return true
+        }
     }
 
     static capitals(arr,val){
@@ -45,10 +59,24 @@ module.exports = class MoulditConstraints{
         })
     }
 
-    static maxDecimals(arr,val){
+    static maxDecimals(val){
         return function (v){
             if(typeof v !== 'number') return false
             return (v - Math.trunc(v)).toString().length<=val+2
+        }
+    }
+
+    static minDecimals(val){
+        return function (v){
+            if(typeof v !== 'number') return false
+            return (v - Math.trunc(v)).toString().length>=val+2
+        }
+    }
+
+    static decimals(val){
+        return function (v){
+            if(typeof v !== 'number') return false
+            return (v - Math.trunc(v)).toString().length===val+2
         }
     }
 

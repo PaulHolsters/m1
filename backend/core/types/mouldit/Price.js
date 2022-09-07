@@ -1,36 +1,28 @@
+const MoulditConstraints = require('../../Mouldit.Constraints')
+
 module.exports = class Price {
-    static get price(){
-        const constraints = {min:0}
+    static get price() {
+        const constraints = {
+            min: 0
+        }
         const type = new Map()
         return type.set(Number, constraints)
     }
 
-    static get ref(){
+    static get ref() {
         return 'price'
     }
 
-    static get UIControl(){
-        return 'money'
+    static staticConstraints(){
+        return [
+            {function:'maxDecimals',params:[2],value:MoulditConstraints.maxDecimals(2)}
+        ]
     }
 
-    static currency(currency){
-        switch (currency){
-            case 'EUR':
-                return function (v){
-                    return (v - Math.trunc(v)).toString().length<5
-                }
-        }
+    static optionalConstraints({allowed:allowed}){
+        return [
+            {function:'cents',params:[allowed],value:MoulditConstraints.cents(allowed)}
+        ]
     }
 
-    static cents(config){
-        if(config.allowed===false){
-            return function (v) {
-                return Math.trunc(v) === v
-            }
-        }
-    }
-
-    static isInt(constraints){
-        return constraints.hasOwnProperty('cents') && constraints.cents.allowed === false
-    }
 }
