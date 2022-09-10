@@ -194,7 +194,6 @@ module.exports = class App {
                 return this.startupData
             }).bind(this)
         }
-        console.log(this.resolvers)
         return this.#resolvers
     }
 
@@ -286,6 +285,7 @@ module.exports = class App {
                                 plurality === 'singular' ? GeneralFunctions.capitalizeFirst(targetConcept.name.ref.singular)
                                     : GeneralFunctions.capitalizeFirst(targetConcept.name.ref.plural)
                             )
+                            // todo check of de desbetreffende actie inderdaad gelieerd is met de desbetreffende UI component
                             const targetAction = this.actions.find(act => {
                                 return act.name === component.configuration.action
                             })
@@ -312,13 +312,97 @@ module.exports = class App {
                     components.push(component)
                     break
                 case 'form':
-
+                    if (component.configuration.hasOwnProperty('action')) {
+                        // todo zet volgende gemeenschappleijke lijnen in een aparte functie
+                        if (MoulditActions.hasOwnProperty(GeneralFunctions.capitalizeFirst(component.configuration.action))) {
+                            const plurality = MoulditActions[GeneralFunctions.capitalizeFirst(component.configuration.action)].plurality
+                            const targetConcept = this.concepts.find(concept => {
+                                return concept.name.ref.singular === component.configuration.concept
+                            })
+                            const actionName = component.configuration.action + GeneralFunctions.capitalizeFirst(
+                                plurality === 'singular' ? GeneralFunctions.capitalizeFirst(targetConcept.name.ref.singular)
+                                    : GeneralFunctions.capitalizeFirst(targetConcept.name.ref.plural)
+                            )
+                            // todo check of de desbetreffende actie inderdaad gelieerd is met de desbetreffende UI component
+                            const targetAction = this.actions.find(act => {
+                                return act.name === component.configuration.action
+                            })
+                            if (targetAction) {
+                                // todo ook dit in een aparte functie
+                                const queryType = GQLFunctions.getQueryTypeOf(targetAction)
+                                const requests = this.GQLstr.split('type ' + queryType + '{')[1].split('}')[0].trim().split('\n')
+                                let request = requests.find(request => {
+                                    return request.search(actionName) !== -1
+                                })
+                                request = request.split('(')[0].trim()
+                                let properties = ''
+                                let params = '('
+                                targetConcept.attr.forEach(at => {
+                                    if (at.hasOwnProperty('ref')) {
+                                        properties += '\t\t' + at.ref + '\n'
+                                        params += at.ref + ':'
+                                    } else if (MoulditFunctions.isMoulditType(at)) {
+                                        properties += '\t\t' + MoulditFunctions.getRef(at) + '\n'
+                                        params += MoulditFunctions.getRef(at) + ':'
+                                    } else throw new Error('no ref property found')
+                                    params += ' ' + MoulditFunctions.getGQLTypeOf(at, this) + ', '
+                                })
+                                params = params.substr(0, params.length - 2) + ')'
+                                switch (targetAction.name) {
+                                    case 'create':
+                                        component.configuration.action = 'Mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'
+                                        break
+                                    case 'edit':
+                                        component.configuration.action = []
+                                        component.configuration.action.push({edit: 'Mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'})
+                                        const plurality = MoulditActions['GetDetailsOf'].plurality
+                                        const targetConcept = this.concepts.find(concept => {
+                                            return concept.name.ref.singular === component.configuration.concept
+                                        })
+                                        const actionName = 'getDetailsOf' + GeneralFunctions.capitalizeFirst(
+                                            plurality === 'singular' ? GeneralFunctions.capitalizeFirst(targetConcept.name.ref.singular)
+                                                : GeneralFunctions.capitalizeFirst(targetConcept.name.ref.plural)
+                                        )
+                                        component.configuration.action.push({getDetailsOf: 'Query{\n\t' + actionName + '(id:ID)' + '{\n' + properties + '\t}\n}'})
+                                        break
+                                }
+                            }
+                        }
+                    }
+                    if (component.configuration.hasOwnProperty('concept')) {
+                        component.configuration['controls'] = []
+                        const targetConcept = this.concepts.find(concept => {
+                            return concept.name.ref.singular === component.configuration.concept
+                        })
+                        if(targetConcept){
+                            targetConcept.attr.forEach(at => {
+                                if(MoulditFunctions.isMoulditType(at)){
+                                    const control = {
+                                        label:this.#getLabel(component.configuration.concept,MoulditFunctions.getRef(at)),
+                                        type:MoulditFunctions.getTypeOf(at),
+                                        // todo add constraints
+                                        constraints:undefined
+                                    }
+                                    component.configuration.controls.push(control)
+                                } else if(MoulditFunctions.isMongooseType(at)){
+                                    const control = {
+                                        label:this.#getLabel(component.configuration.concept,MoulditFunctions.getRef(at)),
+                                        type:at.type.name,
+                                        // todo add constraints
+                                        constraints:undefined
+                                    }
+                                    component.configuration.controls.push(control)
+                                }
+                            })
+                        }
+                    }
+                    console.log(component.configuration.controls)
                     break
                 case 'summary':
-
+                    // todo make a form with read only values to use as a summary component
                     break
                 case 'prompt':
-
+                    // todo make a form with a delete function to use as a way of deleting a resource
                     break
             }
         })
