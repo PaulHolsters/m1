@@ -144,11 +144,11 @@ const app = new App( {
                     },
                     {
                         label:'bekijken',
-                        component:'detailsProductSummary'
+                        component:'detailsProductForm'
                     },
                     {
                         label:'verwijderen',
-                        component: 'deleteProductPrompt'
+                        component: 'deleteProductForm'
                     }
                 ],
                 columns:['gearName', 'basePrice', 'creationDate']
@@ -174,7 +174,7 @@ const app = new App( {
                 validation:'onsubmit'
             }
         },
-        {
+/*        {
             type:'summary',
             route:'product/samenvatting',
             ref:'detailsProductSummary',
@@ -182,8 +182,46 @@ const app = new App( {
                 action:'getDetailsOf',
                 concept:'product'
             }
+        },*/
+        {
+            type:'form',
+            route:'product/details',
+            ref:'detailsProductForm',
+            configuration:{
+                action:'getDetailsOf',
+                concept:'product',
+                formats: [
+                    {
+                        ref: 'basePrice',
+                        format:{currency:'EUR', cents:{show:false,allowed:false}}
+                    },
+                    {
+                        ref: 'creationDate',
+                        format:{time:{show:true,timeFormat:'HH:MM:SS:mmm', hourFormat:'24'},date:{show:true,dateFormat:'dd/mm/yyyy'}}
+                    }
+                ]
+            }
         },
         {
+            type:'form',
+            route:'product/verwijderen',
+            ref:'deleteProductForm',
+            configuration:{
+                action:'delete',
+                concept:'product',
+                formats: [
+                    {
+                        ref: 'basePrice',
+                        format:{currency:'EUR', cents:{show:false,allowed:false}}
+                    },
+                    {
+                        ref: 'creationDate',
+                        format:{time:{show:true,timeFormat:'HH:MM:SS:mmm', hourFormat:'24'},date:{show:true,dateFormat:'dd/mm/yyyy'}}
+                    }
+                ]
+            }
+        },
+/*        {
             type:'prompt',
             ref:'deleteProductPrompt',
             configuration:{
@@ -193,7 +231,7 @@ const app = new App( {
                 question:'Bent u zeker dat u dit product definitief wil verwijderen?',
                 buttons:{yes:'Ja',no:'nee'}
             }
-        },
+        },*/
     ],
 })
 
