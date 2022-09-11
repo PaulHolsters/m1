@@ -12,7 +12,7 @@ module.exports = class MoulditFunctions{
     }
 
     static isChildConcept(attr,app){
-        if(GeneralFunctions.getTypeOf(attr)==='string'){
+        if(GeneralFunctions.getTypeOf(attr.type)==='string'){
             return app.concepts.find(concept=>{
                 return attr.type.search(concept.name.ref.singular) !== -1
             }) !== undefined
@@ -61,6 +61,24 @@ module.exports = class MoulditFunctions{
     static getConstraintsOf(attr){
         if(moulditTypes.hasOwnProperty(attr.type.name)) return [...moulditTypes[attr.type.name][attr.type.name].values()][0]
         return undefined
+    }
+
+    static getStaticConstraintsOf(attr){
+        if(moulditTypes.hasOwnProperty(attr.type.name) && moulditTypes[attr.type.name].hasOwnProperty('staticConstraints'))
+            console.log(moulditTypes[attr.type.name].staticConstraints,'******')
+            return [...moulditTypes[attr.type.name].staticConstraints]
+        return undefined
+    }
+
+    static hasOptionalConstraints(attr){
+        return (moulditTypes.hasOwnProperty(attr.type.name) && moulditTypes[attr.type.name].hasOwnProperty('optionalConstraints'))
+    }
+
+    static getOptionalConstraintsOf(attr){
+        if(this.hasOptionalConstraints(attr)){
+            return [...moulditTypes[attr.type.name].optionalConstraints]
+        }
+        throw new Error('Optional constraints are not defined')
     }
 
     static isMongooseConstraint(constraint){

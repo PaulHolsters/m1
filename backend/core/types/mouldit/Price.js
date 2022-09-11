@@ -3,7 +3,7 @@ const MoulditConstraints = require('../../Mouldit.Constraints')
 module.exports = class Price {
     static get price() {
         const constraints = {
-            min: 0
+            min: 0, maxDecimals:2
         }
         const type = new Map()
         return type.set(Number, constraints)
@@ -13,15 +13,17 @@ module.exports = class Price {
         return 'price'
     }
 
-    static staticConstraints(){
+    // je moet hiervoor iets steken in het backend schema
+    // dit heeft ook zijn equivalent in het frontend schema
+    static get staticConstraints(){
         return [
-            {function:'maxDecimals',params:[2],value:MoulditConstraints.maxDecimals(2)}
+            {function:'maxDecimals',value:MoulditConstraints.maxDecimals}
         ]
     }
 
-    static optionalConstraints({allowed:allowed}){
+    static get optionalConstraints(){
         return [
-            {function:'cents',params:[allowed],value:MoulditConstraints.cents(allowed)}
+            {function:'cents',value:MoulditConstraints.cents}
         ]
     }
 

@@ -15,6 +15,31 @@ module.exports = class MoulditConstraints{
         cents:this.cents
     }
 
+    static isAllowedValue(functionName,value){
+        switch (functionName){
+            case 'cents':
+                return value===true||value===false
+            case 'capitals':
+                return []
+            case 'maxDecimals':
+                return !isNaN(value) && value >=0
+            case 'minDecimals':
+                return !isNaN(value) && value >=0
+            case 'decimals':
+                return !isNaN(value) && value >=0
+            case 'unique':
+                return value===true||value===false
+            case 'uniqueInList':
+                return value===true||value===false
+            case 'uniqueList':
+                return value===true||value===false
+            case 'uniqueToList':
+                return value===true||value===false
+            case 'checkChildId':
+                return value===true||value===false
+        }
+    }
+
     static cents(allowed){
         if (allowed === false) {
             return function (v) {

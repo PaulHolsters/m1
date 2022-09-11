@@ -10,6 +10,8 @@ const GQLFunctions = require("./Mouldit.GQL");
 const MoulditTypes = require('./types/mouldit/types.mouldit')
 const MoulditActions = require('./actions/Mouldit.Actions')
 const Resolver = require("./Resolver");
+const MoulditConstraints = require("./Mouldit.Constraints");
+const MongooseConstraints = require("./Mongoose.Constraints");
 
 module.exports = class App {
     /********************************************   attributes  ******************************************************/
@@ -377,26 +379,62 @@ module.exports = class App {
                         if(targetConcept){
                             targetConcept.attr.forEach(at => {
                                 if(MoulditFunctions.isMoulditType(at)){
+                                    const constraints = {}
+                                    const mongooseConstraints = MoulditFunctions.getConstraintsOf(at)
+                                    Object.assign(constraints,mongooseConstraints)
+                                    // todo refactor naming of namespaces and functions
+                                    const staticConstraints = MoulditFunctions.getStaticConstraintsOf(at)
+                                    staticConstraints.forEach(ct=>{
+                                        for (let key of Object.keys(mongooseConstraints)){
+                                            if(key===ct.function){
+                                                constraints[key] = mongooseConstraints[key]
+                                                break
+                                            }
+                                        }
+                                    })
+                                    let optionalConstraints
+                                    let optionalSelected
+                                    if(MoulditFunctions.hasOptionalConstraints(at)){
+                                        optionalConstraints = MoulditFunctions.getOptionalConstraintsOf(at)
+                                        optionalSelected = {...at.constraints}
+                                        for (let key of Object.keys(optionalSelected)){
+                                            if(MoulditFunctions.isMongooseConstraint(key)){
+                                                constraints[key] = optionalSelected[key]
+                                            } else{
+                                                const optionalConstraint = optionalConstraints.find(ct=>{
+                                                    return ct.function === key
+                                                })
+                                                if(optionalConstraint && MoulditConstraints.isAllowedValue(key,optionalSelected[key])){
+                                                    constraints[key] = optionalSelected[key]
+                                                }
+                                            }
+                                        }
+                                    }
                                     const control = {
-                                        label:this.#getLabel(component.configuration.concept,MoulditFunctions.getRef(at)),
-                                        type:MoulditFunctions.getTypeOf(at),
-                                        // todo add constraints
-                                        constraints:undefined
+                                        label: this.#getLabel(component.configuration.concept, MoulditFunctions.getRef(at)),
+                                        type: MoulditFunctions.getTypeOf(at),
+                                        constraints: constraints
                                     }
                                     component.configuration.controls.push(control)
                                 } else if(MoulditFunctions.isMongooseType(at)){
+                                    const optionalSelected = {...at.constraints}
+                                    for (let key of Object.keys(optionalSelected)){
+                                        if(!MoulditFunctions.isMongooseConstraint(key)){
+                                            throw new Error('unknown constraint')
+                                        } else if(!MongooseConstraints.isAllowedValue(key,optionalSelected[key])){
+                                            throw new Error('unknown type of value for constraint')
+                                        }
+                                    }
                                     const control = {
-                                        label:this.#getLabel(component.configuration.concept,MoulditFunctions.getRef(at)),
-                                        type:at.type.name,
-                                        // todo add constraints
-                                        constraints:undefined
+                                        label: this.#getLabel(component.configuration.concept, MoulditFunctions.getRef(at)),
+                                        type: at.type.name,
+                                        constraints: optionalSelected
                                     }
                                     component.configuration.controls.push(control)
                                 }
                             })
                         }
                     }
-                    console.log(component.configuration.controls)
                     break
                 case 'summary':
                     // todo make a form with read only values to use as a summary component

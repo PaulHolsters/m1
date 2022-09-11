@@ -8,17 +8,17 @@ module.exports = class GeneralFunctions{
         else return word
     }
 
-    static getTypeOf(attr){
-        switch (typeof attr.type) {
+    static getTypeOf(value){
+        switch (typeof value) {
             case 'object':
                 // now it can be a: date, an normal object, an array, ...
-                if (attr.type instanceof Array) {
+                if (value instanceof Array) {
                     return 'array'
-                } else if (attr.type instanceof mongoose.Types.ObjectId) {
+                } else if (value instanceof mongoose.Types.ObjectId) {
                     return 'objectId'
-                } else if (attr.type instanceof Map) {
+                } else if (value instanceof Map) {
                     return 'map'
-                } else if (attr.type instanceof Date) {
+                } else if (value instanceof Date) {
                     return 'date'
                 } else return 'object'
             case 'function':
