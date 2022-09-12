@@ -122,17 +122,62 @@ module.exports = class App {
             value:String
         }
         
+        type Column{
+            ref:String
+            label:String
+        }
+        
+        type Prompt{
+            ref:String
+            type:String
+            configuration:Configuration
+        }
+        
+        union ActionComponent = Prompt
+        
+        type ActionMenuItem{
+            label:String
+            routerLink: String
+            component: ActionComponent
+        }
+        
+        type Button{
+            name:String,
+            text:String
+        }
+        
+        union Value = String | Int | Boolean | Values
+        
+        type Values{
+            name:String
+            values: [Value]
+        }
+        
+        type FormatValue{
+            name:String
+            value:Value
+        }
+        
+        type Format{
+            ref:String,
+            format:[FormatValue]
+        }
+        
         type Configuration{
             actions: ActionOrCollectionOfActions
-            columns: [String]
+            columns: [Column]
             validation: String
-            cards: [Card]
             actionMenu: [ActionMenuItem]
-            title: String
-            label: String
             header: String
             question: String 
-            format:      
+            buttons:[Button]
+            formats: [Format]
+            
+            cards: [Card]
+            title: String
+            label: String
+
+     
         }
         
         type Component{
@@ -306,7 +351,6 @@ module.exports = class App {
                             } else {
                                 switch (comp2.type) {
                                     case 'prompt':
-                                        // todo add extra cases for the forms
                                         switch (comp2.configuration.action) {
                                             case 'delete':
                                                 const actionName = 'delete' + GeneralFunctions.capitalizeFirst(comp2.configuration.concept)
