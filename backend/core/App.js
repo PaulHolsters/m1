@@ -105,6 +105,49 @@ module.exports = class App {
             statusCode: Int!
             msg: String
         }\n`
+        // todo finish configuration
+        this.#GQLstr +=`type Route{
+            path: String
+            component: String
+        }
+        
+        union ActionOrCollectionOfActions = String | Actions
+        
+        type Actions{
+            actions:[Action]
+        }
+        
+        type Action{
+            name:String
+            value:String
+        }
+        
+        type Configuration{
+            actions: ActionOrCollectionOfActions
+            columns: [String]
+            validation: String
+            cards: [Card]
+            actionMenu: [ActionMenuItem]
+            title: String
+            label: String
+            header: String
+            question: String 
+            format:      
+        }
+        
+        type Component{
+            type: String
+            subtype:String
+            route:String
+            ref: String
+            configuration: Configuration
+        }
+        
+        type startupData{
+           routes: [Route]
+           components: [Component]
+           currentComponent: String
+        }\n`
         this.concepts.forEach(concept => {
             this.#GQLstr += '\ntype ' + GeneralFunctions.capitalizeFirst(concept.name.ref.singular) + '{'
             this.#GQLstr += '\n   ' + 'id' + ': ' + 'ID!'
@@ -263,6 +306,7 @@ module.exports = class App {
                             } else {
                                 switch (comp2.type) {
                                     case 'prompt':
+                                        // todo add extra cases for the forms
                                         switch (comp2.configuration.action) {
                                             case 'delete':
                                                 const actionName = 'delete' + GeneralFunctions.capitalizeFirst(comp2.configuration.concept)
@@ -371,8 +415,8 @@ module.exports = class App {
                                         break
                                     case 'edit':
                                         component.configuration.action = []
-                                        component.configuration.action.push({edit: 'Mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'})
-                                        component.configuration.action.push({getDetailsOf: 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
+                                        component.configuration.action.push({name:'edit',value: 'Mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'})
+                                        component.configuration.action.push({name:'getDetailsOf',value: 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
                                         break
                                     case 'getDetailsOf':
                                         component.configuration.action = 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'
@@ -380,7 +424,7 @@ module.exports = class App {
                                     case 'delete':
                                         params = '(id:ID)'
                                         component.configuration.action = []
-                                        component.configuration.action.push({delete: 'Mutation{\n\t' + request + params +
+                                        component.configuration.action.push({name:'delete',value: 'Mutation{\n\t' + request + params +
                                                 `{
                                                     Result{
                                                         statusCode
@@ -388,7 +432,7 @@ module.exports = class App {
                                                     }
                                                 }`
                                         })
-                                        component.configuration.action.push({getDetailsOf: 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
+                                        component.configuration.action.push({name:'getDetailsOf',value: 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
                                         break
                                 }
                             }
