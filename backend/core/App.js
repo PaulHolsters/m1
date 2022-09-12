@@ -314,20 +314,20 @@ module.exports = class App {
                     components.push(component)
                     break
                 case 'form':
-                    if (component.configuration.hasOwnProperty('action')) {
+                    if (component.hasOwnProperty('subtype')) {
                         // todo zet volgende gemeenschappleijke lijnen in een aparte functie
-                        if (MoulditActions.hasOwnProperty(GeneralFunctions.capitalizeFirst(component.configuration.action))) {
-                            const plurality = MoulditActions[GeneralFunctions.capitalizeFirst(component.configuration.action)].plurality
+                        if (MoulditActions.hasOwnProperty(GeneralFunctions.capitalizeFirst(component.subtype))) {
+                            const plurality = MoulditActions[GeneralFunctions.capitalizeFirst(component.subtype)].plurality
                             const targetConcept = this.concepts.find(concept => {
                                 return concept.name.ref.singular === component.configuration.concept
                             })
-                            const actionName = component.configuration.action + GeneralFunctions.capitalizeFirst(
+                            const actionName = component.subtype + GeneralFunctions.capitalizeFirst(
                                 plurality === 'singular' ? GeneralFunctions.capitalizeFirst(targetConcept.name.ref.singular)
                                     : GeneralFunctions.capitalizeFirst(targetConcept.name.ref.plural)
                             )
                             // todo check of de desbetreffende actie inderdaad gelieerd is met de desbetreffende UI component
                             const targetAction = this.actions.find(act => {
-                                return act.name === component.configuration.action
+                                return act.name === component.subtype
                             })
                             if (targetAction) {
                                 // todo ook dit in een aparte functie
@@ -350,29 +350,38 @@ module.exports = class App {
                                     params += ' ' + MoulditFunctions.getGQLTypeOf(at, this) + ', '
                                 })
                                 params = params.substr(0, params.length - 2) + ')'
-                                switch (targetAction.name) {
-                                    // todo maak hier steeds een array van zodat de frontend weet welke buttons voorzien moeten worden en welke niet
+                                const pluralitySwitch = MoulditActions['GetDetailsOf'].plurality
+                                const targetConceptSwitch = this.concepts.find(concept => {
+                                    return concept.name.ref.singular === component.configuration.concept
+                                })
+                                const actionNameSwitch = 'getDetailsOf' + GeneralFunctions.capitalizeFirst(
+                                    pluralitySwitch === 'singular' ? GeneralFunctions.capitalizeFirst(targetConceptSwitch.name.ref.singular)
+                                        : GeneralFunctions.capitalizeFirst(targetConceptSwitch.name.ref.plural)
+                                )
+                                switch (component.subtype){
                                     case 'create':
                                         component.configuration.action = 'Mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'
                                         break
                                     case 'edit':
                                         component.configuration.action = []
                                         component.configuration.action.push({edit: 'Mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'})
-                                        const plurality = MoulditActions['GetDetailsOf'].plurality
-                                        const targetConcept = this.concepts.find(concept => {
-                                            return concept.name.ref.singular === component.configuration.concept
-                                        })
-                                        const actionName = 'getDetailsOf' + GeneralFunctions.capitalizeFirst(
-                                            plurality === 'singular' ? GeneralFunctions.capitalizeFirst(targetConcept.name.ref.singular)
-                                                : GeneralFunctions.capitalizeFirst(targetConcept.name.ref.plural)
-                                        )
-                                        component.configuration.action.push({getDetailsOf: 'Query{\n\t' + actionName + '(id:ID)' + '{\n' + properties + '\t}\n}'})
-                                        break
-                                    case 'delete':
-                                        // todo
+                                        component.configuration.action.push({getDetailsOf: 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
                                         break
                                     case 'getDetailsOf':
                                         // todo
+                                        break
+                                    case 'delete':
+                                        params = '(id:ID)'
+                                        component.configuration.action = []
+                                        component.configuration.action.push({delete: 'Mutation{\n\t' + request + params +
+                                                `{
+                                                    Result{
+                                                        statusCode
+                                                        msg
+                                                    }
+                                                }`
+                                        })
+                                        component.configuration.action.push({getDetailsOf: 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
                                         break
                                 }
                             }
@@ -445,10 +454,10 @@ module.exports = class App {
                     }
                     break
                 case 'summary':
-                    // todo make a form with read only values to use as a summary component
+                    // todo
                     break
                 case 'prompt':
-                    // todo make a form with a delete function to use as a way of deleting a resource
+                    // todo
                     break
             }
         })

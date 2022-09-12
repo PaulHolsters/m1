@@ -112,10 +112,10 @@ const app = new App( {
         },
         {
             type:'form',
+            subtype:'create',
             route:'product/nieuw',
             ref:'newProductForm',
             configuration:{
-                action:'create',
                 concept:'product',
                 formats: [
                     {
@@ -156,10 +156,10 @@ const app = new App( {
         },
         {
             type:'form',
+            subtype:'edit',
             route:'product/aanpassen',
             ref:'editProductForm',
             configuration:{
-                action:'edit',
                 concept:'product',
                 formats: [
                     {
@@ -185,10 +185,10 @@ const app = new App( {
         },*/
         {
             type:'form',
+            subtype:'getDetailsOf',
             route:'product/details',
             ref:'detailsProductForm',
             configuration:{
-                action:'getDetailsOf',
                 concept:'product',
                 formats: [
                     {
@@ -204,10 +204,10 @@ const app = new App( {
         },
         {
             type:'form',
+            subtype:'delete',
             route:'product/verwijderen',
             ref:'deleteProductForm',
             configuration:{
-                action:'delete',
                 concept:'product',
                 formats: [
                     {
