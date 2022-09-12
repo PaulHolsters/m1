@@ -99,6 +99,7 @@ module.exports = class App {
 
     /********************************************   private methods  *************************************************/
     #generateGQLStr() {
+        // todo define startupData in schema
         this.#GQLstr += `\nscalar Date\n`
         this.#GQLstr += `type Result{
             statusCode: Int!
@@ -208,7 +209,13 @@ module.exports = class App {
     }
 
     #getRoutes() {
-
+       const routes = []
+       this.components.forEach(component=>{
+         if(component.hasOwnProperty('route')){
+             routes.push({path:component.route,component:component.type})
+         }
+       })
+       return routes
     }
 
     #getComponents() {
@@ -452,6 +459,7 @@ module.exports = class App {
                         }
                         delete component.configuration.concept
                     }
+                    components.push(component)
                     break
                 case 'summary':
                     // todo
