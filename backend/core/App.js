@@ -368,7 +368,7 @@ module.exports = class App {
                                         component.configuration.action.push({getDetailsOf: 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
                                         break
                                     case 'getDetailsOf':
-                                        // todo
+                                        component.configuration.action = 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'
                                         break
                                     case 'delete':
                                         params = '(id:ID)'
