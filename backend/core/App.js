@@ -163,8 +163,37 @@ module.exports = class App {
             format:[FormatValue]
         }
         
+        type MenuItem{
+            routerLink:String
+            label:String
+        }
+        
+        type Card{
+            routerLink:String
+            label:String
+        }
+        
+        type Constraints{
+            min:Int
+            maxDecimals:Int
+            minDecimals:Int
+            decimals:Int
+            required:Boolean
+            cents:Boolean
+            trim:Boolean
+            unique:Boolean
+            uniqueInList:Boolean
+            uniqueToList:Boolean
+        }
+        
+        type Control{
+            label:String
+            type:String
+            constraints:Constraints
+        }
+        
         type Configuration{
-            actions: ActionOrCollectionOfActions
+            action: ActionOrCollectionOfActions
             columns: [Column]
             validation: String
             actionMenu: [ActionMenuItem]
@@ -172,12 +201,9 @@ module.exports = class App {
             question: String 
             buttons:[Button]
             formats: [Format]
-            
+            menuItems:[MenuItem]
             cards: [Card]
-            title: String
-            label: String
-
-     
+            controls:[Control]
         }
         
         type Component{
@@ -188,11 +214,12 @@ module.exports = class App {
             configuration: Configuration
         }
         
-        type startupData{
+        type StartupData{
            routes: [Route]
            components: [Component]
            currentComponent: String
         }\n`
+        // todo add resolvers for all the unions + remove all incorrect union types
         this.concepts.forEach(concept => {
             this.#GQLstr += '\ntype ' + GeneralFunctions.capitalizeFirst(concept.name.ref.singular) + '{'
             this.#GQLstr += '\n   ' + 'id' + ': ' + 'ID!'
@@ -214,13 +241,16 @@ module.exports = class App {
         }).forEach(action => {
             this.#GQLstr += '\n' + GQLFunctions.createAndGetGQLFor(action, this.concepts, this)
         })
-        this.#GQLstr += '\n}\ntype Query{'
+        this.#GQLstr += '\n}\ntype Query{'+
+            'getStartupData: StartupData\n'
         this.actions.filter(action => {
             return GQLFunctions.getQueryTypeOf(action) === 'Query'
         }).forEach(action => {
             this.#GQLstr += '\n' + GQLFunctions.createAndGetGQLFor(action, this.concepts, this)
         })
         this.#GQLstr += '\n}\n'
+        // todo add getStartupData query
+
         console.log(this.GQLstr)
         return this.GQLstr
     }
@@ -544,6 +574,7 @@ module.exports = class App {
                                     component.configuration.controls.push(control)
                                 }
                             })
+                            console.log(component.configuration.controls)
                         }
                         delete component.configuration.concept
                     }
