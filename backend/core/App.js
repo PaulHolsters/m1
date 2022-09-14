@@ -110,12 +110,10 @@ module.exports = class App {
             path: String
             component: String
         }
-        
-        union ActionOrCollectionOfActions = String | Actions
-        
-        type Actions{
-            actions:[Action]
-        }
+
+        union ActionComponent = Prompt
+        union Value = ValueB | ValueS | ValueI | ValueF
+
         
         type Action{
             name:String
@@ -132,9 +130,7 @@ module.exports = class App {
             type:String
             configuration:Configuration
         }
-        
-        union ActionComponent = Prompt
-        
+              
         type ActionMenuItem{
             label:String
             routerLink: String
@@ -146,18 +142,27 @@ module.exports = class App {
             text:String
         }
         
-        union Value = String | Int | Boolean | Values
-        
-        type Values{
-            name:String
-            values: [Value]
-        }
-        
         type FormatValue{
             name:String
             value:Value
         }
         
+        type ValueF{
+            value:[FormatValue]
+        }
+        
+        type ValueS{
+            value:String
+        }
+        
+        type ValueI{
+            value:Int
+        }
+        
+        type ValueB{
+            value:Boolean
+        }
+       
         type Format{
             ref:String,
             format:[FormatValue]
@@ -193,7 +198,7 @@ module.exports = class App {
         }
         
         type Configuration{
-            action: ActionOrCollectionOfActions
+            action: [Action]
             columns: [Column]
             validation: String
             actionMenu: [ActionMenuItem]
@@ -273,7 +278,31 @@ module.exports = class App {
             },
         });
         this.#resolvers = {
-            Date: dateScalar
+            Date: dateScalar,
+            ActionComponent: {
+                __resolveType(obj, context, info){
+                    // Only Author has a name field
+                    if(obj.ref){
+                        return 'Prompt';
+                    }
+                    return null; // GraphQLError is thrown
+                },
+            },
+            Value: {
+                __resolveType(obj, context, info){
+                    // Only Author has a name field
+                    if(typeof obj === 'string'){
+                        return 'String';
+                    } else if(typeof obj.value === 'string'){
+                        return 'ValueS'
+                    }else if(typeof obj.value === 'number'){
+                        return 'ValueI'
+                    }else if(typeof obj.value === 'boolean'){
+                        return 'ValueB'
+                    } else if(typeof obj.value === 'object') return 'ValueF'
+                    return null; // GraphQLError is thrown
+                },
+            },
         }
         this.actions.forEach(action => {
             // voor elke actie moet er natuurlijk een resolver zijn
@@ -388,7 +417,7 @@ module.exports = class App {
                                                 let properties = '{Result{' +
                                                     'statusCode msg' +
                                                     '}}'
-                                                comp2.configuration.action = 'Mutation{\n\t' + request + '{\n' + properties + '\t}\n}'
+                                                comp2.configuration.action = [{name:'delete',value:'Mutation{\n\t' + request + '{\n' + properties + '\t}\n}'}]
                                                 delete comp2.configuration.concept
                                                 break
                                             default:
@@ -429,7 +458,7 @@ module.exports = class App {
                                     else if (MoulditFunctions.isMoulditType(at)) properties += '\t\t' + MoulditFunctions.getRef(at) + '\n'
                                     else throw new Error('no ref property found')
                                 })
-                                component.configuration.action = 'Query{\n\t' + request + '{\n' + properties + '\t}\n}'
+                                component.configuration.action = [{name:'get',value:'Query{\n\t' + request + '{\n' + properties + '\t}\n}'}]
                             } else {
                                 throw new Error('action not configured')
                             }
@@ -485,7 +514,7 @@ module.exports = class App {
                                 )
                                 switch (component.subtype){
                                     case 'create':
-                                        component.configuration.action = 'Mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'
+                                        component.configuration.action = [{name:'create',value:'Mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'}]
                                         break
                                     case 'edit':
                                         component.configuration.action = []
@@ -493,7 +522,7 @@ module.exports = class App {
                                         component.configuration.action.push({name:'getDetailsOf',value: 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
                                         break
                                     case 'getDetailsOf':
-                                        component.configuration.action = 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'
+                                        component.configuration.action = [{name:'getDetailsOf',value:'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'}]
                                         break
                                     case 'delete':
                                         params = '(id:ID)'
