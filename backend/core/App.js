@@ -112,7 +112,6 @@ module.exports = class App {
         }
 
         union ActionComponent = Prompt
-        union Value = ValueB | ValueS | ValueI | ValueF
 
         
         type Action{
@@ -142,30 +141,31 @@ module.exports = class App {
             text:String
         }
         
-        type FormatValue{
-            name:String
-            value:Value
-        }
-        
-        type ValueF{
-            value:[FormatValue]
-        }
+        union Value = ValueB | ValueS | ValueI | ValueF
         
         type ValueS{
+            name:String
             value:String
         }
         
         type ValueI{
+            name:String
             value:Int
         }
         
         type ValueB{
+            name:String
             value:Boolean
+        }
+        
+        type ValueF{
+            name:String
+            value:[Value]
         }
        
         type Format{
             ref:String,
-            format:[FormatValue]
+            format:[Value]
         }
         
         type MenuItem{
