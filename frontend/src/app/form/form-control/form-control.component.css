@@ -1,0 +1,7 @@
+input{
+  width: 40rem;
+}
+
+.formControl:first-of-type{
+  margin-bottom: 20px;
+}

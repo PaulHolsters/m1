@@ -1,0 +1,51 @@
+<div class="ml-3" *ngIf="component && component.configuration && component.configuration.title">
+  <h3>{{component.configuration.title}}</h3>
+</div>
+<div *ngFor="let control of controls">
+  <app-form-control (onPreSave)="updateControl($event)" [savePressed]="savePressed" [control]="control">
+    <app-form-label [control]="control"></app-form-label>
+  </app-form-control>
+</div>
+<div class="grid col-12 absolute bottom-0">
+  <p-divider class="col-12 pl-3 pr-1 static"></p-divider>
+  <div class="grid col-12 justify-content-end pt-0 pr-0 static">
+    <div>
+      <span class="p-buttonset">
+          <button (click)="reset()"
+                  pButton
+                  type="button"
+                  label="Leegmaken"
+                  class="p-button-warning"
+                  icon="pi pi-trash">
+          </button>
+          <button (click)="cancel()"
+                  pButton
+                  type="button"
+                  label="Annuleren"
+                  class="p-button-outlined"
+                  icon="pi pi-times">
+          </button>
+          <button *ngIf="isDisabled()"
+                  [style]="{'cursor':'not-allowed'}"
+                  [disabled]="true"
+                  iconPos="left"
+                  icon="pi pi-check"
+                  label="Bewaar"
+                  pButton
+                  type="button"
+                  class="p-button-success">
+          </button>
+          <button *ngIf="!isDisabled()"
+                  (click)="preSave()"
+                  iconPos="left"
+                  icon="pi pi-check"
+                  label="Bewaar"
+                  pButton
+                  type="button"
+                  class="p-button-success">
+          </button>
+      </span>
+    </div>
+  </div>
+</div>
+

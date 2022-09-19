@@ -1,0 +1,10 @@
+<div style="height: 100%" >
+  <div class="grid d-flex flex-column h-full justify-content-center">
+    <div class="col-8 col-offset-2 grid">
+      <div class="col" *ngFor="let item of items">
+        <p-card [style]="{'width':'15rem','margin':'0.4rem auto','text-align':'center',
+'background-color':'#fef4f7','color':'#757575'}" routerLink="{{item.routerLink}}">{{item.label | uppercase}}</p-card>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="col-12 grid m-auto p-0" style="height:100%;width:100%; overflow:hidden;">
+  <div class="col-12 m-auto p-0 mt-0" id="header" style="height: 7%; background: black; overflow:hidden">
+    <div style="height:100%; background: black">
+      <!-- todo logo
+      <div style="position: relative; top:5px;left:5px; height:86%; overflow:hidden;background: black">
+        <img src="assets/logo_hottub_centrale.PNG" alt="logo Vistaline"  (click)="homepage()">
+      </div>
+      -->
+    </div>
+  </div>
+  <!-- todo breadcrumb
+  <div id="breadcrumb" class="col-12 grid m-auto p-0 mt-0" style=" height: 6%;">
+    <p-breadcrumb [home]="home" [style]="{'border':'none'}" [model]="breadcrumbs" (onItemClick)="changeBreadcrumb($event)"></p-breadcrumb>
+  </div>
+  -->
+  <div id="content" class="col-12 grid m-auto p-0 mt-0" style=" height: 86%; overflow-x: hidden">
+    <div class="col-12 grid p-0 m-0" style="height: 100%">
+      <app-menu></app-menu>
+      <div id="main" class="col p-0 relative" style="border:1px solid #dee2e6; border-left:none; height:100%; overflow: hidden">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+  <div id="footer" class="col-12 m-auto p-0 mt-0" style="height: 7%; overflow:hidden">
+    <div style="border:1px solid #dee2e6;height: 100%">
+
+    </div>
+  </div>
+</div>
