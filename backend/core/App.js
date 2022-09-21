@@ -192,6 +192,7 @@ module.exports = class App {
         }
         
         type Control{
+            ref:String
             label:String
             type:String
             constraints:Constraints
@@ -224,7 +225,6 @@ module.exports = class App {
            components: [Component]
            currentComponent: String
         }\n`
-        // todo add resolvers for all the unions + remove all incorrect union types
         this.concepts.forEach(concept => {
             this.#GQLstr += '\ntype ' + GeneralFunctions.capitalizeFirst(concept.name.ref.singular) + '{'
             this.#GQLstr += '\n   ' + 'id' + ': ' + 'ID!'
@@ -254,9 +254,6 @@ module.exports = class App {
             this.#GQLstr += '\n' + GQLFunctions.createAndGetGQLFor(action, this.concepts, this)
         })
         this.#GQLstr += '\n}\n'
-        // todo add getStartupData query
-
-        console.log(this.GQLstr)
         return this.GQLstr
     }
 
@@ -581,6 +578,7 @@ module.exports = class App {
                                         }
                                     }
                                     const control = {
+                                        ref:MoulditFunctions.getRef(at),
                                         label: this.#getLabel(component.configuration.concept, MoulditFunctions.getRef(at)),
                                         type: MoulditFunctions.getTypeOf(at),
                                         constraints: constraints
@@ -596,6 +594,7 @@ module.exports = class App {
                                         }
                                     }
                                     const control = {
+                                        ref: MoulditFunctions.getRef(at),
                                         label: this.#getLabel(component.configuration.concept, MoulditFunctions.getRef(at)),
                                         type: at.type.name,
                                         constraints: optionalSelected
@@ -603,7 +602,6 @@ module.exports = class App {
                                     component.configuration.controls.push(control)
                                 }
                             })
-                            console.log(component.configuration.controls)
                         }
                         delete component.configuration.concept
                     }
@@ -617,6 +615,7 @@ module.exports = class App {
                     break
             }
         })
+        console.log(components)
         return components
     }
 

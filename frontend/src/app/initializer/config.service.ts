@@ -29,6 +29,7 @@ export class ConfigService {
 
   fetchConfig(){
     this.getStartupData().subscribe((result: any) => {
+      console.log(result,'result incoming')
       this.routes = Array.from(result.data.getStartupData.routes)
       const components: any = Array.from(result.data.getStartupData.components)
       const routes: any = Array.from(result.data.getStartupData.routes)
@@ -80,108 +81,88 @@ export class ConfigService {
       .watchQuery({
         query: gql`
 {
-            getStartupData {
-              routes{
-                 path
-                 component
+  getStartupData{
+    components{
+      type
+      subtype
+      ref
+      configuration{
+        menuItems{
+          routerLink
+          label
+        }
+        action{
+          name
+          value
+        }
+        buttons{
+          name
+        }
+      validation
+      columns{
+        ref
+        label
+      }
+      actionMenu{
+        label
+        routerLink
+        component{
+          __typename
+        }
+      }
+      formats{
+        ref
+        format{
+          ... on ValueB{
+            name
+            valueB:value
+          }
+          ... on ValueS{
+            name
+            valueS:value
+          }
+          ... on ValueI{
+            name
+            valueI:value
+          }
+          ... on ValueF{
+            name
+            valueF:value{
+              ... on ValueB{
+                name
+                valueB:value
               }
-              components{
-                 type
-                 ref
-                 configuration{
-                    columns
-                    validation
-                    cards{
-                        label
-                        ref
-                        routerLink
-                    }
-                    actionMenu{
-                        label
-                        ref
-                        routerLink
-                        target
-                    }
-                    title
-                    label
-                    header
-                    question
-                 }
-                 routerLink
-                 columns{
-                    name
-                    value
-                 }
-                concept{
-                  concept{
-                    ref{
-                      singular
-                      plural
-                    }
-                    label{
-                      singular
-                      plural
-                    }
-                  }
-                  props{
-                    label
-                    type
-                    constraints{
-                        required
-                        currency
-                        cents{
-                            allowed
-                            show
-                        }
-                        capitalized
-                        uniqueList
-                        uniqueInList
-                        uniqueToList
-                        min
-                        unique
-                        trim
-                    }
-                    concept{
-                      concept{
-                        ref{
-                          singular
-                          plural
-                        }
-                        label{
-                          singular
-                          plural
-                        }
-                      }
-                      props{
-                        label
-                        type
-                        constraints{
-                          required
-                          currency
-                          cents{
-                              allowed
-                              show
-                          }
-                          capitalized
-                          uniqueList
-                          uniqueInList
-                          uniqueToList
-                          min
-                          unique
-                          trim
-                        }
-                      }
-                    }
-                  }
-                }
-                 action
+              ... on ValueS{
+                name
+                valueS:value
               }
-              currentComponent
-              menu{
-                 label
-                 routerLink
+              ... on ValueI{
+                name
+                valueI:value
               }
             }
+          }
+        }
+      }
+      cards{
+        routerLink
+        label
+      }
+      controls{
+        ref
+        label
+        type
+        constraints{
+          min
+          maxDecimals
+          decimals
+          required
+          trim
+        }
+      }
+    }
+  }
+}
 }
         `,
       })
