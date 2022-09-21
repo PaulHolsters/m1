@@ -29,7 +29,7 @@ export class ConfigService {
 
   fetchConfig(){
     this.getStartupData().subscribe((result: any) => {
-      console.log(result,'result incoming')
+      console.log(result)
       this.routes = Array.from(result.data.getStartupData.routes)
       const components: any = Array.from(result.data.getStartupData.components)
       const routes: any = Array.from(result.data.getStartupData.routes)
@@ -82,6 +82,10 @@ export class ConfigService {
         query: gql`
 {
   getStartupData{
+    routes{
+      path
+      component
+    }
     components{
       type
       subtype

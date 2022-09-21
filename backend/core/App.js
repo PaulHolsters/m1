@@ -356,7 +356,7 @@ module.exports = class App {
        const routes = []
        this.components.forEach(component=>{
          if(component.hasOwnProperty('route')){
-             routes.push({path:component.route,component:component.type})
+             routes.push({path:component.route,component:component.ref})
          }
        })
        return routes
