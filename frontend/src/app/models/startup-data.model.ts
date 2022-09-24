@@ -7,8 +7,7 @@ export class StartupDataModel {
   constructor(
     public components: ComponentModel[],
     public currentComponent: string,
-    public menu: MenuModel[],
-    public routesIn?: RouteModel[],
+    public menu:MenuModel[],
     public routes?: Route[],
   ) {
 

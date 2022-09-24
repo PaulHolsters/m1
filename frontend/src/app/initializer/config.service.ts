@@ -4,7 +4,7 @@ import {CardsComponent} from "../cards/cards.component";
 import {OverviewComponent} from "../overview/overview.component";
 import {FormComponent} from "../form/form.component";
 import {HomeComponent} from "../home/home.component";
-import {Route, Routes} from "@angular/router";
+import {Route} from "@angular/router";
 import {BehaviorSubject} from "rxjs";
 import {filter} from "rxjs/operators";
 import {StartupDataModel} from "../models/startup-data.model";
@@ -28,16 +28,45 @@ export class ConfigService {
   }
 
   fetchConfig(){
-    this.getStartupData().subscribe((result: any) => {
-      console.log(result)
-      this.routes = Array.from(result.data.getStartupData.routes)
-      const components: any = Array.from(result.data.getStartupData.components)
-      const routes: any = Array.from(result.data.getStartupData.routes)
-      const menuItems: any = Array.from(result.data.getStartupData.menu)
-      const currentComponent: any = result.data.getStartupData.currentComponent
-      const startupData: StartupDataModel = {components: components, routesIn: routes, menu:menuItems, currentComponent:currentComponent}
+    this.getStartupData().subscribe((result:any) => {
+      let routesIn:RouteModel[] = []
+      let routesOut:Route[] = []
+      if(result?.data?.getStartupData?.routes){
+        routesIn = Array.from(result?.data?.getStartupData?.routes)
+        this.routes = Array.from(result?.data?.getStartupData?.routes)
+        // todo plaats alle routes in de juiste volgorde
+        routesIn.forEach(el=>{
+          if(el.componentName)
+          el.component = getComponent(el.componentName)
+          delete el.__typename
+          delete el.componentName
+        })
+        routesIn.push({path: '', pathMatch: 'full',  component: HomeComponent})
+        routesIn.push({path: '**', redirectTo:''})
+        this.routes = [...routesIn]
+        routesIn.forEach(r=>{
+          const route = {path:''}
+          if(r.path) Object.assign(route,{path:r.path})
+          if(r.component) Object.assign(route,{component:r.component})
+          if(r.redirectTo) Object.assign(route,{redirectTo:r.redirectTo})
+          if(r.pathMatch) Object.assign(route,{pathMatch:r.pathMatch})
+          routesOut.push(route)
+        })
+      }
+      let components: any[] = []
+      let menuItems: any[] = []
+      if(result?.data?.getStartupData?.components){
+        components = Array.from(result.data.getStartupData.components)
+        menuItems = [...components.find(comp=>{
+          return comp.ref === 'menu'
+        }).configuration.menuItems]
+      }
+      let currentComponent
+      if(result?.data?.getStartupData?.currentComponent){
+        currentComponent = result.data.getStartupData.currentComponent
+      }
       const getComponent = function (componentName: string) {
-        const component = startupData.components.find((comp) => {
+        const component = components.find((comp) => {
           return comp.ref === componentName
         })?.type
         switch (component) {
@@ -51,24 +80,8 @@ export class ConfigService {
             return HomeComponent
         }
       }
-      const appRoutes: Route[] = []
-      startupData.routesIn?.forEach(route => {
-        appRoutes.push({path: route.path, component: getComponent(route.component)})
-      })
-      const newRoutes: Route[] = []
-      appRoutes.forEach(r => {
-        const route = newRoutes.find(r2 => {
-          return r2.path === r?.path?.substr(1)
-        })
-        if (!route) {
-          r.path = r?.path?.substr(1)
-          newRoutes.push(r)
-        }
-      })
-      newRoutes.push({path: '',pathMatch: 'full',  component: HomeComponent})
-      newRoutes.push({path: '**', redirectTo:''})
-      this.startupData.next({routes:newRoutes, menu:startupData.menu,
-        components:startupData.components, currentComponent:startupData.currentComponent})
+      this.startupData.next({routes:routesOut, menu:menuItems,
+        components:components, currentComponent:currentComponent})
     },(err)=>{
       console.log(err)
     })
