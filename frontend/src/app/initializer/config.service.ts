@@ -29,30 +29,6 @@ export class ConfigService {
 
   fetchConfig(){
     this.getStartupData().subscribe((result:any) => {
-      let routesIn:RouteModel[] = []
-      let routesOut:Route[] = []
-      if(result?.data?.getStartupData?.routes){
-        routesIn = Array.from(result?.data?.getStartupData?.routes)
-        this.routes = Array.from(result?.data?.getStartupData?.routes)
-        // todo plaats alle routes in de juiste volgorde
-        routesIn.forEach(el=>{
-          if(el.componentName)
-          el.component = getComponent(el.componentName)
-          delete el.__typename
-          delete el.componentName
-        })
-        routesIn.push({path: '', pathMatch: 'full',  component: HomeComponent})
-        routesIn.push({path: '**', redirectTo:''})
-        this.routes = [...routesIn]
-        routesIn.forEach(r=>{
-          const route = {path:''}
-          if(r.path) Object.assign(route,{path:r.path})
-          if(r.component) Object.assign(route,{component:r.component})
-          if(r.redirectTo) Object.assign(route,{redirectTo:r.redirectTo})
-          if(r.pathMatch) Object.assign(route,{pathMatch:r.pathMatch})
-          routesOut.push(route)
-        })
-      }
       let components: any[] = []
       let menuItems: any[] = []
       if(result?.data?.getStartupData?.components){
@@ -80,6 +56,28 @@ export class ConfigService {
             return HomeComponent
         }
       }
+      let routesIn:RouteModel[] = []
+      let routesOut:Route[] = []
+      if(result?.data?.getStartupData?.routes){
+        routesIn = Array.from(result?.data?.getStartupData?.routes)
+        this.routes = Array.from(result?.data?.getStartupData?.routes)
+        // todo plaats alle routes in de juiste volgorde
+        routesIn.forEach(el=>{
+          if(el.componentName)
+          el.component = getComponent(el.componentName)
+        })
+        routesIn.push({path: '', pathMatch: 'full',  component: HomeComponent})
+        routesIn.push({path: '**', redirectTo:''})
+        this.routes = [...routesIn]
+        routesIn.forEach(r=>{
+          const route = {path:''}
+          Object.assign(route,{path:r.path})
+          if(r.component) Object.assign(route,{component:r.component})
+          if(r.redirectTo !== undefined) Object.assign(route,{redirectTo:r.redirectTo})
+          if(r.pathMatch) Object.assign(route,{pathMatch:r.pathMatch})
+          routesOut.push(route)
+        })
+      }
       this.startupData.next({routes:routesOut, menu:menuItems,
         components:components, currentComponent:currentComponent})
     },(err)=>{
@@ -97,7 +95,7 @@ export class ConfigService {
   getStartupData{
     routes{
       path
-      component
+      componentName
     }
     components{
       type

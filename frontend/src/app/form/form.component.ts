@@ -33,7 +33,7 @@ export class FormComponent implements OnInit,AfterViewChecked {
         })
         const compRef = this.config.getRoutes().find(route => {
           return route.path.substr(1) === this.currentPath
-        })?.component
+        })?.componentName
 
         this.component = startupData.components.find(comp => {
           return comp.ref === compRef

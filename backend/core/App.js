@@ -108,7 +108,7 @@ module.exports = class App {
         // todo finish configuration
         this.#GQLstr +=`type Route{
             path: String
-            component: String
+            componentName: String
         }
 
         union ActionComponent = Prompt
@@ -356,7 +356,7 @@ module.exports = class App {
        const routes = []
        this.components.forEach(component=>{
          if(component.hasOwnProperty('route')){
-             routes.push({path:component.route,component:component.ref})
+             routes.push({path:component.route,componentName:component.ref})
          }
        })
        return routes

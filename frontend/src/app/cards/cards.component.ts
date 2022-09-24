@@ -22,13 +22,12 @@ export class CardsComponent implements OnInit {
           this.currentPath = segments[0].toString()
         })
         const compRef = this.config.getRoutes().find(route => {
-          return route.path.substr(1) === this.currentPath
-        })?.component
+          return route.path === this.currentPath
+        })?.componentName
         const cards = startupData.components.find(comp => {
           return comp.ref === compRef
         })
         if (cards && cards.configuration && cards.configuration.cards) {
-          console.log(cards.configuration.cards)
           this.items = cards.configuration.cards.map(card => {
             return {label: card.label, routerLink: card.routerLink}
           })
