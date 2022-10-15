@@ -110,9 +110,6 @@ module.exports = class App {
             path: String
             componentName: String
         }
-
-        union ActionComponent = Prompt
-
         
         type Action{
             name:String
@@ -123,17 +120,11 @@ module.exports = class App {
             ref:String
             label:String
         }
-        
-        type Prompt{
-            ref:String
-            type:String
-            configuration:Configuration
-        }
               
         type ActionMenuItem{
             label:String
             routerLink: String
-            component: ActionComponent
+            dialogRef: String
         }
         
         type Button{
@@ -275,7 +266,7 @@ module.exports = class App {
             },
         });
         this.#resolvers = {
-            Date: dateScalar,
+            Date: dateScalar,/*
             ActionComponent: {
                 __resolveType(obj, context, info){
                     // Only Author has a name field
@@ -284,7 +275,7 @@ module.exports = class App {
                     }
                     return null; // GraphQLError is thrown
                 },
-            },
+            },*/
             Value: {
                 __resolveType(obj, context, info){
                     // Only Author has a name field
@@ -455,7 +446,7 @@ module.exports = class App {
                                     else if (MoulditFunctions.isMoulditType(at)) properties += '\t\t' + MoulditFunctions.getRef(at) + '\n'
                                     else throw new Error('no ref property found')
                                 })
-                                component.configuration.action = [{name:'get',value:'Query{\n\t' + request + '{\n' + properties + '\t}\n}'}]
+                                component.configuration.action = [{name:'get',value:'query{\n\t'  + request + '{\n' +'id\n' +  properties + '\t}\n}'}]
                             } else {
                                 throw new Error('action not configured')
                             }
@@ -511,20 +502,20 @@ module.exports = class App {
                                 )
                                 switch (component.subtype){
                                     case 'create':
-                                        component.configuration.action = [{name:'create',value:'Mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'}]
+                                        component.configuration.action = [{name:'create',value:'mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'}]
                                         break
                                     case 'edit':
                                         component.configuration.action = []
-                                        component.configuration.action.push({name:'edit',value: 'Mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'})
-                                        component.configuration.action.push({name:'getDetailsOf',value: 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
+                                        component.configuration.action.push({name:'edit',value: 'mutation{\n\t' + request + params + '{\n' + properties + '\t}\n}'})
+                                        component.configuration.action.push({name:'getDetailsOf',value: 'query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
                                         break
                                     case 'getDetailsOf':
-                                        component.configuration.action = [{name:'getDetailsOf',value:'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'}]
+                                        component.configuration.action = [{name:'getDetailsOf',value:'query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'}]
                                         break
                                     case 'delete':
                                         params = '(id:ID)'
                                         component.configuration.action = []
-                                        component.configuration.action.push({name:'delete',value: 'Mutation{\n\t' + request + params +
+                                        component.configuration.action.push({name:'delete',value: 'mutation{\n\t' + request + params +
                                                 `{
                                                     Result{
                                                         statusCode
@@ -532,7 +523,7 @@ module.exports = class App {
                                                     }
                                                 }`
                                         })
-                                        component.configuration.action.push({name:'getDetailsOf',value: 'Query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
+                                        component.configuration.action.push({name:'getDetailsOf',value: 'query{\n\t' + actionNameSwitch + '(id:ID)' + '{\n' + properties + '\t}\n}'})
                                         break
                                 }
                             }

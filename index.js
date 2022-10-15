@@ -276,13 +276,13 @@ const app = new App({
         },
         /*        {
                     type:'prompt',
-                    ref:'deleteProductPrompt',
+                    ref:'deleteProductConfirmDialog',
                     configuration:{
                         action:'delete',
                         concept:'product',
                         header: 'Verwijderen product',
                         question:'Bent u zeker dat u dit product definitief wil verwijderen?',
-                        buttons:{yes:'Ja',no:'nee'}
+                        buttons:{yes:'Ja',no:'Nee'}
                     }
                 },*/
     ],

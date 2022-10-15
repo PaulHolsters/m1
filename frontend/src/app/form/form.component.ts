@@ -32,15 +32,15 @@ export class FormComponent implements OnInit,AfterViewChecked {
           this.currentPath = segments[0] + '/' + segments[1]
         })
         const compRef = this.config.getRoutes().find(route => {
-          return route.path.substr(1) === this.currentPath
+          return route.path === this.currentPath
         })?.componentName
-
         this.component = startupData.components.find(comp => {
           return comp.ref === compRef
         })
-
-        this.component?.concept.props.forEach(prop => {
-          this.controls.push({label: prop.label, type: prop.type, constraints:prop.constraints, id: UUID.UUID(),
+        //console.log(this.component)
+        // todo add the format constraints as well?
+        this.component?.configuration?.controls?.forEach(control => {
+          this.controls.push({label: control.label, type: control.type, constraints:control.constraints, id: UUID.UUID(),
             value: undefined,valid:{value:undefined,constraints:{}}})
         })
       }
@@ -58,7 +58,15 @@ export class FormComponent implements OnInit,AfterViewChecked {
   }
 
   preSave() {
-    if (this.component && this.component.action) {
+    if (this.component && this.component.configuration.action) {
+      let action
+      for (let i=0;i<this.component.configuration.action.length;i++){
+        if(Object.keys(this.component.configuration.action[i])[0]!=='retrieve'){
+          action = Object.values(this.component.configuration.action[i])[0]
+          break
+        }
+      }
+      if(action)
       this.savePressed = true
     } else {
       console.log('No action implemented')
@@ -70,17 +78,26 @@ export class FormComponent implements OnInit,AfterViewChecked {
     this.checkValidity()
     if(!this.invalidForm){
       try {
-        if (this.component && this.component.action) {
+        if (this.component && this.component.configuration.action) {
           let actionString
-          if (this.component.action.search(/[{]\s*[a-z][^(]+[(]/) === 0) {
+          // de save button wordt gebruikt voor edit, delete en add
+          let action
+          for (let i=0;i<this.component.configuration.action.length;i++){
+            if(Object.keys(this.component.configuration.action[i])[0]!=='retrieve'){
+              action = Object.values(this.component.configuration.action[i])[0]
+              break
+            }
+          }
+          if (action && action.search(/[{]\s*[a-z][^(]+[(]/) === 0) {
             // actie bevat parameters
-            let actionCopy = this.component.action
-            let stopAt = this.component.action.indexOf(')')
+            let actionCopy = action
+            let stopAt = action.indexOf(')')
             let pattern = /[:]([^:,)]+)[),]/g
             let match
             let index = 0
             let term = 0
-            while ((match = pattern.exec(this.component.action)) !== null && match.index < stopAt) {
+            // hier worden de datatypes vervangen door de uiteindelijke waarden vanuit het formulier
+            while ((match = pattern.exec(action)) !== null && match.index < stopAt) {
               const part1 = actionCopy.substr(0, (match.index) + 1 - term)
               const part2 = actionCopy.substr((match.index) + 1 + match[1].length - term)
               switch (match[1].toString().trim()) {
@@ -123,7 +140,6 @@ export class FormComponent implements OnInit,AfterViewChecked {
             actionString = actionCopy
           } else {
             // actie bevat enkel een return type
-
           }
           this.apollo
             .mutate({
@@ -146,6 +162,15 @@ export class FormComponent implements OnInit,AfterViewChecked {
     }
   }
 
+  // todo fix this method
+  /*
+  *           min
+          maxDecimals
+          decimals
+          required
+          trim
+  *
+  * */
   isValid(constraint:string,control:any):{value:boolean,constraints:ConstraintsModel}{
     if(control.constraints.hasOwnProperty(constraint) && control.constraints[constraint]!==null){
       switch (constraint) {
@@ -153,7 +178,21 @@ export class FormComponent implements OnInit,AfterViewChecked {
           if(control.constraints.required === true)
           return {value: (control.value !== undefined && control.value !== null && control.value !== '') , constraints:{required:true}}
           break
-        case 'currency':
+        case 'min':
+          if(control.value)
+            return {value: (
+                typeof control.value === 'number' && control.value >= control.constraints.min
+              ) , constraints:{min:control.constraints.min}}
+          break
+        case 'maxDecimals':
+          break
+        case 'decimals':
+          break
+        case 'trim':
+          break
+        // todo replace these by going through the format property => is er wezenlijk een verschil hier tussen een format en een constraint?
+          // je zou de formats kunnne toevoegen aan het constraintmodel tijdens de initializatie?
+/*        case 'currency':
           if(control.value){
             return {value: (
                 control.constraints.currency
@@ -180,13 +219,8 @@ export class FormComponent implements OnInit,AfterViewChecked {
                 this.functions.capitalizeFirst(control.value) === control.value
               ) , constraints:{capitalized:control.constraints.capitalized}}
           }
-          break
-        case 'min':
-          if(control.value)
-            return {value: (
-                typeof control.value === 'number' && control.value >= control.constraints.min
-              ) , constraints:{min:control.constraints.min}}
-          break
+          break*/
+
       }
     }
     const constraintObj = Object.create({})

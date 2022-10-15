@@ -3,9 +3,9 @@
     <ng-template pTemplate="header">
       <tr>
         <ng-container *ngFor="let column of columns">
-          <th>{{column.value}}</th>
+          <th>{{column.label}}</th>
         </ng-container>
-        <ng-container  *ngIf="prompts.length>0">
+        <ng-container  *ngIf="confirmDialogs.length>0">
           <th>Actions</th>
         </ng-container>
       </tr>
@@ -13,18 +13,18 @@
     <ng-template pTemplate="body" let-resource>
       <tr>
         <ng-container *ngFor="let column of columns">
-          <ng-container [ngSwitch]="getResource('type',resource.id,column.name)">
+          <ng-container [ngSwitch]="getResource('type',resource.id,column.ref)">
             <ng-container *ngSwitchCase="'money'">
               <!--  money column -->
-              <td>{{getResource('value', resource.id, column.name) | currency:'EUR'}}</td>
+              <td>{{getResource('value', resource.id, column.ref) | currency:'EUR'}}</td>
             </ng-container>
             <ng-container *ngSwitchDefault>
               <!-- primitief datatype column -->
-              <td>{{getResource('value', resource.id, column.name)}}</td>
+              <td>{{getResource('value', resource.id, column.ref)}}</td>
             </ng-container>
           </ng-container>
         </ng-container>
-        <ng-container  *ngIf="prompts.length>0">
+        <ng-container  *ngIf="confirmDialogs.length>0">
           <td (mouseleave)="hideMenu()" >
             <i *ngIf="isIcon(resource.id)" style="cursor:pointer" class="pi pi-ellipsis-h" (click)="showMenu(resource.id)"></i>
             <p-menu [style]="{'position':'absolute','z-index': '50','right':'4rem' }"
@@ -48,13 +48,8 @@
     </p-paginator>
   </div>
 </div>
-<ng-container *ngFor="let prompt of prompts">
-  <p-confirmDialog
-    header="{{prompt.header}}"
-    icon="pi pi-exclamation-triangle"
-    acceptLabel="Yes"
-    rejectLabel="No">
-  </p-confirmDialog>
+<ng-container *ngFor="let confirm of confirmDialogs">
+  <app-confirm [confirmObject]="confirm"></app-confirm>
 </ng-container>
 
 

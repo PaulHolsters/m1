@@ -1,17 +1,24 @@
 import {ConfigurationModel} from "./configuration.model";
-import {ConceptModel} from "./concept.model";
 
 export class ComponentModel {
   constructor(
     public configuration: ConfigurationModel,
     public ref: string,
     public type: string,
-    public routerLink: string | null,
-    public columns: {name:string,value:string}[],
-    public concept: ConceptModel,
-    public action?:string,
+    public route: string | null,
+    public routerLink?: string,
+    public subtype?: string,
     public __typename?: string
   ) {
 
   }
 }
+/*
+*         type Component{
+            type: String
+            subtype:String
+            route:String
+            ref: String
+            configuration: Configuration
+        }
+* */

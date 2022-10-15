@@ -6,6 +6,8 @@ import {map} from "rxjs/operators";
 import {Subscription} from "rxjs";
 import {ComponentModel} from "../models/component.model";
 import {ConfirmationService} from "primeng/api";
+import {PromptModel} from "../models/prompt.model";
+import {ConfirmModel} from "../models/confirm.model";
 
 @Component({
   selector: 'app-overview',
@@ -18,7 +20,19 @@ export class OverviewComponent implements OnInit, OnDestroy {
   numberOfRows: number | undefined
   resourcesAll: any
   header: string | undefined
-  prompts: { header: string, question: string, action: string }[] = []
+  // todo fix this
+  /*        {
+            type:'prompt',
+            ref:'deleteProductPrompt',
+            configuration:{
+                action:'delete',
+                concept:'product',
+                header: 'Verwijderen product',
+                question:'Bent u zeker dat u dit product definitief wil verwijderen?',
+                buttons:{yes:'Ja',no:'nee'}
+            }
+        },*/
+  confirmDialogs: ConfirmModel[] = []
   activatedActionsMenu: string | undefined
   resources: {
     resource:
@@ -32,7 +46,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }[]
   resourcesMenuHandler: { id: string, items: any }[]
   currentPath: string | undefined
-  columns: { name: string, value: string }[]
+  columns: { ref: string, label: string }[]
   component: ComponentModel | undefined
 
   constructor(private config: ConfigService,
@@ -46,104 +60,98 @@ export class OverviewComponent implements OnInit, OnDestroy {
     this.resourcesMenuHandler = []
   }
 
-  /*
-  *     this.confirmationService.confirm({
-      message: 'Het verwijderen is definitief. Doorgaan?',
-      accept: ()=>{
-        this.header = undefined
-        this.dataService.deleteQuotationSpecification(id).subscribe(res=>{
-          // inform parent to rerender this component
-          this.source.splice(this.source.findIndex(opt=>{
-            return opt._id===id
-          }),1)
-          this.listChanged.emit({source:this.source,target:this.target})
-          this.messageService.add({severity:'success', summary: 'Offerte specificatie verwijderd', life:3000});
-        })
-      },
-      reject: ()=>{
-        this.header = undefined
-      }
-    })
-  *
-  * */
-
   ngOnInit(): void {
     this.startupSubscription = this.config.startupData$.pipe(
     ).subscribe(async startupData => {
       if (startupData && startupData.routes && startupData.components) {
+        // ophalen data component
         this.route.url.subscribe(segments => {
           this.currentPath = segments[0] + '/' + segments[1]
         })
         const compRef = this.config.getRoutes().find(route => {
-          return route.path.substr(1) === this.currentPath
+          return route.path === this.currentPath
         })?.componentName
         this.component = startupData.components.find(comp => {
           return comp.ref === compRef
         })
+        // invullen component met de data
         if (this.component?.configuration.actionMenu !== null) {
-          this.component?.configuration.actionMenu.forEach(item => {
-            if (item.target !== null) {
-              const target = startupData.components.find(comp => {
-                return comp.ref === item.target
+          this.component?.configuration?.actionMenu?.forEach(item => {
+            // todo herwerk dit: check in de backend wat nu de opzet is
+            if (item.dialogRef !== null) {
+              const dialog = startupData.components.find(comp => {
+                return comp.ref === item.dialogRef
               })
-              if (target?.type === 'prompt') {
-                this.prompts.push({
-                  header: target.configuration.header || '',
-                  question: target.configuration.question || '',
-                  action: target.action || ''
+              if (dialog && dialog.subtype === 'confirm' && dialog.configuration.action) {
+                this.confirmDialogs.push({
+                  header: dialog.configuration.header || '',
+                  message: dialog.configuration.message || '',
+                  action: dialog.configuration.action,
+                  acceptText: dialog.configuration?.buttons && dialog.configuration?.buttons?.length > 0 ? dialog.configuration?.buttons[0].text : undefined,
+                  rejectText: dialog.configuration?.buttons && dialog.configuration?.buttons?.length > 1 ? dialog.configuration?.buttons[1].text : undefined
                 })
+              } else{
+                // andere dialoogvensters zoals alert of ...
               }
+            } else{
+              // todo routerLink naar een gewone component zoals een form
             }
           })
         }
-        if (this.component?.columns) {
-          this.columns = this.component?.columns
+        if (this.component?.configuration.columns) {
+          this.columns = this.component?.configuration.columns
         }
       }
     }, err => {
       console.log(err)
     })
-    this.querySubscription = this.apollo
-      .watchQuery<{ data: {}[] }>({
-        query: gql`
-            ${this.component?.action}
+    if(this.component?.configuration.action && this.component?.configuration.action.length>0){
+      console.log('id erbij?',this.component.configuration.action[0].value)
+      this.querySubscription = this.apollo
+        .watchQuery<{ data: {}[] }>({
+          query: gql`
+            ${this.component.configuration.action[0].value}
         `,
-      })
-      .valueChanges.pipe(map((result) => result.data)).subscribe(res => {
-        this.resourcesAll = Object.values(res)[0].map(val => {
-          const valCopy = Object.create(val)
-          const resource: {
-            resource:
-              {
+        })
+        .valueChanges.pipe(map((result) => result.data)).subscribe(res => {
+          //console.log('items van de overview',res)
+          this.resourcesAll = Object.values(res)[0].map(val => {
+            console.log('item',val)
+            const valCopy = Object.create(val)
+            const resource: {
+              resource:{
+                  property: string,
+                  type: string,
+                  value: any,
+                  column: string | undefined
+              }[],
+              id: string
+            } = {id: valCopy.id.toString(), resource: []}
+            Object.getOwnPropertyNames(val).filter(prop => {
+              return prop !== '__typename' && prop !== 'id'
+            }).forEach(prop => {
+              const resourceItem: {
                 property: string,
                 type: string,
                 value: any,
                 column: string | undefined
-              }[],
-            id: string
-          } = {id: valCopy.id.toString(), resource: []}
-          Object.getOwnPropertyNames(val).filter(prop => {
-            return prop !== '__typename' && prop !== 'id'
-          }).forEach(prop => {
-            const resourceItem: {
-              property: string,
-              type: string,
-              value: any,
-              column: string | undefined
-            } = {property: '', type: '', value: undefined, column: ''}
-            resourceItem.property = prop
-            resourceItem.type = this.getType(prop)
-            resourceItem.value = valCopy[prop]
-            resourceItem.column = this.columns.find(col => {
-              return col.name === prop
-            })?.value
-            resource.resource.push(resourceItem)
+              } = {property: '', type: '', value: undefined, column: ''}
+              resourceItem.property = prop
+              resourceItem.type = this.getType(prop)
+              resourceItem.value = valCopy[prop]
+              resourceItem.column = this.columns.find(col => {
+                return col.ref === prop
+              })?.label
+              console.log(resourceItem,'created')
+              resource.resource.push(resourceItem)
+            })
+            return resource
           })
-          return resource
+          this.resources = this.resourcesAll.slice(0, this.numberOfRows)
+          this.rerenderActionMenus()
         })
-        this.resources = this.resourcesAll.slice(0, this.numberOfRows)
-        this.rerenderActionMenus()
-      })
+    }
+
   }
 
   rerenderActionMenus() {
@@ -154,9 +162,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
             label: 'Verwijderen', icon: 'pi pi-fw pi-trash',
             command: () => {
               this.confirmationService.confirm({
-                  message: this.prompts[0].question,
+                  message: this.confirmDialogs[0].message,
                   accept: () => {
-                    const actionStr = this.prompts[0].action.replace('ID','"'+res.id+'"')
+                    const actionStr = this.confirmDialogs[0].action[0].value.replace('ID','"'+res.id+'"')
                     this.apollo
                       .mutate({
                         mutation: gql`mutation${actionStr}`
@@ -174,47 +182,50 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   reloadPage(){
-    this.querySubscription = this.apollo
-      .watchQuery<{ data: {}[] }>({
-        query: gql`
-            ${this.component?.action}
+    if(this.component?.configuration?.action && this.component?.configuration?.action.length>0){
+      this.querySubscription = this.apollo
+        .watchQuery<{ data: {}[] }>({
+          query: gql`
+            ${this.component?.configuration?.action[0].value}
         `,
-      })
-      .valueChanges.pipe(map((result) => result.data)).subscribe(res => {
-        this.resourcesAll = Object.values(res)[0].map(val => {
-          const valCopy = Object.create(val)
-          const resource: {
-            resource:
-              {
+        })
+        .valueChanges.pipe(map((result) => result.data)).subscribe(res => {
+          this.resourcesAll = Object.values(res)[0].map(val => {
+            const valCopy = Object.create(val)
+            const resource: {
+              resource:
+                {
+                  property: string,
+                  type: string,
+                  value: any,
+                  column: string | undefined
+                }[],
+              id: string
+            } = {id: valCopy.id.toString(), resource: []}
+            Object.getOwnPropertyNames(val).filter(prop => {
+              return prop !== '__typename' && prop !== 'id'
+            }).forEach(prop => {
+              const resourceItem: {
                 property: string,
                 type: string,
                 value: any,
                 column: string | undefined
-              }[],
-            id: string
-          } = {id: valCopy.id.toString(), resource: []}
-          Object.getOwnPropertyNames(val).filter(prop => {
-            return prop !== '__typename' && prop !== 'id'
-          }).forEach(prop => {
-            const resourceItem: {
-              property: string,
-              type: string,
-              value: any,
-              column: string | undefined
-            } = {property: '', type: '', value: undefined, column: ''}
-            resourceItem.property = prop
-            resourceItem.type = this.getType(prop)
-            resourceItem.value = valCopy[prop]
-            resourceItem.column = this.columns.find(col => {
-              return col.name === prop
-            })?.value
-            resource.resource.push(resourceItem)
+              } = {property: '', type: '', value: undefined, column: ''}
+              resourceItem.property = prop
+              resourceItem.type = this.getType(prop)
+              resourceItem.value = valCopy[prop]
+              resourceItem.column = this.columns.find(col => {
+                return col.ref === prop
+              })?.label
+              resource.resource.push(resourceItem)
+            })
+            return resource
           })
-          return resource
+          this.resources = this.resourcesAll.slice(0, this.numberOfRows)
+          this.rerenderActionMenus()
         })
-        this.resources = this.resourcesAll.slice(0, this.numberOfRows)
-        this.rerenderActionMenus()
-      })
+    }
+
   }
 
   isMenu(id: string): boolean {

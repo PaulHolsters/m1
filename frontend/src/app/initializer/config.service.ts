@@ -121,9 +121,7 @@ export class ConfigService {
       actionMenu{
         label
         routerLink
-        component{
-          __typename
-        }
+        dialogRef
       }
       formats{
         ref

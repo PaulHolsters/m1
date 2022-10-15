@@ -1,19 +1,29 @@
+import {ControlModel} from "./control.model";
+import {ActionModel} from "./action.model";
+import {FormatModel} from "./format.model";
+import {ButtonModel} from "./button.model";
+import {ActionMenuItemModel} from "./action-menu-item.model";
+
 export class ConfigurationModel {
   constructor(
      public __typename: string,
-     public columns: string[] | null,
-     public validation: string | null,
+     public columns: {ref:string,label:string}[],
+     public controls:ControlModel[],
+     public validation: string,
      public cards:
        {
-         label: string | null,
          ref: string,
-         routerLink: string | null,
-         __typename?: string }[] | null,
-     public actionMenu: {header:string,label: string, ref: string,routerLink: string|null,target: string|null}[] | null,
-     public title: string | null,
-     public label: string| null,
-     public header:string|null,
-     public question:string|null
+         label: string,
+         routerLink: string,
+         __typename: string }[],
+     public actionMenu: ActionMenuItemModel[],
+     public title: string,
+     public label: string,
+     public header:string,
+     public message:string,
+     public buttons:ButtonModel[],
+     public action:ActionModel[],
+     public formats:FormatModel[]
   ) {
 
   }

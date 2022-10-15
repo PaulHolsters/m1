@@ -52,6 +52,9 @@ import {FormControlComponent} from "./form/form-control/form-control.component";
 import { FormLabelComponent } from './form/form-label/form-label.component';
 import {CalendarModule} from "primeng/calendar";
 import {ConfirmationService} from "primeng/api";
+import { AlertComponent } from './dialogs/alert/alert.component';
+import { ConfirmComponent } from './dialogs/confirm/confirm.component';
+import { PromptComponent } from './dialogs/prompt/prompt.component';
 
 const routes: Routes = [
   {path:'', pathMatch: 'full', component:HomeComponent},
@@ -78,7 +81,10 @@ const routes: Routes = [
     OverviewComponent,
     HomeComponent,
     FormControlComponent,
-    FormLabelComponent
+    FormLabelComponent,
+    AlertComponent,
+    ConfirmComponent,
+    PromptComponent
   ],
     imports: [
         BrowserModule,
