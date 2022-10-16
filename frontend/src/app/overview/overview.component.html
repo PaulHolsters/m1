@@ -28,9 +28,9 @@
 
         <ng-container  *ngIf="component && component.configuration && component.configuration.actionMenu!== null">
           <td (mouseleave)="hideMenu()" >
-            <i *ngIf="isIcon(resource.id)" style="cursor:pointer" class="pi pi-ellipsis-h" (click)="showMenu(resource.id)"></i>
-            <p-menu [style]="{'position':'absolute','z-index': '50','right':'14rem' }"
-                    *ngIf="isMenu(resource.id)" [model]="getItems(resource.id)" (mouseleave)="hideMenu()"
+            <i *ngIf="isIcon(resource.id)" style="cursor:pointer" class="pi pi-ellipsis-h" (click)="showMenu(resource.id,$event)"></i>
+            <p-menu [style]="{'position':'absolute','z-index': '50','right':'{{posX}}px', 'top': '{{posY}}px' }"
+                    *ngIf="isMenu(resource.id) && posY && posY" [model]="getItems(resource.id)" (mouseleave)="hideMenu()"
                     #menu>
             </p-menu>
           </td>

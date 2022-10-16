@@ -22,6 +22,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
   header: string | undefined
   actionMenuItems: any[] = []
   activatedActionsMenu: string | undefined
+  posX:number|undefined
+  posY:number|undefined
   resources: {
     resource:
       {
@@ -195,14 +197,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  getCommand(type:string){
-    // todo finish this method
-    if (type === 'dialog'){
+  getCommand(item:any){
+    // todo finish dialog
+    if (item.type === 'dialog'){
       return () => {
         this.confirmationService.confirm({
-            message: this.confirmDialogs[0].message,
+            message: "",
             accept: () => {
-              const actionStr = this.confirmDialogs[0].action[0].value.replace('ID', '"' + res.id + '"')
+              const actionStr =''// this.confirmDialogs[0].action[0].value.replace('ID', '"' + res.id + '"')
               this.apollo
                 .mutate({
                   mutation: gql`mutation${actionStr}`
@@ -215,7 +217,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
         )
       }
     } else{
-      return ()=>{}
+      return ()=>{
+        this.router.navigate([this.actionMenuItems.find(menu=>{
+          return menu.label === item.label
+        }).routerLink])
+      }
     }
   }
 
@@ -227,7 +233,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         items.push(
           {
             label: item.label, icon: actionIcon,
-            command: this.getCommand(item.type)
+            command: this.getCommand(item)
           })
       })
       return {
@@ -292,12 +298,16 @@ export class OverviewComponent implements OnInit, OnDestroy {
     return this.activatedActionsMenu !== id;
   }
 
-  showMenu(id: string) {
+  showMenu(id: string, event:MouseEvent) {
+    this.posX = event.x + 4
+    this.posY = event.y - 6
     this.activatedActionsMenu = id
   }
 
   hideMenu() {
     this.activatedActionsMenu = undefined
+    this.posY = undefined
+    this.posY  = undefined
   }
 
   getItems(id: string) {
