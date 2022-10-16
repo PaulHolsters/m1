@@ -5,13 +5,14 @@
         <ng-container *ngFor="let column of columns">
           <th>{{column.label}}</th>
         </ng-container>
-        <ng-container  *ngIf="confirmDialogs.length>0">
+        <ng-container  *ngIf="component && component.configuration && component.configuration.actionMenu!== null">
           <th>Actions</th>
         </ng-container>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-resource>
       <tr>
+        <!-- todo type introduceren in tabel-->
         <ng-container *ngFor="let column of columns">
           <ng-container [ngSwitch]="getResource('type',resource.id,column.ref)">
             <ng-container *ngSwitchCase="'money'">
@@ -24,10 +25,11 @@
             </ng-container>
           </ng-container>
         </ng-container>
-        <ng-container  *ngIf="confirmDialogs.length>0">
+
+        <ng-container  *ngIf="component && component.configuration && component.configuration.actionMenu!== null">
           <td (mouseleave)="hideMenu()" >
             <i *ngIf="isIcon(resource.id)" style="cursor:pointer" class="pi pi-ellipsis-h" (click)="showMenu(resource.id)"></i>
-            <p-menu [style]="{'position':'absolute','z-index': '50','right':'4rem' }"
+            <p-menu [style]="{'position':'absolute','z-index': '50','right':'14rem' }"
                     *ngIf="isMenu(resource.id)" [model]="getItems(resource.id)" (mouseleave)="hideMenu()"
                     #menu>
             </p-menu>
@@ -48,7 +50,7 @@
     </p-paginator>
   </div>
 </div>
-<ng-container *ngFor="let confirm of confirmDialogs">
+<ng-container *ngFor="let confirm of getConfirmDialogs()">
   <app-confirm [confirmObject]="confirm"></app-confirm>
 </ng-container>
 

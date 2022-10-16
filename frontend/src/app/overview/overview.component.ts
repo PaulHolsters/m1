@@ -20,19 +20,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   numberOfRows: number | undefined
   resourcesAll: any
   header: string | undefined
-  // todo fix this
-  /*        {
-            type:'prompt',
-            ref:'deleteProductPrompt',
-            configuration:{
-                action:'delete',
-                concept:'product',
-                header: 'Verwijderen product',
-                question:'Bent u zeker dat u dit product definitief wil verwijderen?',
-                buttons:{yes:'Ja',no:'nee'}
-            }
-        },*/
-  confirmDialogs: ConfirmModel[] = []
+  actionMenuItems: any[] = []
   activatedActionsMenu: string | undefined
   resources: {
     resource:
@@ -75,26 +63,37 @@ export class OverviewComponent implements OnInit, OnDestroy {
           return comp.ref === compRef
         })
         // invullen component met de data
+        // controleren of het een tabel is mét of zonder actie menu
         if (this.component?.configuration.actionMenu !== null) {
-          this.component?.configuration?.actionMenu?.forEach(item => {
-            // todo herwerk dit: check in de backend wat nu de opzet is
-            if (item.dialogRef !== null) {
+          this.component?.configuration.actionMenu.forEach(action => {
+            if (action.dialogRef !== null) {
               const dialog = startupData.components.find(comp => {
-                return comp.ref === item.dialogRef
+                return comp.ref === action.dialogRef
               })
               if (dialog && dialog.subtype === 'confirm' && dialog.configuration.action) {
-                this.confirmDialogs.push({
+                this.actionMenuItems.push({
+                  label: action.label,
+                  icon: action.icon,
+                  type: 'dialog',
+                  subtype: 'confirm',
                   header: dialog.configuration.header || '',
                   message: dialog.configuration.message || '',
+                  // hier zal tijdens de uitvoering van de actie het placeholder ID door een echt ID vervangen moeten worden
                   action: dialog.configuration.action,
                   acceptText: dialog.configuration?.buttons && dialog.configuration?.buttons?.length > 0 ? dialog.configuration?.buttons[0].text : undefined,
                   rejectText: dialog.configuration?.buttons && dialog.configuration?.buttons?.length > 1 ? dialog.configuration?.buttons[1].text : undefined
                 })
-              } else{
-                // andere dialoogvensters zoals alert of ...
+              } else {
+                // todo andere dialoogvensters zoals alert of ...
+
               }
-            } else{
-              // todo routerLink naar een gewone component zoals een form
+            } else {
+              this.actionMenuItems.push({
+                label: action.label,
+                icon: action.icon,
+                type: 'navigation',
+                routerLink: action.routerLink
+              })
             }
           })
         }
@@ -105,8 +104,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }, err => {
       console.log(err)
     })
-    if(this.component?.configuration.action && this.component?.configuration.action.length>0){
-      console.log('id erbij?',this.component.configuration.action[0].value)
+    if (this.component?.configuration.action && this.component?.configuration.action.length > 0) {
       this.querySubscription = this.apollo
         .watchQuery<{ data: {}[] }>({
           query: gql`
@@ -116,14 +114,13 @@ export class OverviewComponent implements OnInit, OnDestroy {
         .valueChanges.pipe(map((result) => result.data)).subscribe(res => {
           //console.log('items van de overview',res)
           this.resourcesAll = Object.values(res)[0].map(val => {
-            console.log('item',val)
             const valCopy = Object.create(val)
             const resource: {
-              resource:{
-                  property: string,
-                  type: string,
-                  value: any,
-                  column: string | undefined
+              resource: {
+                property: string,
+                type: string,
+                value: any,
+                column: string | undefined
               }[],
               id: string
             } = {id: valCopy.id.toString(), resource: []}
@@ -142,47 +139,106 @@ export class OverviewComponent implements OnInit, OnDestroy {
               resourceItem.column = this.columns.find(col => {
                 return col.ref === prop
               })?.label
-              console.log(resourceItem,'created')
               resource.resource.push(resourceItem)
             })
             return resource
           })
           this.resources = this.resourcesAll.slice(0, this.numberOfRows)
-          this.rerenderActionMenus()
+          if (this.component?.configuration.actionMenu !== null)
+            this.rerenderActionMenus()
         })
     }
 
   }
 
+  /*
+  *         return {
+          id: res.id, items: [
+            {
+              label: 'Verwijderen', icon: 'pi pi-fw pi-trash',
+              command: () => {
+                this.confirmationService.confirm({
+                    message: this.confirmDialogs[0].message,
+                    accept: () => {
+                      const actionStr = this.confirmDialogs[0].action[0].value.replace('ID','"'+res.id+'"')
+                      this.apollo
+                        .mutate({
+                          mutation: gql`mutation${actionStr}`
+                        }).subscribe(response => {
+                        this.reloadPage()
+                      })
+                      this.hideMenu()
+                    }
+                  }
+                )
+              }
+            }]
+        }
+  * */
+
+  getConfirmDialogs(): ConfirmModel[] {
+    return this.actionMenuItems.filter(item => {
+      return item.type === 'dialog' && item.subtype === 'confirm'
+    }).map(confirmD => {
+      delete confirmD.type
+      delete confirmD.subscribe
+      return confirmD
+    })
+  }
+
+  getIconName(icon: string) {
+    switch (icon) {
+      case 'trash':
+        return 'pi pi-fw pi-trash'
+      default:
+        return ''
+    }
+  }
+
+  getCommand(type:string){
+    // todo finish this method
+    if (type === 'dialog'){
+      return () => {
+        this.confirmationService.confirm({
+            message: this.confirmDialogs[0].message,
+            accept: () => {
+              const actionStr = this.confirmDialogs[0].action[0].value.replace('ID', '"' + res.id + '"')
+              this.apollo
+                .mutate({
+                  mutation: gql`mutation${actionStr}`
+                }).subscribe(response => {
+                this.reloadPage()
+              })
+              this.hideMenu()
+            }
+          }
+        )
+      }
+    } else{
+      return ()=>{}
+    }
+  }
+
   rerenderActionMenus() {
     this.resourcesMenuHandler = this.resources.map(res => {
-      return {
-        id: res.id, items: [
+      const items: any[] = []
+      this.actionMenuItems.forEach(item => {
+        const actionIcon = item.icon === undefined ? null : this.getIconName(item.icon)
+        items.push(
           {
-            label: 'Verwijderen', icon: 'pi pi-fw pi-trash',
-            command: () => {
-              this.confirmationService.confirm({
-                  message: this.confirmDialogs[0].message,
-                  accept: () => {
-                    const actionStr = this.confirmDialogs[0].action[0].value.replace('ID','"'+res.id+'"')
-                    this.apollo
-                      .mutate({
-                        mutation: gql`mutation${actionStr}`
-                      }).subscribe(response => {
-                      this.reloadPage()
-                    })
-                    this.hideMenu()
-                  }
-                }
-              )
-            }
-          }]
+            label: item.label, icon: actionIcon,
+            command: this.getCommand(item.type)
+          })
+      })
+      return {
+        id: res.id,
+        items: items
       }
     })
   }
 
-  reloadPage(){
-    if(this.component?.configuration?.action && this.component?.configuration?.action.length>0){
+  reloadPage() {
+    if (this.component?.configuration?.action && this.component?.configuration?.action.length > 0) {
       this.querySubscription = this.apollo
         .watchQuery<{ data: {}[] }>({
           query: gql`
