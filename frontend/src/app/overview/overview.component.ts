@@ -153,31 +153,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   }
 
-  /*
-  *         return {
-          id: res.id, items: [
-            {
-              label: 'Verwijderen', icon: 'pi pi-fw pi-trash',
-              command: () => {
-                this.confirmationService.confirm({
-                    message: this.confirmDialogs[0].message,
-                    accept: () => {
-                      const actionStr = this.confirmDialogs[0].action[0].value.replace('ID','"'+res.id+'"')
-                      this.apollo
-                        .mutate({
-                          mutation: gql`mutation${actionStr}`
-                        }).subscribe(response => {
-                        this.reloadPage()
-                      })
-                      this.hideMenu()
-                    }
-                  }
-                )
-              }
-            }]
-        }
-  * */
-
   getConfirmDialogs(): ConfirmModel[] {
     return this.actionMenuItems.filter(item => {
       return item.type === 'dialog' && item.subtype === 'confirm'
@@ -197,24 +172,27 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  getCommand(item:any){
-    // todo finish dialog
+  getCommand(item:any,id:string){
     if (item.type === 'dialog'){
-      return () => {
-        this.confirmationService.confirm({
-            message: "",
-            accept: () => {
-              const actionStr =''// this.confirmDialogs[0].action[0].value.replace('ID', '"' + res.id + '"')
-              this.apollo
-                .mutate({
-                  mutation: gql`mutation${actionStr}`
-                }).subscribe(response => {
-                this.reloadPage()
-              })
-              this.hideMenu()
-            }
+      switch (item.subtype) {
+        default:
+          return () => {
+            this.confirmationService.confirm({
+                message: item.message,
+                accept: () => {
+                  const actionStr = item.action[0].value.replace('ID', '"' + id + '"')
+                  console.log(actionStr)
+                  this.apollo
+                    .mutate({
+                      mutation: gql`mutation${actionStr}`
+                    }).subscribe(response => {
+                    this.reloadPage()
+                  })
+                  this.hideMenu()
+                }
+              }
+            )
           }
-        )
       }
     } else{
       return ()=>{
@@ -233,7 +211,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         items.push(
           {
             label: item.label, icon: actionIcon,
-            command: this.getCommand(item)
+            command: this.getCommand(item,res.id)
           })
       })
       return {

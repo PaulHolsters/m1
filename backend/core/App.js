@@ -386,7 +386,9 @@ module.exports = class App {
                         )
                         component.configuration.columns = newColumns
                     }
+
                     if (component.configuration.hasOwnProperty('actionMenu')) {
+                        // todo vervang prompt door confirm en werk af
                         component.configuration.actionMenu.forEach(menuItem => {
                             const comp2 = this.components.find(component2 => {
                                 return component2.ref === menuItem.component
@@ -419,6 +421,7 @@ module.exports = class App {
                             }
                         })
                     }
+
                     if (component.configuration.hasOwnProperty('action')) {
                         if (MoulditActions.hasOwnProperty(GeneralFunctions.capitalizeFirst(component.configuration.action))) {
                             const plurality = MoulditActions[GeneralFunctions.capitalizeFirst(component.configuration.action)].plurality
