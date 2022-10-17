@@ -112,17 +112,19 @@ export class ConfigService {
         }
         buttons{
           name
+          text
         }
-      validation
-      columns{
-        ref
-        label
-      }
-      actionMenu{
-        label
-        routerLink
-        dialogRef
-      }
+        validation
+        columns{
+          ref
+          label
+        }
+        actionMenu{
+          label
+          routerLink
+          dialogRef
+          icon
+        }
       formats{
         ref
         format{
@@ -173,6 +175,8 @@ export class ConfigService {
           trim
         }
       }
+      message
+      header
     }
   }
 }

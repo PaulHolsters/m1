@@ -68,16 +68,17 @@ export class OverviewComponent implements OnInit, OnDestroy {
         // controleren of het een tabel is mét of zonder actie menu
         if (this.component?.configuration.actionMenu !== null) {
           this.component?.configuration.actionMenu.forEach(action => {
+            console.log('action',action)
             if (action.dialogRef !== null) {
               const dialog = startupData.components.find(comp => {
                 return comp.ref === action.dialogRef
               })
               if (dialog && dialog.subtype === 'confirm' && dialog.configuration.action) {
                 this.actionMenuItems.push({
-                  label: action.label,
-                  icon: action.icon,
                   type: 'dialog',
                   subtype: 'confirm',
+                  label: action.label,
+                  icon: action.icon,
                   header: dialog.configuration.header || '',
                   message: dialog.configuration.message || '',
                   // hier zal tijdens de uitvoering van de actie het placeholder ID door een echt ID vervangen moeten worden
@@ -85,6 +86,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
                   acceptText: dialog.configuration?.buttons && dialog.configuration?.buttons?.length > 0 ? dialog.configuration?.buttons[0].text : undefined,
                   rejectText: dialog.configuration?.buttons && dialog.configuration?.buttons?.length > 1 ? dialog.configuration?.buttons[1].text : undefined
                 })
+                console.log(this.actionMenuItems)
               } else {
                 // todo andere dialoogvensters zoals alert of ...
 
@@ -97,7 +99,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
                 routerLink: action.routerLink
               })
             }
+
           })
+          console.log(this.actionMenuItems)
         }
         if (this.component?.configuration.columns) {
           this.columns = this.component?.configuration.columns
@@ -173,6 +177,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   getCommand(item:any,id:string){
+    //console.log(item.type)
     if (item.type === 'dialog'){
       switch (item.subtype) {
         default:
@@ -181,7 +186,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
                 message: item.message,
                 accept: () => {
                   const actionStr = item.action[0].value.replace('ID', '"' + id + '"')
-                  console.log(actionStr)
                   this.apollo
                     .mutate({
                       mutation: gql`mutation${actionStr}`
@@ -207,6 +211,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     this.resourcesMenuHandler = this.resources.map(res => {
       const items: any[] = []
       this.actionMenuItems.forEach(item => {
+        console.log(item.type)
         const actionIcon = item.icon === undefined ? null : this.getIconName(item.icon)
         items.push(
           {
@@ -214,6 +219,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
             command: this.getCommand(item,res.id)
           })
       })
+      console.log(items)
       return {
         id: res.id,
         items: items

@@ -125,6 +125,7 @@ module.exports = class App {
             label:String
             routerLink: String
             dialogRef: String
+            icon: String
         }
         
         type Button{
@@ -195,12 +196,13 @@ module.exports = class App {
             validation: String
             actionMenu: [ActionMenuItem]
             header: String
-            question: String 
+            message: String 
             buttons:[Button]
             formats: [Format]
             menuItems:[MenuItem]
             cards: [Card]
             controls:[Control]
+
         }
         
         type Component{
@@ -356,6 +358,7 @@ module.exports = class App {
     #getComponents() {
         const components = []
         this.components.forEach(component => {
+            console.log(component.ref)
             switch (component.type) {
                 case 'menu':
                     component.configuration.menuItems.forEach(item => {
@@ -388,7 +391,6 @@ module.exports = class App {
                     }
 
                     if (component.configuration.hasOwnProperty('actionMenu')) {
-                        // todo vervang prompt door confirm en werk af
                         component.configuration.actionMenu.forEach(menuItem => {
                             const comp2 = this.components.find(component2 => {
                                 return component2.ref === menuItem.component
@@ -399,21 +401,15 @@ module.exports = class App {
                                 delete menuItem.component
                             } else {
                                 switch (comp2.type) {
-                                    case 'prompt':
-                                        switch (comp2.configuration.action) {
-                                            case 'delete':
-                                                const actionName = 'delete' + GeneralFunctions.capitalizeFirst(comp2.configuration.concept)
-                                                const request = actionName + '(id:"ID")'
-                                                let properties = '{Result{' +
-                                                    'statusCode msg' +
-                                                    '}}'
-                                                comp2.configuration.action = [{name:'delete',value:'Mutation{\n\t' + request + '{\n' + properties + '\t}\n}'}]
-                                                delete comp2.configuration.concept
+                                    case 'dialog':
+                                        switch (comp2.subtype){
+                                            case 'confirm':
+                                                menuItem['dialogRef'] = comp2.ref
+                                                delete menuItem.component
                                                 break
                                             default:
                                                 break
                                         }
-                                        menuItem.component = {...comp2}
                                         break
                                     default:
                                         break
@@ -604,12 +600,39 @@ module.exports = class App {
                 case 'summary':
                     // todo
                     break
-                case 'prompt':
-                    // todo
+                case 'dialog':
+                    switch (component.subtype){
+                        case 'confirm':
+                            switch (component.configuration.action) {
+                                case 'delete':
+                                    const actionName = 'delete' + GeneralFunctions.capitalizeFirst(component.configuration.concept)
+                                    const request = actionName + '(id:"ID")'
+                                    let properties = '{Result{' +
+                                        'statusCode msg' +
+                                        '}}'
+                                    component.configuration.action = [{name:'delete',value:'mutation{\n\t' + request + '{\n' + properties + '\t}\n}'}]
+                                    delete component.configuration.concept
+                                    break
+                                default:
+                                    break
+                            }
+                            if(component.configuration.buttons){
+                                const buttons = []
+                                for (let btn of Object.keys(component.configuration.buttons)){
+                                    buttons.push({name:btn,text:component.configuration.buttons[btn]})
+                                }
+                                component.configuration.buttons = buttons
+                            }
+                            break
+
+                        default:
+                            break
+                    }
+                    console.log(component.configuration)
+                    components.push(component)
                     break
             }
         })
-        console.log(components)
         return components
     }
 

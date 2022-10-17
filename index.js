@@ -153,15 +153,18 @@ const app = new App({
                 actionMenu: [
                     {
                         label: 'aanpassen',
+                        icon: '',
                         component: 'editProductForm'
                     },
                     {
                         label: 'bekijken',
+                        icon: '',
                         component: 'detailsProductForm'
                     },
                     {
                         label: 'verwijderen',
-                        component: 'deleteProductForm'
+                        icon: 'trash',
+                        component: 'deleteProductConfirmDialog'
                     }
                 ],
                 columns: ['gearName', 'basePrice', 'creationDate']
@@ -241,7 +244,7 @@ const app = new App({
                 ]
             }
         },
-        {
+/*        {
             type: 'form',
             subtype: 'delete',
             route: 'product/verwijderen',
@@ -273,18 +276,19 @@ const app = new App({
                     }
                 ]
             }
-        },
-        /*        {
-                    type:'prompt',
+        },*/
+                {
+                    type:'dialog',
+                    subtype:'confirm',
                     ref:'deleteProductConfirmDialog',
                     configuration:{
                         action:'delete',
                         concept:'product',
                         header: 'Verwijderen product',
-                        question:'Bent u zeker dat u dit product definitief wil verwijderen?',
+                        message:'Bent u zeker dat u dit product definitief wil verwijderen?',
                         buttons:{yes:'Ja',no:'Nee'}
                     }
-                },*/
+                }
     ],
 })
 

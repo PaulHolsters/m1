@@ -23,7 +23,8 @@ export class ConfigurationModel {
      public message:string,
      public buttons:ButtonModel[],
      public action:ActionModel[],
-     public formats:FormatModel[]
+     public formats:FormatModel[],
+     public icon: string
   ) {
 
   }
