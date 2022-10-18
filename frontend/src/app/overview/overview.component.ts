@@ -8,6 +8,9 @@ import {ComponentModel} from "../models/component.model";
 import {ConfirmationService} from "primeng/api";
 import {PromptModel} from "../models/prompt.model";
 import {ConfirmModel} from "../models/confirm.model";
+import {ActionModel} from "../models/action.model";
+import {NavigationModel} from "../models/navigation.model";
+import {DialogModel} from "../models/dialog.model";
 
 @Component({
   selector: 'app-overview',
@@ -20,7 +23,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
   numberOfRows: number | undefined
   resourcesAll: any
   header: string | undefined
-  actionMenuItems: any[] = []
+  confirmDialogs:DialogModel[]
+  navigations: NavigationModel[]
   activatedActionsMenu: string | undefined
   posX:number|undefined
   posY:number|undefined
@@ -48,6 +52,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
     this.resources = []
     this.numberOfRows = 10
     this.resourcesMenuHandler = []
+    this.confirmDialogs = []
+    this.navigations = []
   }
 
   ngOnInit(): void {
@@ -66,19 +72,17 @@ export class OverviewComponent implements OnInit, OnDestroy {
         })
         // invullen component met de data
         // controleren of het een tabel is mét of zonder actie menu
-        if (this.component?.configuration.actionMenu !== null) {
-          this.component?.configuration.actionMenu.forEach(action => {
-            console.log('action',action)
-            if (action.dialogRef !== null) {
+        if (this.component?.configuration.actionMenu) {
+          for (let i=0;i<this.component?.configuration.actionMenu.length;i++){
+            if (this.component?.configuration.actionMenu[i].dialogRef !== null) {
               const dialog = startupData.components.find(comp => {
-                return comp.ref === action.dialogRef
+                return comp.ref === this.component?.configuration.actionMenu[i].dialogRef
               })
               if (dialog && dialog.subtype === 'confirm' && dialog.configuration.action) {
-                this.actionMenuItems.push({
-                  type: 'dialog',
-                  subtype: 'confirm',
-                  label: action.label,
-                  icon: action.icon,
+                this.confirmDialogs.push({
+                  label: this.component?.configuration.actionMenu[i].label,
+                  icon: this.component?.configuration.actionMenu[i].icon,
+                  rang:i,
                   header: dialog.configuration.header || '',
                   message: dialog.configuration.message || '',
                   // hier zal tijdens de uitvoering van de actie het placeholder ID door een echt ID vervangen moeten worden
@@ -86,22 +90,20 @@ export class OverviewComponent implements OnInit, OnDestroy {
                   acceptText: dialog.configuration?.buttons && dialog.configuration?.buttons?.length > 0 ? dialog.configuration?.buttons[0].text : undefined,
                   rejectText: dialog.configuration?.buttons && dialog.configuration?.buttons?.length > 1 ? dialog.configuration?.buttons[1].text : undefined
                 })
-                console.log(this.actionMenuItems)
               } else {
                 // todo andere dialoogvensters zoals alert of ...
 
               }
             } else {
-              this.actionMenuItems.push({
-                label: action.label,
-                icon: action.icon,
-                type: 'navigation',
-                routerLink: action.routerLink
+              this.navigations.push({
+                label: this.component?.configuration.actionMenu[i].label,
+                icon: this.component?.configuration.actionMenu[i].icon,
+                routerLink: this.component?.configuration.actionMenu[i].routerLink,
+                rang:i
               })
             }
+          }
 
-          })
-          console.log(this.actionMenuItems)
         }
         if (this.component?.configuration.columns) {
           this.columns = this.component?.configuration.columns
@@ -154,16 +156,49 @@ export class OverviewComponent implements OnInit, OnDestroy {
             this.rerenderActionMenus()
         })
     }
-
   }
 
-  getConfirmDialogs(): ConfirmModel[] {
-    return this.actionMenuItems.filter(item => {
-      return item.type === 'dialog' && item.subtype === 'confirm'
-    }).map(confirmD => {
-      delete confirmD.type
-      delete confirmD.subscribe
-      return confirmD
+  rerenderActionMenus() {
+    this.resourcesMenuHandler = this.resources.map(res => {
+      const items: any[] = []
+      this.navigations.forEach(nav=>{
+        const actionIcon = nav.icon === undefined ? null : this.getIconName(nav.icon)
+        items.push(
+          {
+            label: nav.label,
+            icon: actionIcon,
+            command: ()=>{
+              this.router.navigate([nav.routerLink])
+            }
+          })
+      })
+      this.confirmDialogs.forEach(confirmD => {
+        const actionStr = confirmD.action[0].value.replace('ID',  res.id )
+        const actionIcon = confirmD.icon === undefined ? null : this.getIconName(confirmD.icon)
+        items.push(
+          {
+            label: confirmD.label,
+            icon: actionIcon,
+            command: () => {
+              this.confirmationService.confirm({
+                  message: confirmD.message,
+                  accept: () => {
+                    this.apollo
+                      .mutate({
+                        mutation: gql`${actionStr}`
+                      }).subscribe(response => {
+                      this.reloadPage()
+                    })
+                    this.hideMenu()
+                  }
+                })
+            }
+          })
+      })
+      return {
+        id: res.id,
+        items: items
+      }
     })
   }
 
@@ -176,56 +211,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  getCommand(item:any,id:string){
-    //console.log(item.type)
-    if (item.type === 'dialog'){
-      switch (item.subtype) {
-        default:
-          return () => {
-            this.confirmationService.confirm({
-                message: item.message,
-                accept: () => {
-                  const actionStr = item.action[0].value.replace('ID', '"' + id + '"')
-                  this.apollo
-                    .mutate({
-                      mutation: gql`mutation${actionStr}`
-                    }).subscribe(response => {
-                    this.reloadPage()
-                  })
-                  this.hideMenu()
-                }
-              }
-            )
-          }
-      }
-    } else{
-      return ()=>{
-        this.router.navigate([this.actionMenuItems.find(menu=>{
-          return menu.label === item.label
-        }).routerLink])
-      }
-    }
-  }
 
-  rerenderActionMenus() {
-    this.resourcesMenuHandler = this.resources.map(res => {
-      const items: any[] = []
-      this.actionMenuItems.forEach(item => {
-        console.log(item.type)
-        const actionIcon = item.icon === undefined ? null : this.getIconName(item.icon)
-        items.push(
-          {
-            label: item.label, icon: actionIcon,
-            command: this.getCommand(item,res.id)
-          })
-      })
-      console.log(items)
-      return {
-        id: res.id,
-        items: items
-      }
-    })
-  }
 
   reloadPage() {
     if (this.component?.configuration?.action && this.component?.configuration?.action.length > 0) {

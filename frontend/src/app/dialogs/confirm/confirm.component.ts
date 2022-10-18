@@ -34,16 +34,4 @@ export class ConfirmComponent implements OnInit {
     }
   }
 
-  confirm() {
-    this.confirmationService.confirm({
-      message: this.confirmObject?.message,
-      accept: () => {
-        // todo bepaal aan de hand van de action wat er moet gebeuren bij accepteren
-
-      }
-    });
-  }
-
-
-
 }

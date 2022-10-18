@@ -607,9 +607,7 @@ module.exports = class App {
                                 case 'delete':
                                     const actionName = 'delete' + GeneralFunctions.capitalizeFirst(component.configuration.concept)
                                     const request = actionName + '(id:"ID")'
-                                    let properties = '{Result{' +
-                                        'statusCode msg' +
-                                        '}}'
+                                    let properties = 'statusCode msg'
                                     component.configuration.action = [{name:'delete',value:'mutation{\n\t' + request + '{\n' + properties + '\t}\n}'}]
                                     delete component.configuration.concept
                                     break
