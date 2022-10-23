@@ -283,6 +283,7 @@ const app = new App({
                     ref:'deleteProductConfirmDialog',
                     configuration:{
                         action:'delete',
+                        toast:{summary:'Product verwijderd'},
                         concept:'product',
                         header: 'Verwijderen product',
                         message:'Bent u zeker dat u dit product definitief wil verwijderen?',

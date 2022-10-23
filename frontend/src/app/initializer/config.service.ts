@@ -110,6 +110,11 @@ export class ConfigService {
           name
           value
         }
+        toast{
+          summary
+          severity
+          detail
+        }
         buttons{
           name
           text

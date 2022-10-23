@@ -190,8 +190,15 @@ module.exports = class App {
             constraints:Constraints
         }
         
+        type Toast{
+            summary:String
+            severity:String
+            detail: String
+        }
+        
         type Configuration{
             action: [Action]
+            toast: Toast
             columns: [Column]
             validation: String
             actionMenu: [ActionMenuItem]
@@ -202,7 +209,6 @@ module.exports = class App {
             menuItems:[MenuItem]
             cards: [Card]
             controls:[Control]
-
         }
         
         type Component{

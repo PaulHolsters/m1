@@ -1,4 +1,5 @@
 import {ActionModel} from "./action.model";
+import {ToastModel} from "./toast.model";
 
 export class DialogModel {
   constructor(
@@ -7,6 +8,7 @@ export class DialogModel {
     public rang:number,
     public header:string,
     public action:ActionModel[],
+    public toast?:ToastModel,
     public message?:string, // default = Are you sure you want to proceed?
     public acceptText?:string, // default = Yes
     public rejectText?:string // default = No

@@ -51,10 +51,14 @@ import {InputTextModule} from "primeng/inputtext";
 import {FormControlComponent} from "./form/form-control/form-control.component";
 import { FormLabelComponent } from './form/form-label/form-label.component';
 import {CalendarModule} from "primeng/calendar";
-import {ConfirmationService} from "primeng/api";
+import {ConfirmationService, MessageService} from "primeng/api";
 import { AlertComponent } from './dialogs/alert/alert.component';
 import { ConfirmComponent } from './dialogs/confirm/confirm.component';
 import { PromptComponent } from './dialogs/prompt/prompt.component';
+import { ToastComponent } from './messages/toast/toast.component';
+import { MessageComponent } from './messages/message/message.component';
+import {MessageModule} from "primeng/message";
+import {MessagesModule} from "primeng/messages";
 
 const routes: Routes = [
   {path:'', pathMatch: 'full', component:HomeComponent},
@@ -84,46 +88,50 @@ const routes: Routes = [
     FormLabelComponent,
     AlertComponent,
     ConfirmComponent,
-    PromptComponent
+    PromptComponent,
+    ToastComponent,
+    MessageComponent
   ],
-    imports: [
-        BrowserModule,
-        BreadcrumbModule,
-        MenuModule,
-        MenubarModule,
-        GraphQLModule,
-        HttpClientModule,
-        RouterModule.forRoot(routes),
-        InitializerModule,
-        BrowserAnimationsModule,
-        ButtonModule,
-        TableModule,
-        HttpClientModule,
-        FormsModule,
-        DropdownModule,
-        InputTextModule,
-        PanelModule,
-        InplaceModule,
-        AutoCompleteModule,
-        StepsModule,
-        CardModule,
-        RadioButtonModule,
-        DividerModule,
-        ListboxModule,
-        PickListModule,
-        ToastModule,
-        CheckboxModule,
-        DialogModule,
-        ConfirmDialogModule,
-        BlockUIModule,
-        InputNumberModule,
-        BreadcrumbModule,
-        PaginatorModule,
-        CalendarModule
-    ],
+  imports: [
+    BrowserModule,
+    BreadcrumbModule,
+    MenuModule,
+    MenubarModule,
+    GraphQLModule,
+    HttpClientModule,
+    RouterModule.forRoot(routes),
+    InitializerModule,
+    BrowserAnimationsModule,
+    ButtonModule,
+    TableModule,
+    HttpClientModule,
+    FormsModule,
+    DropdownModule,
+    InputTextModule,
+    PanelModule,
+    InplaceModule,
+    AutoCompleteModule,
+    StepsModule,
+    CardModule,
+    RadioButtonModule,
+    DividerModule,
+    ListboxModule,
+    PickListModule,
+    ToastModule,
+    CheckboxModule,
+    DialogModule,
+    ConfirmDialogModule,
+    BlockUIModule,
+    InputNumberModule,
+    BreadcrumbModule,
+    PaginatorModule,
+    CalendarModule,
+    MessageModule,
+    MessagesModule
+  ],
 
   providers: [
-    ConfirmationService
+    ConfirmationService, MessageService
   ],
   bootstrap: [AppComponent]
 })

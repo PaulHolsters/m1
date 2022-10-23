@@ -42,7 +42,12 @@
           </p-inputNumber>
         </div>
         <div *ngIf="control.valid.value === false" class="mt-1 mb-1">
-          <span style="color: #f84b4b" [innerHTML]="getMessage()"></span>
+          <p-messages severity="error">
+            <ng-template pTemplate>
+              <span class="ml-2" [innerHTML]="getMessage()"></span>
+            </ng-template>
+          </p-messages>
+<!--          <app-message style="color: #f84b4b" [message]="getMessage()"></app-message>-->
         </div>
       </div>
       <div *ngSwitchCase="'radio'">

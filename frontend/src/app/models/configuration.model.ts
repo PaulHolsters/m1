@@ -3,6 +3,7 @@ import {ActionModel} from "./action.model";
 import {FormatModel} from "./format.model";
 import {ButtonModel} from "./button.model";
 import {ActionMenuItemModel} from "./action-menu-item.model";
+import {ToastModel} from "./toast.model";
 
 export class ConfigurationModel {
   constructor(
@@ -24,7 +25,8 @@ export class ConfigurationModel {
      public buttons:ButtonModel[],
      public action:ActionModel[],
      public formats:FormatModel[],
-     public icon: string
+     public icon: string,
+     public toast:ToastModel
   ) {
 
   }

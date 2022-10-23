@@ -5,12 +5,10 @@ import {Apollo, gql} from "apollo-angular";
 import {map} from "rxjs/operators";
 import {Subscription} from "rxjs";
 import {ComponentModel} from "../models/component.model";
-import {ConfirmationService} from "primeng/api";
-import {PromptModel} from "../models/prompt.model";
-import {ConfirmModel} from "../models/confirm.model";
-import {ActionModel} from "../models/action.model";
+import {ConfirmationService, MessageService} from "primeng/api";
 import {NavigationModel} from "../models/navigation.model";
 import {DialogModel} from "../models/dialog.model";
+import {ToastModel} from "../models/toast.model";
 
 @Component({
   selector: 'app-overview',
@@ -23,6 +21,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   numberOfRows: number | undefined
   resourcesAll: any
   header: string | undefined
+  toasts:ToastModel[]
   confirmDialogs:DialogModel[]
   navigations: NavigationModel[]
   activatedActionsMenu: string | undefined
@@ -47,13 +46,15 @@ export class OverviewComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private router: Router,
               private apollo: Apollo,
-              private confirmationService: ConfirmationService) {
+              private confirmationService: ConfirmationService,
+              private messageService: MessageService) {
     this.columns = []
     this.resources = []
     this.numberOfRows = 10
     this.resourcesMenuHandler = []
     this.confirmDialogs = []
     this.navigations = []
+    this.toasts = []
   }
 
   ngOnInit(): void {
@@ -85,8 +86,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
                   rang:i,
                   header: dialog.configuration.header || '',
                   message: dialog.configuration.message || '',
-                  // hier zal tijdens de uitvoering van de actie het placeholder ID door een echt ID vervangen moeten worden
                   action: dialog.configuration.action,
+                  toast:dialog.configuration.toast,
                   acceptText: dialog.configuration?.buttons && dialog.configuration?.buttons?.length > 0 ? dialog.configuration?.buttons[0].text : undefined,
                   rejectText: dialog.configuration?.buttons && dialog.configuration?.buttons?.length > 1 ? dialog.configuration?.buttons[1].text : undefined
                 })
@@ -158,6 +159,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  // todo use yield to show it in the correct order
   rerenderActionMenus() {
     this.resourcesMenuHandler = this.resources.map(res => {
       const items: any[] = []
@@ -188,6 +190,12 @@ export class OverviewComponent implements OnInit, OnDestroy {
                         mutation: gql`${actionStr}`
                       }).subscribe(response => {
                       this.reloadPage()
+                      if(confirmD.toast){
+                        this.messageService.add({
+                          severity:confirmD.toast.severity !== null ? confirmD.toast.severity : 'success',
+                          summary:confirmD.toast.summary,
+                          detail: confirmD.toast.detail})
+                      }
                     })
                     this.hideMenu()
                   }
@@ -202,6 +210,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     })
   }
 
+  // todo finish method
   getIconName(icon: string) {
     switch (icon) {
       case 'trash':
@@ -268,6 +277,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     return this.activatedActionsMenu !== id;
   }
 
+  // todo fix bug: op volgende pagina's komt geen menu
   showMenu(id: string, event:MouseEvent) {
     this.posX = event.x + 4
     this.posY = event.y - 6
