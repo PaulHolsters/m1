@@ -15,11 +15,19 @@
         <!-- todo type introduceren in tabel-->
         <ng-container *ngFor="let column of columns">
           <ng-container [ngSwitch]="getResource('type',resource.id,column.ref)">
-            <ng-container *ngSwitchCase="'money'">
-              <!--  money column -->
+<!--            <ng-container *ngSwitchCase="'money'">
+              &lt;!&ndash;  money column &ndash;&gt;
               <td>{{getResource('value', resource.id, column.ref) | currency:'EUR'}}</td>
+            </ng-container>-->
+            <ng-container *ngSwitchCase="'String'">
+              <!-- primitief datatype column -->
+              <td>{{getResource('value', resource.id, column.ref)}}</td>
             </ng-container>
-            <ng-container *ngSwitchDefault>
+            <ng-container *ngSwitchCase="'Number'">
+              <!-- primitief datatype column -->
+              <td>{{getResource('value', resource.id, column.ref) | currency:'EUR':'symbol':'1.0-0': 'de' }}</td>
+            </ng-container>
+            <ng-container *ngSwitchCase="'Date'">
               <!-- primitief datatype column -->
               <td>{{getResource('value', resource.id, column.ref)}}</td>
             </ng-container>

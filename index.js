@@ -167,7 +167,31 @@ const app = new App({
                         component: 'deleteProductConfirmDialog'
                     }
                 ],
-                columns: ['gearName', 'basePrice', 'creationDate']
+                columns: ['gearName', 'basePrice', 'creationDate'],
+                formats: [
+                    {
+                        ref: 'basePrice',
+                        format: [{name: 'currency', value: 'EUR'}, {
+                            name: 'cents',
+                            value: [{name: 'show', value: false}, {name: 'allowed', value: false}]
+                        }]
+                    },
+                    {
+                        ref: 'creationDate',
+                        format: [{
+                            name: 'time',
+                            value: [{name: 'show', value: true}, {
+                                name: 'timeFormat',
+                                value: 'HH:MM:SS:mmm'
+                            }, {name: 'hourFormat', value: '24'}]
+                        },
+                            {
+                                name: 'date',
+                                value: [{name: 'show', value: true}, {name: 'dateFormat', value: 'dd/mm/yyyy'}]
+                            }]
+                    }
+                ],
+
             }
         },
         {

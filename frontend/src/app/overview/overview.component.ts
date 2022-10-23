@@ -9,6 +9,11 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {NavigationModel} from "../models/navigation.model";
 import {DialogModel} from "../models/dialog.model";
 import {ToastModel} from "../models/toast.model";
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import localeNl from '@angular/common/locales/nl';
+import localeDe from '@angular/common/locales/de';
+import localeBe from '@angular/common/locales/be';
 
 @Component({
   selector: 'app-overview',
@@ -48,6 +53,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
               private apollo: Apollo,
               private confirmationService: ConfirmationService,
               private messageService: MessageService) {
+
     this.columns = []
     this.resources = []
     this.numberOfRows = 10
@@ -58,6 +64,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    registerLocaleData(localeFr, 'fr');
+    registerLocaleData(localeDe, 'de');
+    registerLocaleData(localeBe, 'be');
+    registerLocaleData(localeNl, 'nl');
     this.startupSubscription = this.config.startupData$.pipe(
     ).subscribe(async startupData => {
       if (startupData && startupData.routes && startupData.components) {
@@ -109,6 +119,13 @@ export class OverviewComponent implements OnInit, OnDestroy {
         if (this.component?.configuration.columns) {
           this.columns = this.component?.configuration.columns
         }
+        // todo fix this to get the correct types
+        if(this.component?.configuration.formats){
+          console.log(this.component?.configuration.formats)
+        }
+        if(this.component?.configuration.controls){
+          console.log(this.component?.configuration.controls)
+        }
       }
     }, err => {
       console.log(err)
@@ -121,13 +138,12 @@ export class OverviewComponent implements OnInit, OnDestroy {
         `,
         })
         .valueChanges.pipe(map((result) => result.data)).subscribe(res => {
-          //console.log('items van de overview',res)
           this.resourcesAll = Object.values(res)[0].map(val => {
             const valCopy = Object.create(val)
             const resource: {
               resource: {
                 property: string,
-                type: string,
+                type: string | undefined,
                 value: any,
                 column: string | undefined
               }[],
@@ -138,7 +154,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
             }).forEach(prop => {
               const resourceItem: {
                 property: string,
-                type: string,
+                type: string | undefined,
                 value: any,
                 column: string | undefined
               } = {property: '', type: '', value: undefined, column: ''}
@@ -158,6 +174,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
         })
     }
   }
+
+
 
   // todo use yield to show it in the correct order
   rerenderActionMenus() {
@@ -220,8 +238,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   reloadPage() {
     if (this.component?.configuration?.action && this.component?.configuration?.action.length > 0) {
       this.querySubscription = this.apollo
@@ -231,13 +247,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
         `,
         })
         .valueChanges.pipe(map((result) => result.data)).subscribe(res => {
+          console.log(res)
           this.resourcesAll = Object.values(res)[0].map(val => {
             const valCopy = Object.create(val)
             const resource: {
               resource:
                 {
                   property: string,
-                  type: string,
+                  type: string |undefined,
                   value: any,
                   column: string | undefined
                 }[],
@@ -248,13 +265,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
             }).forEach(prop => {
               const resourceItem: {
                 property: string,
-                type: string,
+                type: string | undefined,
                 value: any,
                 column: string | undefined
               } = {property: '', type: '', value: undefined, column: ''}
               resourceItem.property = prop
               resourceItem.type = this.getType(prop)
               resourceItem.value = valCopy[prop]
+              console.log(valCopy[prop])
               resourceItem.column = this.columns.find(col => {
                 return col.ref === prop
               })?.label
@@ -262,11 +280,20 @@ export class OverviewComponent implements OnInit, OnDestroy {
             })
             return resource
           })
+          // todo fix this want het lijkt er op dat er steeds dezelfde
+          //  pagina getoond wordt => inderdaad terwijl d epagina numme rniet eens correct wijzigt op dat moment!
           this.resources = this.resourcesAll.slice(0, this.numberOfRows)
           this.rerenderActionMenus()
         })
     }
 
+  }
+
+  // todo zorg ervoor dat types in een correct formaat worden getoond
+  getType(propertyName: string) {
+    return this.component?.configuration.controls.find(control=>{
+      return control.ref === propertyName
+    })?.type
   }
 
   isMenu(id: string): boolean {
@@ -277,7 +304,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
     return this.activatedActionsMenu !== id;
   }
 
-  // todo fix bug: op volgende pagina's komt geen menu
   showMenu(id: string, event:MouseEvent) {
     this.posX = event.x + 4
     this.posY = event.y - 6
@@ -298,10 +324,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   paginate(event: any) {
     this.resources = this.resourcesAll.slice(event.page * event.rows, (event.page * event.rows + event.rows))
-  }
-
-  getType(propertyName: string) {
-    return 'DEFAULT'
+    this.rerenderActionMenus()
   }
 
   getResource(type: string, id: string, columnRef: string) {
