@@ -14,6 +14,7 @@ import localeFr from '@angular/common/locales/fr';
 import localeNl from '@angular/common/locales/nl';
 import localeDe from '@angular/common/locales/de';
 import localeBe from '@angular/common/locales/be';
+import {ValueModel} from "../models/value.model";
 
 @Component({
   selector: 'app-overview',
@@ -46,6 +47,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   currentPath: string | undefined
   columns: { ref: string, label: string }[]
   component: ComponentModel | undefined
+
 
   constructor(private config: ConfigService,
               private route: ActivatedRoute,
@@ -175,7 +177,53 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  isCurrency(field:string):boolean{
+    const isCurrency = this.component?.configuration.formats.find(format=>{
+      return format.ref === field && format.format.find(formatt=>{
+        return formatt.name==='currency'
+      }) !== undefined
+    }) !== undefined
+    console.log(isCurrency,field)
+    return isCurrency
+  }
 
+  getCurrency(conf:string,field:string){
+    const format = this.component?.configuration.formats.find(format=>{
+      return format.ref === field && format.format.find(formatt=>{
+        return formatt.name==='currency'
+      }) !== undefined
+    })?.format
+    switch (conf) {
+      case 'code':
+        const code = format?.find(formatt=>{
+          //console.log(formatt.name)
+          return formatt.name==='currency'
+        })?.valueS
+        //console.log(code)
+        return code
+      case 'display':
+        return format?.find(formatt=>{
+          return formatt.name==='display'
+        })?.valueS
+      case 'digitsInfo':
+        const centsValue = format?.find(formatt=>{
+          return formatt.name==='cents'
+        })?.valueF
+          const show = centsValue?.find(value=>{
+            return value.name === 'show'
+          })?.valueB
+          if(!show){
+              return '1.0-0'
+          }
+        return '1.2-3'
+      case 'locale':
+        return format?.find(formatt=>{
+          return formatt.name==='locale'
+        })?.valueS
+      default:
+        return undefined
+    }
+  }
 
   // todo use yield to show it in the correct order
   rerenderActionMenus() {

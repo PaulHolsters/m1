@@ -173,8 +173,9 @@ const app = new App({
                         ref: 'basePrice',
                         format: [{name: 'currency', value: 'EUR'}, {
                             name: 'cents',
-                            value: [{name: 'show', value: false}, {name: 'allowed', value: false}]
-                        }]
+                            value: [{name: 'show', value: false}, {name: 'allowed', value: false},
+                                ]
+                        },{name: 'display',value:'symbol'},{name:'locale',value:'de'}]
                     },
                     {
                         ref: 'creationDate',

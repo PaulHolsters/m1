@@ -25,7 +25,19 @@
             </ng-container>
             <ng-container *ngSwitchCase="'Number'">
               <!-- primitief datatype column -->
-              <td>{{getResource('value', resource.id, column.ref) | currency:'EUR':'symbol':'1.0-0': 'de' }}</td>
+                <td>
+                  <ng-container *ngIf="isCurrency(column.ref)">
+                    {{getResource('value', resource.id, column.ref)
+                  | currency:
+                  getCurrency('code',column.ref):
+                  getCurrency('display',column.ref):
+                  getCurrency('digitsInfo',column.ref):
+                  getCurrency('locale',column.ref)}}
+                  </ng-container>
+                  <ng-container *ngIf="!isCurrency(column.ref)">
+                    {{getResource('value', resource.id, column.ref)}}
+                  </ng-container>
+                </td>
             </ng-container>
             <ng-container *ngSwitchCase="'Date'">
               <!-- primitief datatype column -->
