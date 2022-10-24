@@ -171,11 +171,11 @@ const app = new App({
                 formats: [
                     {
                         ref: 'basePrice',
-                        format: [{name: 'currency', value: 'EUR'}, {
+                        format: [{name: 'currency',value:'EUR'}/*, {
                             name: 'cents',
                             value: [{name: 'show', value: false}, {name: 'allowed', value: false},
                                 ]
-                        },{name: 'display',value:'symbol'},{name:'locale',value:'de'}]
+                        }*/,/*{name: 'display',value:'symbol'},*/{name:'locale',value:'de'}]
                     },
                     {
                         ref: 'creationDate',

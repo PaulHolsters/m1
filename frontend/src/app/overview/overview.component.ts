@@ -123,7 +123,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         }
         // todo fix this to get the correct types
         if(this.component?.configuration.formats){
-          console.log(this.component?.configuration.formats)
+          console.log('formats',this.component?.configuration.formats)
         }
         if(this.component?.configuration.controls){
           console.log(this.component?.configuration.controls)
@@ -178,13 +178,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   isCurrency(field:string):boolean{
-    const isCurrency = this.component?.configuration.formats.find(format=>{
+    return this.component?.configuration.formats.find(format=>{
       return format.ref === field && format.format.find(formatt=>{
         return formatt.name==='currency'
       }) !== undefined
     }) !== undefined
-    console.log(isCurrency,field)
-    return isCurrency
   }
 
   getCurrency(conf:string,field:string){
