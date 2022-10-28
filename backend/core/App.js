@@ -261,7 +261,12 @@ module.exports = class App {
             name: 'Date',
             description: 'Date custom scalar type',
             serialize(value) {
-                return Intl.DateTimeFormat('en-GB').format(value); // Convert outgoing Date to string for JSON
+                // todo geef steeds het volledige formaat aan de frontend => die moet dan op basis van de format
+                //  de transformatie doen
+                // value is een Date Object
+                //return Intl.DateTimeFormat('en-GB').format(value); // Convert outgoing Date to string for JSON
+                console.log(value.toISOString())
+                return value.toISOString()
             },
             parseValue(value) {
                 return new Date(value); // Convert incoming string to Date

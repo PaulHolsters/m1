@@ -179,13 +179,14 @@ const app = new App({
                     },
                     {
                         ref: 'creationDate',
-                        format: [{
+                        format: [
+                            {
                             name: 'time',
                             value: [{name: 'show', value: true}, {
                                 name: 'timeFormat',
-                                value: 'HH:MM:SS:mmm'
-                            }, {name: 'hourFormat', value: '24'}]
-                        },
+                                value: 'HH:MM:SS'
+                                }, {name: 'hourFormat', value: '24'}]
+                            },
                             {
                                 name: 'date',
                                 value: [{name: 'show', value: true}, {name: 'dateFormat', value: 'dd/mm/yyyy'}]

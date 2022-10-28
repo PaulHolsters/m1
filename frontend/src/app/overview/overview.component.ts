@@ -14,7 +14,6 @@ import localeFr from '@angular/common/locales/fr';
 import localeNl from '@angular/common/locales/nl';
 import localeDe from '@angular/common/locales/de';
 import localeBe from '@angular/common/locales/be';
-import {ValueModel} from "../models/value.model";
 
 @Component({
   selector: 'app-overview',
@@ -223,6 +222,160 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  getDateTime(datetime: string,field:string){
+    console.log(datetime)
+    const date = new Date(datetime)
+    const format = this.component?.configuration.formats.find(format=>{
+      return format.ref === field
+    })?.format
+    let year = "numeric"
+    let month = '2-digit'
+    let day= '2-digit'
+    let sepDate = '/'
+    let sepTime = ':'
+    let weekday
+    let hour = '2-digit'
+    let minute = '2-digit'
+    let second = '2-digit'
+    let ms = false
+    let era
+    let timeZone
+    let timeZoneName
+    let hour12 = false
+    let hourCycle
+    let showTime = false
+    let showDate = false
+    format?.forEach(f=>{
+      if(f.name==='time'){
+        f?.valueF.forEach(tf=>{
+          switch (tf.name) {
+            case 'show':
+              if(tf.value===true){
+                showTime=true
+              }
+              break
+            case 'timeFormat':
+              let tfArr
+              if(tf.valueS.search('.')!==-1){
+                sepTime = '.'
+                tfArr = tf.valueS.split('.')
+              } else{
+                tfArr = tf.valueS.split(':')
+              }
+              tfArr.forEach(v=>{
+                switch (v){
+                  case 'H':
+                    hour = 'numeric'
+                    break
+                  case 'M':
+                    minute = 'numeric'
+                    break
+                  case 'S':
+                    second = 'numeric'
+                    break
+                  case 'mmm':
+                    ms = true
+                    break
+                }
+              })
+              break
+            case 'hourFormat':
+              if(tf.value==='12'){
+                hour12 = true
+              }
+              break
+          }
+        })
+      }
+      if(f.name=='date'){
+        f?.valueF.forEach(df=>{
+          switch (df.name) {
+            case 'show':
+              if(df.valueB){
+                showDate=true
+              }
+              break
+            case 'dateFormat':
+              switch (df.valueS) {
+                case 'dd-mm-yyyy':
+                  sepDate = '-'
+                  break
+                case 'dd/mm/yy':
+                  year = "2-digit"
+                  break
+                case 'dd-mm-yy':
+                  sepDate = '-'
+                  year = "2-digit"
+                  break
+                case 'd/m/yyyy':
+                  day = 'numeric'
+                  month = 'numeric'
+                  break
+                case 'd-m-yyyy':
+                  sepDate = '-'
+                  day = 'numeric'
+                  month = 'numeric'
+                  break
+                case 'd/m/yy':
+                  day = 'numeric'
+                  month = 'numeric'
+                  year = "2-digit"
+                  break
+                case 'd-m-yy':
+                  sepDate = '-'
+                  day = 'numeric'
+                  month = 'numeric'
+                  year = "2-digit"
+                  break
+              }
+              break
+          }
+        })
+      }
+    })
+    //return Intl.DateTimeFormat('en-GB').format(value);
+    // todo op het einde ga je de string nog is formateren voor de extra dingen
+    /*
+    *     let year = 'numeric'
+    let month = '2-digit'
+    let day= '2-digit'
+    let sepDate = '/'
+    let sepTime = ':'
+    let weekday
+    let hour = '2-digit'
+    let minute = '2-digit'
+    let second = '2-digit'
+    let ms = false
+    let era
+    let timeZone
+    let timeZoneName
+    let hour12 = false
+    let hourCycle
+    let showTime = false
+    let showDate = false
+    * */
+    let opts:any = {year:year,month:month,day:day,hour:hour,minute:minute,second:second,hour12:hour12}
+    let convertedDatetime = Intl.DateTimeFormat('en-GB',opts).format(date)
+    console.log(convertedDatetime)
+    return convertedDatetime
+  }
+
+  getResource(type: string, id: string, columnRef: string) {
+    if (type === 'type') {
+      return this.resources.find(ress => {
+        return ress.id === id
+      })?.resource.find(res => {
+        return res.property === columnRef
+      })?.type
+    } else {
+      return this.resources.find(ress => {
+        return ress.id === id
+      })?.resource.find(res => {
+        return res.property === columnRef
+      })?.value
+    }
+  }
+
   // todo use yield to show it in the correct order
   rerenderActionMenus() {
     this.resourcesMenuHandler = this.resources.map(res => {
@@ -373,21 +526,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     this.rerenderActionMenus()
   }
 
-  getResource(type: string, id: string, columnRef: string) {
-    if (type === 'type') {
-      return this.resources.find(ress => {
-        return ress.id === id
-      })?.resource.find(res => {
-        return res.property === columnRef
-      })?.type
-    } else {
-      return this.resources.find(ress => {
-        return ress.id === id
-      })?.resource.find(res => {
-        return res.property === columnRef
-      })?.value
-    }
-  }
+
 
   ngOnDestroy(): void {
     this.startupSubscription?.unsubscribe()

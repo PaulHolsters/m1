@@ -40,8 +40,9 @@
                 </td>
             </ng-container>
             <ng-container *ngSwitchCase="'Date'">
-              <!-- primitief datatype column -->
-              <td>{{getResource('value', resource.id, column.ref)}}</td>
+              <td>
+                {{getDateTime(getResource('value', resource.id, column.ref),column.ref)}}
+              </td>
             </ng-container>
           </ng-container>
         </ng-container>
