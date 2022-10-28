@@ -184,12 +184,12 @@ const app = new App({
                             name: 'time',
                             value: [{name: 'show', value: true}, {
                                 name: 'timeFormat',
-                                value: 'HH:MM:SS'
+                                value: 'H:M:S'
                                 }, {name: 'hourFormat', value: '24'}]
                             },
                             {
                                 name: 'date',
-                                value: [{name: 'show', value: true}, {name: 'dateFormat', value: 'dd/mm/yyyy'}]
+                                value: [{name: 'show', value: false}, {name: 'dateFormat', value: 'dd-mm-yyyy'}]
                             }]
                     }
                 ],

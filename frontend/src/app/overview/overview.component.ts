@@ -223,7 +223,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   getDateTime(datetime: string,field:string){
-    console.log(datetime)
     const date = new Date(datetime)
     const format = this.component?.configuration.formats.find(format=>{
       return format.ref === field
@@ -250,13 +249,13 @@ export class OverviewComponent implements OnInit, OnDestroy {
         f?.valueF.forEach(tf=>{
           switch (tf.name) {
             case 'show':
-              if(tf.value===true){
+              if(tf.valueB){
                 showTime=true
               }
               break
             case 'timeFormat':
               let tfArr
-              if(tf.valueS.search('.')!==-1){
+              if(tf.valueS.split('.').length>1){
                 sepTime = '.'
                 tfArr = tf.valueS.split('.')
               } else{
@@ -280,7 +279,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
               })
               break
             case 'hourFormat':
-              if(tf.value==='12'){
+              if(tf.valueS==='12'){
                 hour12 = true
               }
               break
@@ -333,30 +332,26 @@ export class OverviewComponent implements OnInit, OnDestroy {
         })
       }
     })
-    //return Intl.DateTimeFormat('en-GB').format(value);
-    // todo op het einde ga je de string nog is formateren voor de extra dingen
-    /*
-    *     let year = 'numeric'
-    let month = '2-digit'
-    let day= '2-digit'
-    let sepDate = '/'
-    let sepTime = ':'
-    let weekday
-    let hour = '2-digit'
-    let minute = '2-digit'
-    let second = '2-digit'
-    let ms = false
-    let era
-    let timeZone
-    let timeZoneName
-    let hour12 = false
-    let hourCycle
-    let showTime = false
-    let showDate = false
-    * */
     let opts:any = {year:year,month:month,day:day,hour:hour,minute:minute,second:second,hour12:hour12}
-    let convertedDatetime = Intl.DateTimeFormat('en-GB',opts).format(date)
-    console.log(convertedDatetime)
+    let convertedDatetime = Intl.DateTimeFormat('en-GB',opts).format(date).toString()
+    if(sepTime==='.'){
+      const convertedDatetimeArr = convertedDatetime.split(':')
+      convertedDatetime = ''
+      for (let i=0;i<convertedDatetimeArr.length;i++){
+        convertedDatetime += convertedDatetimeArr[i]
+        if(i+1<convertedDatetimeArr.length) convertedDatetime +='.'
+      }
+    }
+    if(sepDate==='-'){
+      const convertedDatetimeArr = convertedDatetime.split('/')
+      convertedDatetime = ''
+      for (let i=0;i<convertedDatetimeArr.length;i++){
+        convertedDatetime += convertedDatetimeArr[i]
+        if(i+1<convertedDatetimeArr.length) convertedDatetime +='-'
+      }
+    }
+    if(!showDate) convertedDatetime = convertedDatetime.split(', ')[1]
+    if(!showTime) convertedDatetime = convertedDatetime.split(', ')[0]
     return convertedDatetime
   }
 

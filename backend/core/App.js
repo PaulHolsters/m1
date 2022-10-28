@@ -265,7 +265,6 @@ module.exports = class App {
                 //  de transformatie doen
                 // value is een Date Object
                 //return Intl.DateTimeFormat('en-GB').format(value); // Convert outgoing Date to string for JSON
-                console.log(value.toISOString())
                 return value.toISOString()
             },
             parseValue(value) {
