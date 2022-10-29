@@ -151,21 +151,23 @@ const app = new App({
                 action: 'get',
                 concept: 'product',
                 actionMenu: [
-                    {
-                        label: 'aanpassen',
-                        icon: '',
-                        component: 'editProductForm'
-                    },
+
                     {
                         label: 'bekijken',
-                        icon: '',
+                        icon: 'eye',
                         component: 'detailsProductForm'
+                    },
+                    {
+                        label: 'aanpassen',
+                        icon: 'pencil',
+                        component: 'editProductForm'
                     },
                     {
                         label: 'verwijderen',
                         icon: 'trash',
                         component: 'deleteProductConfirmDialog'
-                    }
+                    },
+
                 ],
                 columns: ['gearName', 'basePrice', 'creationDate'],
                 formats: [

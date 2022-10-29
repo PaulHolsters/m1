@@ -67,7 +67,7 @@
                    backgroundColor:'#f1e8e8'
                    }"
                    [rows]="numberOfRows" [totalRecords]="resourcesAll.length"
-                   (onPageChange)="paginate($event)">
+                   (onPageChange)="showCurrentPage($event)">
     </p-paginator>
   </div>
 </div>

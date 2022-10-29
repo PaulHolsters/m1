@@ -9,7 +9,7 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {NavigationModel} from "../models/navigation.model";
 import {DialogModel} from "../models/dialog.model";
 import {ToastModel} from "../models/toast.model";
-import { registerLocaleData } from '@angular/common';
+import {registerLocaleData} from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import localeNl from '@angular/common/locales/nl';
 import localeDe from '@angular/common/locales/de';
@@ -23,7 +23,7 @@ import localeBe from '@angular/common/locales/be';
 export class OverviewComponent implements OnInit, OnDestroy {
   querySubscription: Subscription | undefined
   startupSubscription: Subscription | undefined
-  numberOfRows: number | undefined
+  numberOfRows: number
   resourcesAll: any
   header: string | undefined
   toasts:ToastModel[]
@@ -46,6 +46,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   currentPath: string | undefined
   columns: { ref: string, label: string }[]
   component: ComponentModel | undefined
+  currentPage: number
 
 
   constructor(private config: ConfigService,
@@ -62,6 +63,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     this.confirmDialogs = []
     this.navigations = []
     this.toasts = []
+    this.currentPage = 0
   }
 
   ngOnInit(): void {
@@ -120,7 +122,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
         if (this.component?.configuration.columns) {
           this.columns = this.component?.configuration.columns
         }
-        // todo fix this to get the correct types
         if(this.component?.configuration.formats){
           console.log('formats',this.component?.configuration.formats)
         }
@@ -169,9 +170,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
             })
             return resource
           })
-          this.resources = this.resourcesAll.slice(0, this.numberOfRows)
-          if (this.component?.configuration.actionMenu !== null)
-            this.rerenderActionMenus()
+          this.showCurrentPage()
         })
     }
   }
@@ -192,12 +191,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
     })?.format
     switch (conf) {
       case 'code':
-        const code = format?.find(formatt=>{
-          //console.log(formatt.name)
-          return formatt.name==='currency'
+        return format?.find(formatt => {
+          return formatt.name === 'currency'
         })?.valueS
-        //console.log(code)
-        return code
       case 'display':
         return format?.find(formatt=>{
           return formatt.name==='display'
@@ -371,50 +367,68 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  // todo use yield to show it in the correct order
   rerenderActionMenus() {
     this.resourcesMenuHandler = this.resources.map(res => {
       const items: any[] = []
-      this.navigations.forEach(nav=>{
-        const actionIcon = nav.icon === undefined ? null : this.getIconName(nav.icon)
-        items.push(
-          {
+      if (this.component?.configuration.actionMenu) {
+        for (let i = 0; i < this.component?.configuration.actionMenu.length; i++) {
+          if(this.component?.configuration.actionMenu[i].dialogRef !== null){
+            const label:string = this.component?.configuration.actionMenu[i].label
+            const obj = confirmDialogs(this,label ).next().value
+            items.push(obj)
+          } else{
+            items.push(navigations(this,this.component?.configuration.actionMenu[i].label).next().value)
+          }
+        }
+      }
+      function* navigations(c:any,
+                            label:string){
+          const nav = c.navigations.find((n: { label: string })=>{
+            return n.label === label
+          })
+          const actionIcon = nav.icon === undefined ? null : c.getIconName(nav.icon)
+          const obj = {
             label: nav.label,
             icon: actionIcon,
             command: ()=>{
-              this.router.navigate([nav.routerLink])
+              c.router.navigate([nav.routerLink])
             }
-          })
-      })
-      this.confirmDialogs.forEach(confirmD => {
-        const actionStr = confirmD.action[0].value.replace('ID',  res.id )
-        const actionIcon = confirmD.icon === undefined ? null : this.getIconName(confirmD.icon)
-        items.push(
-          {
+          };
+          yield obj
+      }
+      function* confirmDialogs(c:any,
+                               label:string){
+        const confirmD =  c.confirmDialogs.find((cd: { label: string })=>{
+          return cd.label === label
+        })
+          const actionStr = confirmD.action[0].value.replace('ID',  res.id )
+          const actionIcon = confirmD.icon === undefined ? null : c.getIconName(confirmD.icon)
+          const obj =             {
             label: confirmD.label,
             icon: actionIcon,
             command: () => {
-              this.confirmationService.confirm({
-                  message: confirmD.message,
-                  accept: () => {
-                    this.apollo
-                      .mutate({
-                        mutation: gql`${actionStr}`
-                      }).subscribe(response => {
-                      this.reloadPage()
-                      if(confirmD.toast){
-                        this.messageService.add({
-                          severity:confirmD.toast.severity !== null ? confirmD.toast.severity : 'success',
-                          summary:confirmD.toast.summary,
-                          detail: confirmD.toast.detail})
-                      }
-                    })
-                    this.hideMenu()
-                  }
-                })
+              c.confirmationService.confirm({
+                message: confirmD.message,
+                accept: () => {
+                  c.apollo
+                    .mutate({
+                      mutation: gql`${actionStr}`
+                    }).subscribe(() => {
+                    c.reloadPage() // dit is wat ervoor zorgt dat de beginpagina geladen wordt
+                    if(confirmD.toast){
+                      c.messageService.add({
+                        severity:confirmD.toast.severity !== null ? confirmD.toast.severity : 'success',
+                        summary:confirmD.toast.summary,
+                        detail: confirmD.toast.detail})
+                    }
+                  })
+                  c.hideMenu()
+                }
+              })
             }
-          })
-      })
+          }
+          yield obj
+      }
       return {
         id: res.id,
         items: items
@@ -422,11 +436,22 @@ export class OverviewComponent implements OnInit, OnDestroy {
     })
   }
 
-  // todo finish method
   getIconName(icon: string) {
     switch (icon) {
       case 'trash':
         return 'pi pi-fw pi-trash'
+      case 'eye':
+        return 'pi pi-fw pi-eye'
+      case 'pencil':
+        return 'pi pi-fw pi-pencil'
+      case 'download':
+        return 'pi pi-fw pi-download'
+      case 'circle':
+        return 'pi pi-info-circle'
+      case 'bill':
+        return 'pi pi-money-bill'
+      case 'send':
+        return 'pi pi-fw pi-send'
       default:
         return ''
     }
@@ -441,7 +466,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
         `,
         })
         .valueChanges.pipe(map((result) => result.data)).subscribe(res => {
-          console.log(res)
           this.resourcesAll = Object.values(res)[0].map(val => {
             const valCopy = Object.create(val)
             const resource: {
@@ -466,7 +490,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
               resourceItem.property = prop
               resourceItem.type = this.getType(prop)
               resourceItem.value = valCopy[prop]
-              console.log(valCopy[prop])
               resourceItem.column = this.columns.find(col => {
                 return col.ref === prop
               })?.label
@@ -474,16 +497,12 @@ export class OverviewComponent implements OnInit, OnDestroy {
             })
             return resource
           })
-          // todo fix this want het lijkt er op dat er steeds dezelfde
-          //  pagina getoond wordt => inderdaad terwijl d epagina numme rniet eens correct wijzigt op dat moment!
-          this.resources = this.resourcesAll.slice(0, this.numberOfRows)
-          this.rerenderActionMenus()
+          this.showCurrentPage()
         })
     }
 
   }
 
-  // todo zorg ervoor dat types in een correct formaat worden getoond
   getType(propertyName: string) {
     return this.component?.configuration.controls.find(control=>{
       return control.ref === propertyName
@@ -516,12 +535,21 @@ export class OverviewComponent implements OnInit, OnDestroy {
     })?.items || []
   }
 
-  paginate(event: any) {
-    this.resources = this.resourcesAll.slice(event.page * event.rows, (event.page * event.rows + event.rows))
-    this.rerenderActionMenus()
+  showCurrentPage(event?: any){
+    if(event){
+      this.resources = this.resourcesAll.slice(event.page * event.rows, (event.page * event.rows + event.rows))
+      this.currentPage = event.page
+    } else{
+      if(this.currentPage * this.numberOfRows > this.resourcesAll.length){
+        // last page
+
+      } else {
+        this.resources = this.resourcesAll.slice(this.currentPage * this.numberOfRows, (this.currentPage * this.numberOfRows + this.numberOfRows))
+      }
+    }
+    if (this.component?.configuration.actionMenu !== null)
+      this.rerenderActionMenus()
   }
-
-
 
   ngOnDestroy(): void {
     this.startupSubscription?.unsubscribe()
