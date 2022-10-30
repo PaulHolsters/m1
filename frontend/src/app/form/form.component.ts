@@ -16,6 +16,7 @@ export class FormComponent implements OnInit,AfterViewChecked {
   controls: { label: string, type: string, constraints:ConstraintsModel, id: string, value: any, valid:{value:boolean|undefined, constraints: ConstraintsModel} }[]
   savePressed: boolean
   currentPath: string | undefined
+  previousPath: string | undefined
   component: ComponentModel | undefined
   invalidForm:boolean|undefined
   constructor(private config: ConfigService, private route: ActivatedRoute, private router: Router, private apollo: Apollo,
@@ -37,8 +38,8 @@ export class FormComponent implements OnInit,AfterViewChecked {
         this.component = startupData.components.find(comp => {
           return comp.ref === compRef
         })
-        //console.log(this.component)
-        // todo add the format constraints as well?
+        console.log(this.component?.configuration.formats,'just take this!')
+        // todo add the format constraints as well? => enkel formats geen constraints!
         this.component?.configuration?.controls?.forEach(control => {
           this.controls.push({label: control.label, type: control.type, constraints:control.constraints, id: UUID.UUID(),
             value: undefined,valid:{value:undefined,constraints:{}}})

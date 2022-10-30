@@ -23,6 +23,7 @@ const app = new App({
                 {
                     type: Gear,
                     label: 'product',
+                    // constraints zijn bedoeld puur voor de backend => een message kan maar dan als externe API
                     constraints: {
                         capitals: ['first']
                     }
@@ -119,11 +120,17 @@ const app = new App({
                 concept: 'product',
                 formats: [
                     {
+                        ref: 'gearName',
+                        format:[{name:'capitals',value:['first']}],
+                        validation:'post'
+                    },
+                    {
                         ref: 'basePrice',
                         format: [{name: 'currency', value: 'EUR'}, {
                             name: 'cents',
                             value: [{name: 'show', value: false}, {name: 'allowed', value: false}]
-                        }]
+                        }],
+                        validation:'pre'
                     },
                     {
                         ref: 'creationDate',
@@ -207,6 +214,11 @@ const app = new App({
                 concept: 'product',
                 formats: [
                     {
+                        ref: 'gearName',
+                        format:[{name:'capitals',value:['first']}],
+                        validation:'post'
+                    },
+                    {
                         ref: 'basePrice',
                         format: [{name: 'currency', value: 'EUR'}, {
                             name: 'cents',
@@ -248,6 +260,11 @@ const app = new App({
             configuration: {
                 concept: 'product',
                 formats: [
+                    {
+                        ref: 'gearName',
+                        format:[{name:'capitals',value:['first']}],
+                        validation:'post'
+                    },
                     {
                         ref: 'basePrice',
                         format: [{name: 'currency', value: 'EUR'}, {

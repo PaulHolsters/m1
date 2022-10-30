@@ -2,7 +2,7 @@
   <ng-content></ng-content>
   <div *ngIf="control">
     <div [ngSwitch]="control.type">
-      <div *ngSwitchCase="'text'">
+      <div *ngSwitchCase="'String'">
         <div>
           <input
             [ngClass]="{'ng-invalid': control.valid.value === false, 'ng-dirty':control.valid.value === false}"
@@ -15,7 +15,7 @@
           <span style="color: #f84b4b" [innerHTML]="getMessage()"></span>
         </div>
       </div>
-      <div *ngSwitchCase="'date'">
+      <div *ngSwitchCase="'Date'">
         <div>
           <p-calendar
             [ngClass]="{'ng-invalid': control.valid.value === false, 'ng-dirty':control.valid.value === false}"
@@ -27,39 +27,39 @@
           <span style="color: #f84b4b" [innerHTML]="getMessage()"></span>
         </div>
       </div>
-      <div *ngSwitchCase="'number'">
+      <div *ngSwitchCase="'Number'">
         <!-- todo control toevoegen -->
-      </div>
-      <div *ngSwitchCase="'money'">
-        <div>
-          <p-inputNumber
-            [ngClass]="{'ng-invalid': control.valid.value === false, 'ng-dirty':control.valid.value === false}"
-            name="{{control.id}}"
-            mode="currency"
-            currency="EUR"
-            [maxFractionDigits]="0"
-            [(ngModel)]="control.value" (onInput)="resetValidity()">
-          </p-inputNumber>
-        </div>
+        <p-inputNumber
+          [ngClass]="{'ng-invalid': control.valid.value === false, 'ng-dirty':control.valid.value === false}"
+          name="{{control.id}}"
+          [(ngModel)]="control.value" (onInput)="resetValidity()">
+        </p-inputNumber>
+        <p-inputNumber
+          [ngClass]="{'ng-invalid': control.valid.value === false, 'ng-dirty':control.valid.value === false}"
+          name="{{control.id}}"
+          mode="{{mode}}"
+          currency="{{currency}}"
+          [maxFractionDigits]="maxFractionDigits"
+          [(ngModel)]="control.value" (onInput)="resetValidity()">
+        </p-inputNumber>
         <div *ngIf="control.valid.value === false" class="mt-1 mb-1">
           <p-messages severity="error">
             <ng-template pTemplate>
               <span class="ml-2" [innerHTML]="getMessage()"></span>
             </ng-template>
           </p-messages>
-<!--          <app-message style="color: #f84b4b" [message]="getMessage()"></app-message>-->
         </div>
       </div>
-      <div *ngSwitchCase="'radio'">
+      <div *ngSwitchCase="'Radio'">
         <!-- todo control toevoegen -->
       </div>
-      <div *ngSwitchCase="'checkbox'">
+      <div *ngSwitchCase="'Checkbox'">
         <!-- todo control toevoegen -->
       </div>
-      <div *ngSwitchCase="'single select'">
+      <div *ngSwitchCase="'Single select'">
         <!-- todo control toevoegen -->
       </div>
-      <div *ngSwitchCase="'picklist'">
+      <div *ngSwitchCase="'Picklist'">
         <!-- todo control toevoegen -->
       </div>
     </div>

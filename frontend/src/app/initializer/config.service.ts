@@ -141,6 +141,10 @@ export class ConfigService {
             name
             valueS:value
           }
+          ... on SValue{
+            name
+            sValue:value
+          }
           ... on ValueI{
             name
             valueI:value
@@ -156,6 +160,10 @@ export class ConfigService {
                 name
                 valueS:value
               }
+          ... on SValue{
+            name
+            sValue:value
+          }
               ... on ValueI{
                 name
                 valueI:value

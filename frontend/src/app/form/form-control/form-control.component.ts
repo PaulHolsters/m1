@@ -20,12 +20,19 @@ export class FormControlComponent implements OnInit, OnChanges,AfterViewChecked 
   @Input() savePressed: boolean|undefined
   @Output() onPreSave = new EventEmitter<{type:string, label:string, id:string,value:any}>()
 
+  mode:string
+  currency:string|null
+  maxFractionDigits:number
+
   constructor(
     private cd: ChangeDetectorRef) {
+    this.mode = 'decimal'
+    this.currency = null
+    this.maxFractionDigits = 3
   }
 
   ngOnInit(): void {
-
+    if(this.control) console.log(this.control.type,this.control.valid.constraints)
   }
 
   ngOnChanges(event:any): void {

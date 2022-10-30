@@ -133,11 +133,16 @@ module.exports = class App {
             text:String
         }
         
-        union Value = ValueB | ValueS | ValueI | ValueF
+        union Value = ValueB | ValueS | ValueI | ValueF | SValue
         
         type ValueS{
             name:String
             value:String
+        }
+        
+        type SValue{
+            name:String
+            value:[String]
         }
         
         type ValueI{
@@ -299,6 +304,8 @@ module.exports = class App {
                         return 'ValueI'
                     }else if(typeof obj.value === 'boolean'){
                         return 'ValueB'
+                    } else if(obj.name === 'capitals'){
+                        return 'SValue'
                     } else if(typeof obj.value === 'object') return 'ValueF'
                     return null; // GraphQLError is thrown
                 },
