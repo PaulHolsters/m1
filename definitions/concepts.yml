@@ -1,4 +1,5 @@
 concepts:
+##
   - ref:
       code:
         singular: price
@@ -16,6 +17,7 @@ concepts:
             plural: bedragen
         type: float
         constraints:
+          - required: true
           - min:
               value: 0
               override: true
@@ -23,7 +25,7 @@ concepts:
           - minDecimals:
               value: 0
               override: true
-          - custom: # hier definieer ik constraints die je voor overeenkomstig attribuut kan gebruiken
+          - custom: # hier definieer ik constraints die je voor overeenkomstig attribuut 'amount' kan gebruiken
               name: cents
               values:
                 - name: show
@@ -35,28 +37,27 @@ concepts:
                 - name: allowed
                   type: bool
       - ref: currency
+        constraints:
+          - required: true
+          - from: currencies
+  ##
   - ref:
-      code:
-        singular: currency
-        plural: currencies
-      label:
-        singular: munteenheid
-        plural: munteenheden
+      code: currency
+      label: munteenheid
     attr:
       - ref:
           code: code
           label: code
         type: string
         constraints:
-          values:
-            - EUR
-            - USD
+          - length: 3
+          - capitals: all
+          - unique: true
+          - required: true
       - ref:
           code: decimals
           label: aantal cijfers na de komma
         type: int
         constraints:
-          range: [0..2]
-    constraints:
-
-            # hier ga je een constraint hebben die gaat over 2 attibuten ipv slechts één attribuut
+          - range: [0..2]
+          - required: true

@@ -1,5 +1,7 @@
 types:
+  ##
   - name: name
+    ## ook de base class string , int en dergelijke zijn interessant om deze hier te plaatsen!!!
     base: string
     constraints:
       - maxLength: 200
@@ -10,17 +12,18 @@ types:
           - newline
           - spaces
       - maxWords: 20
-
-
-  - name: price
-    base: float - currency // herwerk!!!!!
+  ##
+  - name: currencies
+    base: currency
     constraints:
-      # hier enkel reeds bestaande constraints gebruiken die hier worden toegepast voor het type price
-      # constraints zijn niet overridable tenzij expliciet hier gezegd
-      - decimals: currency.decimals
-      - min:
-          - value: 0
-          - override: true # met min: unset cancel je deze constraint
+      - values:
+          - code: EUR
+            decimals: 2
+          - code: USD
+            decimals: 2
+
+
+
 
 
 
