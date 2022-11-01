@@ -1,0 +1,32 @@
+types:
+  - name: name
+    base: string
+    constraints:
+      - maxLength: 200
+      - minLength: 2
+      - not-allowed:
+          - special
+          - tab
+          - newline
+          - spaces
+      - maxWords: 20
+
+
+  - name: price
+    base: float - currency // herwerk!!!!!
+    constraints:
+      # hier enkel reeds bestaande constraints gebruiken die hier worden toegepast voor het type price
+      # constraints zijn niet overridable tenzij expliciet hier gezegd
+      - decimals: currency.decimals
+      - min:
+          - value: 0
+          - override: true # met min: unset cancel je deze constraint
+
+
+
+
+
+
+
+
+

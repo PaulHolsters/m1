@@ -1,0 +1,30 @@
+concepts:
+  - ref:
+      code:
+        singular: product
+        plural: products
+      label:
+        singular: product
+        plural: producten
+    attr:
+      - ref:
+          label: product
+        type: name
+        constraints:
+          - capitals:
+              - first
+      - ref:
+          label: prijs
+        type: price
+        constraints:
+          - currency: eur
+          - cents:
+              show: true
+              allowed: false
+      - type: date
+        ref:
+          code: purchaseDate
+          label: aankoopdatum
+        constraints:
+          - from: 01/01/2000
+        default: now

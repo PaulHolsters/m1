@@ -6,6 +6,7 @@ import {Apollo, gql} from "apollo-angular";
 import {ConstraintsModel} from "../models/constraints.model";
 import {ComponentModel} from "../models/component.model";
 import {FunctionsService} from "../services/functions.service";
+import {FormatModel} from "../models/format.model";
 
 @Component({
   selector: 'app-form',
@@ -13,7 +14,7 @@ import {FunctionsService} from "../services/functions.service";
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit,AfterViewChecked {
-  controls: { label: string, type: string, constraints:ConstraintsModel, id: string, value: any, valid:{value:boolean|undefined, constraints: ConstraintsModel} }[]
+  controls: { label: string, type: string, format:FormatModel|undefined, constraints:ConstraintsModel, id: string, value: any, valid:{value:boolean|undefined, constraints: ConstraintsModel} }[]
   savePressed: boolean
   currentPath: string | undefined
   previousPath: string | undefined
@@ -41,7 +42,9 @@ export class FormComponent implements OnInit,AfterViewChecked {
         console.log(this.component?.configuration.formats,'just take this!')
         // todo add the format constraints as well? => enkel formats geen constraints!
         this.component?.configuration?.controls?.forEach(control => {
-          this.controls.push({label: control.label, type: control.type, constraints:control.constraints, id: UUID.UUID(),
+          this.controls.push({label: control.label, type: control.type, format:this.component?.configuration.formats.find(f=>{
+            return f.ref === control.ref
+            }), constraints:control.constraints, id: UUID.UUID(),
             value: undefined,valid:{value:undefined,constraints:{}}})
         })
       }

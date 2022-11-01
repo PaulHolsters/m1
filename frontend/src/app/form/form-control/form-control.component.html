@@ -5,7 +5,7 @@
       <div *ngSwitchCase="'String'">
         <div>
           <input
-            [ngClass]="{'ng-invalid': control.valid.value === false, 'ng-dirty':control.valid.value === false}"
+            [ngClass]="{'ng-invalid': isValid()=== false, 'ng-dirty':isValid() === false}"
             name="{{control.id}}"
             type="text"
             pInputText
@@ -18,7 +18,7 @@
       <div *ngSwitchCase="'Date'">
         <div>
           <p-calendar
-            [ngClass]="{'ng-invalid': control.valid.value === false, 'ng-dirty':control.valid.value === false}"
+            [ngClass]="{'ng-invalid': isValid() === false, 'ng-dirty':isValid() === false}"
             dateFormat="dd/mm/yy"
             [(ngModel)]="control.value" (ngModelChange)="resetValidity()" (onInput)="resetValidity()">
           </p-calendar>
@@ -30,19 +30,20 @@
       <div *ngSwitchCase="'Number'">
         <!-- todo control toevoegen -->
         <p-inputNumber
-          [ngClass]="{'ng-invalid': control.valid.value === false, 'ng-dirty':control.valid.value === false}"
+          [ngClass]="{'ng-invalid': isValid() === false, 'ng-dirty':isValid() === false}"
           name="{{control.id}}"
           [(ngModel)]="control.value" (onInput)="resetValidity()">
         </p-inputNumber>
+        <!--[ngClass]="{'ng-invalid': control.valid.value === false, 'ng-dirty':control.valid.value === false}"-->
         <p-inputNumber
-          [ngClass]="{'ng-invalid': control.valid.value === false, 'ng-dirty':control.valid.value === false}"
+
           name="{{control.id}}"
           mode="{{mode}}"
           currency="{{currency}}"
           [maxFractionDigits]="maxFractionDigits"
           [(ngModel)]="control.value" (onInput)="resetValidity()">
         </p-inputNumber>
-        <div *ngIf="control.valid.value === false" class="mt-1 mb-1">
+        <div *ngIf="isValid() === false" class="mt-1 mb-1">
           <p-messages severity="error">
             <ng-template pTemplate>
               <span class="ml-2" [innerHTML]="getMessage()"></span>

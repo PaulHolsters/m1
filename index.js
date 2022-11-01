@@ -23,7 +23,6 @@ const app = new App({
                 {
                     type: Gear,
                     label: 'product',
-                    // constraints zijn bedoeld puur voor de backend => een message kan maar dan als externe API
                     constraints: {
                         capitals: ['first']
                     }
@@ -38,9 +37,20 @@ const app = new App({
                         // elke constraint resulteert in een bepaalde validatie, vandaar dat currency 'EUR' hier niet thuishoort!
                         required: true,
                         // indien false dan enkel gehele bedragen toegestaan zonder bv. eurocent
+                        // todo zorg ervoor dat dit enkel in de format moet staan
                         cents: false
                     }
                 },
+                /*
+                *                     {
+                        ref: 'basePrice',
+                        format: [{name: 'currency', value: 'EUR'}, {
+                            name: 'cents',
+                            value: [{name: 'show', value: false}, {name: 'allowed', value: false}]
+                        }],
+                        validation:'pre'
+                    },
+                * */
                 {
                     type: Date,
                     label: 'aangemaakt op',

@@ -611,7 +611,6 @@ module.exports = class App {
                         }
                     }
                     if (component.configuration.hasOwnProperty('concept')) {
-                        // todo voeg deze controls functionaliteit ook toe aan de overview
                         component.configuration['controls'] = []
                         const targetConcept = this.concepts.find(concept => {
                             return concept.name.ref.singular === component.configuration.concept

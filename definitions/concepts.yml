@@ -1,0 +1,62 @@
+concepts:
+  - ref:
+      code:
+        singular: price
+        plural: prices
+      label:
+        singular: prijs
+        plural: prijzen
+    attr:
+      - ref:
+          code:
+            singular: amount
+            plural: amounts
+          label:
+            singular: bedrag
+            plural: bedragen
+        type: float
+        constraints:
+          - min:
+              value: 0
+              override: true
+          - maxDecimals: currency.decimals
+          - minDecimals:
+              value: 0
+              override: true
+          - custom: # hier definieer ik constraints die je voor overeenkomstig attribuut kan gebruiken
+              name: cents
+              values:
+                - name: show
+                  # engine zoekt naar een show functie 'show' in de backend voor het toepassen van backend validatie
+                  # indien niet aanwezig dan doet de backend geen validatie voor deze constraint
+                  # constraints gaan altijd rechtstreeks door naar de frontend zoals ze in het schema komen
+                  # ze worden in de frontend toegepast indien de target component hiermee rekening houdt
+                  type: bool
+                - name: allowed
+                  type: bool
+      - ref: currency
+  - ref:
+      code:
+        singular: currency
+        plural: currencies
+      label:
+        singular: munteenheid
+        plural: munteenheden
+    attr:
+      - ref:
+          code: code
+          label: code
+        type: string
+        constraints:
+          values:
+            - EUR
+            - USD
+      - ref:
+          code: decimals
+          label: aantal cijfers na de komma
+        type: int
+        constraints:
+          range: [0..2]
+    constraints:
+
+            # hier ga je een constraint hebben die gaat over 2 attibuten ipv slechts één attribuut
