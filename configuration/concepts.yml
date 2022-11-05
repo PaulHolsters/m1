@@ -17,7 +17,7 @@ concepts:
           label: prijs
         type: price
         constraints:
-          - currency: eur
+          - this.currency.value: EUR
           - cents:
               show: true
               allowed: false

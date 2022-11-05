@@ -1,63 +1,61 @@
 concepts:
 ##
+  - ref: price
+      singular: price
+      plural: prices
+    code:
+      singular: price
+      plural: prices
+    label:
+        primary:
+          singular: prijs
+          plural: prijzen
+        aliases:
+          - singular: basisprijs
+            plural: basisprijzen
+    attr:
+      - type: float
+        constraints:
+          - gt: 0
+          - maxDecimals: this.currency.decimals
+      - type: currency
+## todo je moet het verband tussen het bedrag en de currency nog definiëren!
+
+##
   - ref:
-      code:
-        singular: price
-        plural: prices
-      label:
-        singular: prijs
-        plural: prijzen
+      singular: currency
+      plural: currencies
+    code:
+        singular: currency
+        plural: currencies
+    label:
+      singular: munteenheid
+      plural: munteenheden
     attr:
       - ref:
-          code:
-            singular: amount
-            plural: amounts
-          label:
-            singular: bedrag
-            plural: bedragen
-        type: float
-        constraints:
-          - required: true
-          - min:
-              value: 0
-              override: true
-          - maxDecimals: currency.decimals
-          - minDecimals:
-              value: 0
-              override: true
-          - custom: # hier definieer ik constraints die je voor overeenkomstig attribuut 'amount' kan gebruiken
-              name: cents
-              values:
-                - name: show
-                  # engine zoekt naar een show functie 'show' in de backend voor het toepassen van backend validatie
-                  # indien niet aanwezig dan doet de backend geen validatie voor deze constraint
-                  # constraints gaan altijd rechtstreeks door naar de frontend zoals ze in het schema komen
-                  # ze worden in de frontend toegepast indien de target component hiermee rekening houdt
-                  type: bool
-                - name: allowed
-                  type: bool
-      - ref: currency
-        constraints:
-          - required: true
-          - from: currencies
-  ##
-  - ref:
-      code: currency
-      label: munteenheid
-    attr:
-      - ref:
-          code: code
-          label: code
+          singular: code
+          plural: codes
+        code:
+          singular: code
+          plural: codes
+        label:
+          singular: code
+          plural: codes
         type: string
         constraints:
           - length: 3
-          - capitals: all
-          - unique: true
-          - required: true
+          - capitals:
+              - all
       - ref:
-          code: decimals
-          label: aantal cijfers na de komma
+          singular: decimal
+          plural: decimals
+        code:
+          singular: decimal
+          plural: decimals
+        label:
+          singular: cijfer na de komma
+          plural: aantal cijfers na de komma
         type: int
         constraints:
-          - range: [0..2]
-          - required: true
+          - range: [0..3]
+
