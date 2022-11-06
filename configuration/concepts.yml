@@ -19,7 +19,6 @@ concepts:
           singular: product
           plural: producten
         type: name
-        constraints:
       - type: price
         constraints:
           - cents:
