@@ -39,7 +39,7 @@ concepts:
               ## de inkomende waarden zijn steeds beschikbaar in de funcDatetime opgemaakt door de
               ## gebruiker op een daarvoor voorziene plek bv. via Configuration.Concepts.product.price
               ## op deze manier kan je alvast cross attribute constraints leggen
-              ## conditionele constraints hebben altidj voorrang op niet conditionele
+              ## conditionele constraints hebben altijd voorrang op niet conditionele
               condition: funcDatetime
           - time: false
         default: now

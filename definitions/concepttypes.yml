@@ -18,6 +18,8 @@ concepts:
         validation: restrict
         constraints:
           - gt: 0
+          # voor kortye zaken kan je dit zo doen,
+          # voor langere kan je hier een functie naam vermelden waarin je de waarde bepaald
           - maxDecimals: currency.decimals
         # een list hier de list currency wordt ook onder type gezet omdat het ook gaat over een welbepaalde verzameling aan waarden
         # zodus iets is van een bepaald type indien de waarde van dat iets voorkomt in de verzameling waarden horende bij dat type
