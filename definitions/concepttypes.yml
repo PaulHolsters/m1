@@ -42,7 +42,8 @@ concepts:
 #      singular: munteenheid
 #      plural: munteenheden
 #    attr:
-#      - ref:
+#      - type: string
+#        ref:
 #          singular: code
 #          plural: codes
 #        code:
@@ -51,18 +52,17 @@ concepts:
 #        label:
 #          singular: code
 #          plural: codes
-#        type: string
 #        constraints:
 #          - length: 3
 #          - capitals:
 #              - all
-#      - ref:
+#      - type: int
+#        ref:
 #          singular: decimals
 #        code:
 #          singular: decimals
 #        label:
 #          singular: aantal cijfers na de komma
-#        type: int
 #        constraints:
 #          - range: [0..3]
 

@@ -9,7 +9,8 @@ concepts:
       singular: product
       plural: producten
     attr:
-      - ref:
+      - type: name
+        ref:
           singular: productName
           plural: productNames
         code:
@@ -18,7 +19,6 @@ concepts:
         label:
           singular: product
           plural: producten
-        type: name
       - type: price
         constraints:
           - cents:
@@ -26,7 +26,8 @@ concepts:
               allowed: false
           - currency:
               - code: EUR
-      - ref:
+      - type: datetime
+        ref:
           singular: purchaseDate
           plural: purchaseDates
         code:
@@ -35,7 +36,6 @@ concepts:
         label:
           singular: aankoopdatum
           plural: aankoopdatums
-        type: datetime
         constraints:
           - from: 01/01/2000
           - time: false
