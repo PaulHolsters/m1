@@ -1,3 +1,5 @@
+# validation
+## ...
 concepts:
   - ref:
       singular: product
@@ -10,8 +12,6 @@ concepts:
       plural: producten
     attr:
       - type: name
-        constraints:
-          - required: true
         ref:
           singular: productName
           plural: productNames
@@ -34,6 +34,7 @@ concepts:
           - from: 01/01/2000
           - time: false
         default: now
+        validation: restrict
         ref:
           singular: purchaseDate
           plural: purchaseDates

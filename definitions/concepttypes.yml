@@ -15,6 +15,7 @@ concepts:
             plural: basisprijzen
     attr:
       - type: float
+        validation: restrict
         constraints:
           - gt: 0
           - maxDecimals: this.currency.decimals
@@ -31,6 +32,7 @@ concepts:
       - name: currency
         params:
             type: currency.code
+    validation: restrict
 ##
 #  - ref:
 #      singular: currency

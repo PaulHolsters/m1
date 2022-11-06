@@ -16,9 +16,12 @@ types:
     constraints:
       - maxLength: 150
       - uniqueCI: true
+      - required: true
+    validation: afterinput
   - type: override
     base: string
     custom constraint functions:
       - name: uniqueCI
         params:
           - type: bool
+        dbcall: true
