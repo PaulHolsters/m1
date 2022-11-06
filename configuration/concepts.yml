@@ -32,6 +32,11 @@ concepts:
       - type: datetime
         constraints:
           - from: 01/01/2000
+          - from: 01/01/2010
+              ## de inkomende waarden zijn steeds beschikbaar in de funcDatetime opgemaakt door de
+              ## gebruiker op een daarvoor voorziene plek bv. via Configuration.Concepts.product.price
+              ## op deze manier kan je alvast cross attribute constraints leggen
+              condition: funcDatetime
           - time: false
         default: now
         validation: restrict

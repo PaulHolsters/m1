@@ -24,4 +24,3 @@ types:
       - name: uniqueCI
         params:
           - type: bool
-        dbcall: true
