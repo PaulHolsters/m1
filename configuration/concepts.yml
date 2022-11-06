@@ -22,6 +22,9 @@ concepts:
           singular: product
           plural: producten
       - type: price
+        ## concept constraints kunnen op actie niveau override worden
+        ## waardoor het mogelijk is om een bepaalde constraint op te hebben voor een bepaalde actie
+        ## maar niet voor andere acties, dit kan ook in combinatie met een bepaalde rol of gebruiker
         constraints:
           - required: true
           - cents:
@@ -36,6 +39,7 @@ concepts:
               ## de inkomende waarden zijn steeds beschikbaar in de funcDatetime opgemaakt door de
               ## gebruiker op een daarvoor voorziene plek bv. via Configuration.Concepts.product.price
               ## op deze manier kan je alvast cross attribute constraints leggen
+              ## conditionele constraints hebben altidj voorrang op niet conditionele
               condition: funcDatetime
           - time: false
         default: now
