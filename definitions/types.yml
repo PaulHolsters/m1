@@ -11,3 +11,14 @@ types:
     constraints:
       ## gt is geen constraints gekend bij type int maar dan zoekt de engine verder naar deze constraint in de base van int zijnde number
       - gt: -1
+  - type: name
+    base: string
+    constraints:
+      - maxLength: 150
+      - uniqueCI: true
+  - type: override
+    base: string
+    custom constraint functions:
+      - name: uniqueCI
+        params:
+          - type: bool

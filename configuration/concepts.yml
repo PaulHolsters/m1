@@ -20,8 +20,6 @@ concepts:
           plural: producten
         type: name
         constraints:
-          - capitals:
-              - first
       - type: price
         constraints:
           - cents:

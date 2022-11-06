@@ -30,7 +30,6 @@ concepts:
             type: bool
       - name: currency
         params:
-          - name: code
             type: currency.code
 ##
 #  - ref:
