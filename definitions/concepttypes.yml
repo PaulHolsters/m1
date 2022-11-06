@@ -1,0 +1,69 @@
+concepts:
+##
+  - ref: price
+      singular: price
+      plural: prices
+    code:
+      singular: price
+      plural: prices
+    label:
+        primary:
+          singular: prijs
+          plural: prijzen
+        aliases:
+          - singular: basisprijs
+            plural: basisprijzen
+    attr:
+      - type: float
+        constraints:
+          - gt: 0
+          - maxDecimals: this.currency.decimals
+        # een list hier de list currency wordt ook onder type gezet omdat het ook gaat over een welbepaalde verzameling aan waarden
+        # zodus iets is van een bepaald type indien de wsaarde van dat iets voorkomt in de verzameling aan waarden horende bij dat type
+      - type: currency
+    constraints:
+      - name: cents
+        params:
+          - name: show
+            type: bool
+          - name: allowed
+            type: bool
+      - name: currency
+        params:
+          - name: code
+            type: currency.code
+##
+#  - ref:
+#      singular: currency
+#      plural: currencies
+#    code:
+#        singular: currency
+#        plural: currencies
+#    label:
+#      singular: munteenheid
+#      plural: munteenheden
+#    attr:
+#      - ref:
+#          singular: code
+#          plural: codes
+#        code:
+#          singular: code
+#          plural: codes
+#        label:
+#          singular: code
+#          plural: codes
+#        type: string
+#        constraints:
+#          - length: 3
+#          - capitals:
+#              - all
+#      - ref:
+#          singular: decimals
+#        code:
+#          singular: decimals
+#        label:
+#          singular: aantal cijfers na de komma
+#        type: int
+#        constraints:
+#          - range: [0..3]
+

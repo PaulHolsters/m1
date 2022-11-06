@@ -1,82 +1,13 @@
-# types werken als volgt:
-# je hebt een aantal primaire types: string, number, datetime, bool, ...
-# Deze worden rechtsreeks door de engine herkend,
-# bij deze types zitten al enkele voorgebakken constraint functies: trim, minLength, maxLength, ... voor het string type
-# maar je kan er zelf ook custom constraint functies aan toevoegen door een naam op te geven van de functie die moet
-# uitgevoerd worden wanneer de constraint wordt opegroepen voor een bepaald niet-primair type of voor een attribuut dat gebruik
-# maakt van de het type waarvoorje een constraintfunctie wilt toevoegen
-# een constraint functie neemt het attribuut waarmee het type is geassocieerd als parameter
-# en geeft twee waarden terug: een boolean die zegt of de input conform was en in bepaalde gevallen een transformatie
-# van de input zodanig dat het daarna wel conform is, in de gevallen dat een transformatie niet mogelijk is wordt de waarde
-# undefined teruggegeven: een constraintfunctie doet dus twee dingen, niet één
-
-# Daarnaast kan je dus bestaande types gebruiken om nieuwe types mee te creëren (keywoord base)
-# daarbij ga je vervolgens constraintfuncties gebruiken van dit base-type (die dan ook moeten bestaan bij de base)
-# om de toegelaten waarden voor dit type in te gaan perken
-# ook voor dit aldus gecreëerde nieuwe type kan je constraintfuncties gaan definiëren
-
-# naast bestaande types kan je ook bestaande concepten gebruiken als base
-# een concept bestaat uit één of meerdere attributen die zelf moeten voldoen aan de regels voor een bepaald type
-# een stuk data voldoet aan zon' concept-type zeg maar wanneer elk attribuut van dat stukje data voldoet aan de regels
-# van de overeenkomende types
-
-# er is echter 1 belangrijk verschil tussen een enkelvoudig type en een meervoudige type (concept-type)
-# bij een meervoudig type kunnen er regels gelden die de relatie bepaald tussen de twee attriburten waaruit het achterliggende concept bestaat
-
-
-
-
-
-
-
-
-
-
-
 types:
-
-
-
-
-
-
-
-  - name: name
-    ## een type baseert zich steeds op een concept, behalve primaire types zoals string, number, boolean, datetime, ...
-    base: string
-    constraints:
-      ## de constraints is functionaliteit die werd aangemaakt bij de aanmaak van het concept vermeld in de base
-      ## in die zin is het perfect mogelijk om van string een concept te maken
-      - maxLength: 200
-      - minLength: 2
-      - not-allowed:
-          - symbols
-          - wsChars
-      - maxWords: 20
-  - name: price
-    ## het type price baseert zich op het concept price, je kan dus met elk concept een type creëren
-    ## point is dat je van een concept instanties kan aanmaken die je al dan niet kan bewaren in een database
-    ## een type is functionaliteit die controleert of de data voldoet aan de vereisten voor een bepaald concept
-    base: price
-  - name: float
+  ##
+  - type: float
     base: number
-  - name: float
+  - type: int
     base: number
     constraints:
-      - custom:
-          - name: decimals
-            input: int
-  - name: int
-    base: number
+      - decimals: 0
+  - type: natural
+    base: int
     constraints:
-      - custom:
-          - name:
-
-
-
-
-
-
-
-
-
+      ## gt is geen constraints gekend bij type int maar dan zoekt de engine verder naar deze constraint in de base van int zijnde number
+      - gt: -1
