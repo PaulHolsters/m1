@@ -41,9 +41,12 @@ concepts:
               ## op deze manier kan je alvast cross attribute constraints leggen
               ## conditionele constraints hebben altijd voorrang op niet conditionele
               condition: funcDatetime
-          - time: false
         default: now
         validation: restrict
+        output:
+          - date:
+              ## output kan desgewenst in specifieke componenten override worden => time kan hier included worden
+              format: DD/MM/YYYY
         ref:
           singular: purchaseDate
           plural: purchaseDates
