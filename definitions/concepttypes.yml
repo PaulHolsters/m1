@@ -27,10 +27,7 @@ concepts:
     constraints:
       - name: cents
         params:
-          - name: show
-            type: bool
-          - name: allowed
-            type: bool
+          - type: bool
       - name: currency
         params:
             type: currency.code

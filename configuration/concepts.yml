@@ -27,11 +27,11 @@ concepts:
         ## maar niet voor andere acties, dit kan ook in combinatie met een bepaalde rol of gebruiker
         constraints:
           - required: true
-          - cents:
-              show: true
-              allowed: false
+          - cents: false
           - currency:
               - code: EUR
+        output:
+          - cents: false
       - type: datetime
         constraints:
           - from: 01/01/2000
