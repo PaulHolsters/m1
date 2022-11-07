@@ -28,8 +28,7 @@ concepts:
         constraints:
           - required: true
           - cents: false
-          - currency:
-              - code: EUR
+          - currency: EUR
         output:
           - cents: false
       - type: datetime
