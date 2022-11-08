@@ -1,5 +1,4 @@
 types:
-  ##
   - type: float
     base: number
   - type: int
@@ -9,7 +8,6 @@ types:
   - type: natural
     base: int
     constraints:
-      ## gt is geen constraints gekend bij type int maar dan zoekt de engine verder naar deze constraint in de base van int zijnde number
       - gt: -1
   - type: name
     base: string
@@ -18,9 +16,13 @@ types:
       - uniqueCI: true
       - required: true
     validation: afterinput
+  - type: date
+    base: datetime
+    constraints:
+      - time: false
   - type: override
     base: string
-    custom constraint functions:
+    constraint functions:
       - name: uniqueCI
         params:
           - type: bool

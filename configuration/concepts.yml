@@ -1,57 +1,15 @@
-# validation
-## ...
 concepts:
-  - ref:
-      singular: product
-      plural: products
-    code:
-      singular: product
-      plural: products
-    label:
-      singular: product
-      plural: producten
+  - name: product
     attr:
       - type: name
-        ref:
-          singular: productName
-          plural: productNames
-        code:
-          singular: productName
-          plural: productNames
-        label:
-          singular: product
-          plural: producten
       - type: price
-        ## concept constraints kunnen op actie niveau override worden
-        ## waardoor het mogelijk is om een bepaalde constraint op te hebben voor een bepaalde actie
-        ## maar niet voor andere acties, dit kan ook in combinatie met een bepaalde rol of gebruiker
         constraints:
           - required: true
           - cents: false
           - currency: EUR
-        output:
-          - cents: false
-      - type: datetime
+      - type: date
         constraints:
           - from: 01/01/2000
           - from: 01/01/2010
-              ## de inkomende waarden zijn steeds beschikbaar in de funcDatetime opgemaakt door de
-              ## gebruiker op een daarvoor voorziene plek bv. via Configuration.Concepts.product.price
-              ## op deze manier kan je alvast cross attribute constraints leggen
-              ## conditionele constraints hebben altijd voorrang op niet conditionele
-              condition: funcDatetime
+              condition: funcDate
         default: now
-        validation: restrict
-        output:
-          - date:
-              ## output kan desgewenst in specifieke componenten override worden => time kan hier included worden
-              format: DD/MM/YYYY
-        ref:
-          singular: purchaseDate
-          plural: purchaseDates
-        code:
-          singular: purchaseDate
-          plural: purchaseDates
-        label:
-          singular: aankoopdatum
-          plural: aankoopdatums
