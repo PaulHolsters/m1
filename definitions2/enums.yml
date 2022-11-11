@@ -1,0 +1,24 @@
+enums:
+  - currency:
+      values:
+        - code: EUR
+          decimals: 2
+        - code: USD
+          decimals: 2
+  - unitprice amount params:
+      values:
+        - totalExclTax
+        - tax
+        - discount
+        - totalInclTax
+        - totalOptionsExclTax
+        - totalOptionsInclTax
+  - tax amount params:
+      values:
+        - product options
+        - services
+        - price
+        - unitprice
+
+
+
