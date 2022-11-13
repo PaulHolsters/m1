@@ -9,6 +9,11 @@ concepts:
           - currency: EUR
       - type: product properties
       - type: product options
+        # indien er geen ambiguïteit is is het ook toegelaten om gewoon "constraints" te schrijven
+        constraints:
+          - for: unitprice
+            cents: false
+            currency: EUR
   - name: quotation
     attr:
       - name: selected product

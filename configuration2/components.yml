@@ -1,1 +1,73 @@
 components:
+  - name: menu
+    type: menu
+    configuration:
+      - menuitems:
+          - label: producten
+            component: productcards
+  - name: productcards
+    type: cards
+    route: producten
+    configuration:
+      - cards:
+          - label: Nieuw product
+            component: new product
+          - label: Overzicht producten
+            component: productsoverview
+  - name: new product
+    type: form
+    route: product/nieuw
+    configuration:
+      - action: create
+      - concept: product
+      - fields:
+          - field: unitprice
+            formats:
+              - name: show cents
+                value: false
+            validation: restrict
+          - field: product properties
+            dialog: true
+            label: eigenschappen
+            component: product properties
+          - field: product options
+            dialog: true
+            label: opties
+            component: product options
+  - name: product properties
+    type: CRUD list
+    configuration:
+      - actions:
+          - action: update
+            icon: pencil
+          - action: delete
+            icon: trash
+          - action: create
+            accordeon: true
+            icon: plus
+            label: nieuwe eigenschap
+            component: new product property
+      - header: eigenschappen
+  - name: product options
+    type: CRUD list
+    configuration:
+      - actions:
+          - action: update
+            icon: pencil
+          - action: delete
+            icon: trash
+          - action: create
+            accordeon: true
+            icon: plus
+            label: nieuwe optie
+            component: new product option
+      - header: opties
+  - name: new product property
+    type: form
+  - name: new product option
+    type: form
+    fields:
+      - field: unitprice
+        validation: restrict
+  - name: productsoverview
+    type: overview
