@@ -338,11 +338,7 @@ module.exports = class App {
                     }
                 })
             } else {
-                // in de toekomst echter moet het mogelijk zijn om acties aan te maken zonder dat de actie
-                // geassocieerd is met een bepaald concept (todo is dat ooit nodig?)
-                // indien er acties moeten kunnen bestaan zonder een geassocieerd concept
-                // dan moet dit weerspiegeld zijn in het configObject m.a.w. concepts moet dan leeg zijnj of onbestaande voor
-                // deze actie
+                // todo custom actions
             }
         })
         this.#startupData = this.#getStartupData()
