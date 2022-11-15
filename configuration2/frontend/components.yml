@@ -1,0 +1,27 @@
+components:
+  - name: menu
+    type: menu
+    configuration:
+      - menuitems:
+          - label: producten
+            component: productcards
+          - label: offertes
+            component: quotationcards
+  - name: productcards
+    type: cards
+    route: producten
+    configuration:
+      - cards:
+          - label: Nieuw product
+            component: new product
+          - label: Overzicht producten
+            component: productsoverview
+  - name: quotationcards
+    type: cards
+    route: offertes
+    configuration:
+      - cards:
+          - label: Nieuwe offerte
+            component: new quotation
+          - label: Overzicht offertes
+            component: quotationsoverview

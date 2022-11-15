@@ -1,7 +1,7 @@
 components:
   - name: new product
     type: form
-    route: product/nieuw
+    route: producten/nieuw
     configuration:
       - action: create
       - concept: product
@@ -77,19 +77,13 @@ components:
         - attr: unitprice
           column: eenheidsprijs (excl. BTW)
           formats:
-            - name: show cents
-              value: false
-            - name: locale
-              value: de
+            - ref: money
         - column: eenheidsprijs (excl. BTW) incl. opties
           calc: totalProduct
           formats:
-            - currency: EUR
-            - name: locale
-              value: de
-              # deze functie zal elke float afkappen en dan ,00 als resultaat teruggeven
-            - name: show cents
-              value: false
+            - name: currency
+              value: EUR
+            - ref: money
   - name: details product
     # het type hoeft niet per se een binnen Mouldit gekende component zijn, je kan dus zonder extra configuratie je eigen componenten gebruiken binnen Mouldit
     # de summary component zal ik hier bv gebruiken zonder dat deze binnen Mouldit gekend is

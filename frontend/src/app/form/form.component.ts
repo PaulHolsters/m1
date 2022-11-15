@@ -40,8 +40,10 @@ export class FormComponent implements OnInit,AfterViewChecked {
           return comp.ref === compRef
         })
         console.log(this.component?.configuration.formats,'just take this!')
-        // todo add the format constraints as well? => enkel formats geen constraints!
+        // todo add the format constraints as well? => enkel frontend geen constraints!
         this.component?.configuration?.controls?.forEach(control => {
+          // todo bv control.type is iets dat de frontend aan data nodig heeft maar in de component configuratie is dat nergens
+          // terug te vinden
           this.controls.push({label: control.label, type: control.type, format:this.component?.configuration.formats.find(f=>{
             return f.ref === control.ref
             }), constraints:control.constraints, id: UUID.UUID(),
@@ -195,7 +197,7 @@ export class FormComponent implements OnInit,AfterViewChecked {
         case 'trim':
           break
         // todo replace these by going through the format property => is er wezenlijk een verschil hier tussen een format en een constraint?
-          // je zou de formats kunnne toevoegen aan het constraintmodel tijdens de initializatie?
+          // je zou de frontend kunnne toevoegen aan het constraintmodel tijdens de initializatie?
 /*        case 'currency':
           if(control.value){
             return {value: (

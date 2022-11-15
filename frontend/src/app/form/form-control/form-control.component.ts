@@ -55,7 +55,7 @@ export class FormControlComponent implements OnInit, OnChanges,AfterViewChecked 
         case 'trim':
           break
         // todo replace these by going through the format property => is er wezenlijk een verschil hier tussen een format en een constraint?
-        // je zou de formats kunnne toevoegen aan het constraintmodel tijdens de initializatie?
+        // je zou de frontend kunnne toevoegen aan het constraintmodel tijdens de initializatie?
         /*        case 'currency':
                   if(control.value){
                     return {value: (

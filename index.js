@@ -306,7 +306,7 @@ const app = new App({
             ref: 'deleteProductForm',
             configuration: {
                 concept: 'product',
-                formats: [
+                frontend: [
                     {
                         ref: 'basePrice',
                         format: [{name: 'currency', value: 'EUR'}, {

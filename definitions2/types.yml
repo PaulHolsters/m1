@@ -17,6 +17,16 @@ types:
           - type: number
     # hoe ziet het gebruik van deze functie er uit?
     # nameOfPercentageInConceptAttrProperty.getAmount(value of some attr that resolves to a number)
+  - type: housenumber
+    base: natural
+    constraints:
+      - gt: 0
+      - lt: 10000
+  - type: postalcode
+    base: natural
+    constraints:
+      - gt: 999
+      - lt: 100000
   - type: tax
     base: percentage
     constraints:
@@ -35,11 +45,30 @@ types:
       - max: 100
     model functions:
       - name: getAmount
-  - type: name
+  - type: e-mail
+    base: string
+    constraints:
+      - e-mail: true
+  - type: constrained string
     base: string
     constraints:
       - maxLength: 200
       - required: true
+  - type: name
+    base: constrained string
+    constraints:
+      - capitals:
+          - first
+  - type: lastname
+    base: constrained string
+    constraints:
+      - only:
+          - alfabet
+  - type: firstname
+    base: name
+    constraints:
+      - only:
+          - alfabet
   - type: property
     plural: properties
     base: string
@@ -53,8 +82,6 @@ types:
     base: name
     constraints:
       - unique: true
-      - capitals:
-          - first
   - type: unitprice
     base: price
     # model functies zijn functies die met een eenvoudige verwijzing aan binnen een concept gerelateerde data kan geraken
@@ -70,10 +97,13 @@ types:
     base: datetime
     constraints:
       - time: false
-  - type: override
+  - type: extension
     base: string
     constraint functions:
-      - # wat is dit nu weer?
+      # wat is uniqueCI nu weer?
       - name: uniqueCI
+        params:
+          - type: bool
+      - name: e-mail
         params:
           - type: bool

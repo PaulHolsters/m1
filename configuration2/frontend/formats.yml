@@ -1,0 +1,20 @@
+# deze formats kan je ook bewaren in de map definitions zodat ze beschikbaar zijn voor meerdere projecten
+# todo op termijn zou je dan mbv de CLI deze definitions map met een simpel commando aan je project moeten kunnen toevoegen
+formats:
+  - ref: name + price
+    format:
+      - name: show
+        values:
+            - value: identifying name
+              - value: unitprice
+                formats:
+                  - name: show cents
+                    value: false
+
+  - ref: money
+    format:
+      - name: show cents
+        value: false
+        # deze functie zal elke float afkappen en dan ,00 als resultaat teruggeven
+      - name: locale
+        value: de

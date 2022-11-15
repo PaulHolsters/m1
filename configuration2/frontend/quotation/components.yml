@@ -1,0 +1,64 @@
+components:
+  - name: new quotation
+    type: form
+    route: offertes/nieuw
+    configuration:
+      - concept: quotation
+      - action: create
+      - fields:
+          - field: selected product
+            label: Product
+            formats:
+              - name: show
+                # indien je de data gemanipuleerd wenst te tonen kan je hier ook een functienaam zetten
+                # in deze functie kan je dan automatisch gebruik maken van de attr van het desbetreffende concept
+                # deze format is in feite optioneel: standaard wordt het eerstvolgende veld genomen
+                # dat binnen het concept een unieke waarde is, verschillend van het objectID veld
+                values:
+                  - value: identifying name
+          - field: VAT
+            label: BTW
+            validation: restrict
+          - field: discount
+            label: Korting
+            validation: restrict
+          - field: selected options
+            label: Opties
+            formats:
+              - name: show
+                # indien je de data gemanipuleerd wenst te tonen kan je hier ook een functienaam zetten
+                # in deze functie kan je dan automatisch gebruik maken van de attr van het desbetreffende concept
+                # deze format is in feite optioneel: standaard wordt het eerstvolgende veld genomen
+                # dat binnen het concept een unieke waarde is, verschillend van het objectID veld
+                # todo  moet het ook niet mogelijk zijn om een deel van een component te outsourcen naar een andere component
+                # todo  al dan niet een custom component die in onderstaand geval dan de desbetreffende data krijgt en daar vervolgens qua output mee kan
+                # todo doen wat het wil? Omdat je anders altijd een component moet hebben die de volledige actie + concept voor zijn rekening neemt
+                # todo dit zouden we kunnen doen bv. door een "component" property hier:
+                # field: selected options
+                # component: componentName
+                # todo het bovenstaande zal er dan voor zorgen dat binnen de hoofdcomponent (hier een form) gezocht zal worden
+                # todo naar een deel component met als type het type dat staat bij de component in het schema met naam componentName
+                # todo op deze manier kan je aan maximale integratie doen tussen Mouldit componenten en je eigen (sub)componenten
+                # todo immers voor onderhavige form zal er in geval van multiple selectie
+                # todo gebruik worden gemaakt van een multiple dropdown maar stel dat je vindt dat naam en prijs teveel info zijn in zo'n multiple
+                # todo select en je wil werken met checkboxes en bv een header en je wil ook dat de gebruiker deze component met
+                # todo behulp van een accordeon principe kan open en dichtklappen dan moet dit uiteraard wel mogelijk zijn
+                # todo zonder dat de dev een volledig eigen form moet gaan maken of moet gaan sleutelen aan de code van de hoofdcomponent
+                # todo de bedoeling is dat deze custom subcomponent in zijn init methode op voorhand weet wat daar zal aankomen en waar hij
+                # todo dus moet naar vragen qua data maar dat hij de code in de parent niet moet aanpassen om ervoor te zorgen dat deze data effectief daar zal
+                # todo aankomen. In onderhavig geval zal dat bv. automatisch alle data zijn die door het systeem gekend is over de product options
+                # todo horende bij het product geselecteerd bij field "selected product". De custom subcomponent zal ook maar aangemaakt worden op het moment
+                # todo dat de gebruiker effectief een product heeft geselecteerd, ook weer zonder dat de dev hiervoor code moet gaan voorzien.
+                values:
+                  - value: identifying name
+                  - value: unitprice
+                    formats:
+                      - name: show cents
+                        value: false
+          - field: selected extra services
+            label: Extra te leveren diensten
+            # todo het zou ook mogelijk moeten zijn om bepaalde frontend die regelmatig terugkomen in je project of in meerdere projecten
+            # todo ergens te bewaren zodat je ze met een enkle keyword kan oproepen zodat je niet telkens zo'n paragraafje moet gaan copy pasten
+            formats:
+              - ref: name + price
+          - field: customer info
