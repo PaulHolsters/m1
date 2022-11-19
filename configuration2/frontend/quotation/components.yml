@@ -61,4 +61,24 @@ components:
             # todo ergens te bewaren zodat je ze met een enkle keyword kan oproepen zodat je niet telkens zo'n paragraafje moet gaan copy pasten
             formats:
               - ref: name + price
-          - field: customer info
+          - fieldset: customer info
+            label: klantinfo
+            fields:
+              - field: firstname
+                label: voornaam
+              - field: lastname
+                label: achternaam
+              - fieldset: address
+                label: adres
+                fields:
+                  - field: street
+                    label: straat
+                  - field: housenumber
+                    label: huisnummer
+                  - field: postalcode
+                    label: postcode
+                  - field: city
+                    label: gemeente
+              - field: e-mail # dien geen label wordt meegenomen wordt door de component automatisch de naam van het veld genomen uit het concept
+
+

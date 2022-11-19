@@ -48,3 +48,5 @@ concepts:
               - name: city
                 type: name
           - type: e-mail
+      - name: groupId
+        type: UUID
