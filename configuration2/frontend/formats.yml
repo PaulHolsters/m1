@@ -6,10 +6,10 @@ formats:
       - name: show
         values:
             - value: identifying name
-              - value: unitprice
-                formats:
-                  - name: show cents
-                    value: false
+            - value: unitprice
+              formats:
+                - name: show cents
+                  value: false
 
   - ref: money
     format:
@@ -18,3 +18,13 @@ formats:
         # deze functie zal elke float afkappen en dan ,00 als resultaat teruggeven
       - name: locale
         value: de
+  - ref: date
+    format:
+      - name: time
+        value:
+          - name: show
+            value: false
+      - name: date
+        value:
+          name: format
+          value: dd/mm/yyyy

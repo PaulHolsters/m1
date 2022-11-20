@@ -80,5 +80,42 @@ components:
                   - field: city
                     label: gemeente
               - field: e-mail # dien geen label wordt meegenomen wordt door de component automatisch de naam van het veld genomen uit het concept
+  - name: quotationsoverview
+    type: overview
+    route: offertes/overzicht
+    configuration:
+      action: get
+      concept: quotations
+      action menu:
+        - label: bekijken
+          icon: eye
+          component: details quotation
+        - label: download
+          icon: download
+          component: pdf quotation
+        - label: aanpassen
+          icon: pencil
+          component: edit quotation
+        - label: verwijderen
+          icon: trash
+          component: delete quotation
+        - label: historiek
+          icon: history
+          component: history quotation
+        - label: status
+          icon: pencil
+          component: status quotation
+      columns:
+        - # todo vergelijk dit is met het geld type waar herbruik van functies mogelijk is zonder telkens de functie te moeten aangeven
+        - column: klant
+          calc: return ${customerInfo.lastname} + ' ' + ${customerInfo.firstname}
+        - attr: identifying name
+          column: product
+        - attr: created at
+          column: aangemaakt op
+          formats:
+            - ref: date
+        - column: totaal excl. BTW
+        - column: totaal incl. BTW
 
 
