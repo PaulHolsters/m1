@@ -6,6 +6,7 @@ components:
       - action: create
       - concept: product
       - fields:
+          - field: type
           - field: unitprice
             formats:
               - name: show cents
@@ -81,13 +82,13 @@ components:
         - column: eenheidsprijs (excl. BTW) incl. opties
           calc: totalProduct
           formats:
-            - name: currency
-              value: EUR
             - ref: money
   - name: details product
     # het type hoeft niet per se een binnen Mouldit gekende component zijn, je kan dus zonder extra configuratie je eigen componenten gebruiken binnen Mouldit
     # de summary component zal ik hier bv gebruiken zonder dat deze binnen Mouldit gekend is
     type: summary
+    # todo aanpassen route met id param er in
+    route: producten/detail
     configuration:
         action: get
         concept: product
@@ -113,6 +114,7 @@ components:
       - concept: product
       - action: update
       - fields:
+          - field: type
           - field: unitprice
             formats:
               - name: show cents

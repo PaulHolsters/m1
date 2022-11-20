@@ -3,6 +3,12 @@ concepts:
     attr:
       # een name is niet verplicht, indien niet opgegeven dan wordt gewoon de naam van het type gebruikt als name
       - type: identifying name
+      - name: type
+        type: enum
+        values:
+           - hottub
+           - sauna
+           - tiny house
       - type: unitprice
         constraints:
           - cents: false
@@ -25,6 +31,14 @@ concepts:
       - name: VAT
         type: tax
       - type: discount
+      - name: status
+        type: enum
+        values:
+           - goedgekeurd
+           - aangemaakt
+           - aangepast
+           - gefactureerd
+           - aan te passen
       - name: selected options
         # dit betekent dat dit altijd een optie zal moeten zijn afkomstig van hey product uit selected product
         # als dit niet de bedoeling is dan ga je hier product options gebruiken zonder product -> of
@@ -50,3 +64,4 @@ concepts:
           - type: e-mail
       - name: groupId
         type: UUID
+        default: new UUID()

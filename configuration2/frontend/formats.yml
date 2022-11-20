@@ -18,6 +18,8 @@ formats:
         # deze functie zal elke float afkappen en dan ,00 als resultaat teruggeven
       - name: locale
         value: de
+      - name: currency
+        value: EUR
   - ref: date
     format:
       - name: time
