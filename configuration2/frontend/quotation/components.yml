@@ -92,7 +92,7 @@ components:
           component: details quotation
         - label: download
           icon: download
-          # hier moet eigenlijk alleen een actie gebeuren => flow?
+          action: download
         - label: aanpassen
           icon: pencil
           component: edit quotation
@@ -107,7 +107,7 @@ components:
           component: history quotation
         - label: status
           icon: pencil
-          # hier moet eigenlijk alleen een actie gebeuren => flow?
+          component: edit status quotation
       columns:
         - # todo vergelijk dit is met het geld type waar herbruik van functies mogelijk is zonder telkens de functie te moeten aangeven
         - column: klant
@@ -126,10 +126,28 @@ components:
           calc: return ${totalQuotation() * (1 + VAT/100)}
           formats:
             - ref: money
+        - column: status
   - name: details quotation
     type: summary
     # todo aanpassen route met id param er in
     route: offertes/detail
+    configuration:
+      - concept: quotation
+      - action: get
+      - header: Details product
+  - name: edit status quotation
+    type: prompt
+    configuration:
+      - concept: quotation
+      - action: update
+      - header: Aanpassen status offerte
+      - component:
+          - type: form
+            configuration:
+              - fields:
+                  - field: status
+      - toast:
+          summary: Status succesvol aangepast
   - name: edit quotation
     type: form
     # todo aanpassen route met id param er in

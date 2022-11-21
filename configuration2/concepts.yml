@@ -39,6 +39,8 @@ concepts:
            - aangepast
            - gefactureerd
            - aan te passen
+        constraints:
+          - # todo
       - name: selected options
         # dit betekent dat dit altijd een optie zal moeten zijn afkomstig van hey product uit selected product
         # als dit niet de bedoeling is dan ga je hier product options gebruiken zonder product -> of
