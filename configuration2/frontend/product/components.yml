@@ -8,7 +8,7 @@ components:
       - fields:
           - field: type
           - field: unitprice
-            formats:
+            format:
               - name: show cents
                 value: false
             validation: restrict
@@ -73,22 +73,21 @@ components:
           icon: trash
           component: delete product
       columns:
-        - attr: identifying name
+        - field: identifying name
           column: product
-        - attr: unitprice
+        - field: unitprice
           column: eenheidsprijs (excl. BTW)
-          formats:
+          format:
             - ref: money
         - column: eenheidsprijs (excl. BTW) incl. opties
           calc: totalProduct
-          formats:
+          format:
             - ref: money
   - name: details product
     # het type hoeft niet per se een binnen Mouldit gekende component zijn, je kan dus zonder extra configuratie je eigen componenten gebruiken binnen Mouldit
     # de summary component zal ik hier bv gebruiken zonder dat deze binnen Mouldit gekend is
     type: summary
-    # todo aanpassen route met id param er in
-    route: producten/detail
+    route: producten/detail/:ID
     configuration:
         action: get
         concept: product
@@ -109,14 +108,14 @@ components:
             # dit betekent simpelweg ervoor zorgen dat devs de GQL string verder moeten kunnen aanvullen met eigen types en dus verder extra API's maken mbv graphQL en Mongo
   - name: edit product
     type: form
-    route: product/aanpassen
+    route: product/aanpassen/:ID
     configuration:
       - concept: product
       - action: update
       - fields:
           - field: type
           - field: unitprice
-            formats:
+            format:
               - name: show cents
                 value: false
             validation: restrict

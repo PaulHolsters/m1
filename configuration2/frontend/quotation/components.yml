@@ -8,7 +8,7 @@ components:
       - fields:
           - field: selected product
             label: Product
-            formats:
+            format:
               - name: show
                 # indien je de data gemanipuleerd wenst te tonen kan je hier ook een functienaam zetten
                 # in deze functie kan je dan automatisch gebruik maken van de attr van het desbetreffende concept
@@ -24,7 +24,7 @@ components:
             validation: restrict
           - field: selected options
             label: Opties
-            formats:
+            format:
               - name: show
                 # indien je de data gemanipuleerd wenst te tonen kan je hier ook een functienaam zetten
                 # in deze functie kan je dan automatisch gebruik maken van de attr van het desbetreffende concept
@@ -52,14 +52,14 @@ components:
                 values:
                   - value: identifying name
                   - value: unitprice
-                    formats:
+                    format:
                       - name: show cents
                         value: false
           - field: selected extra services
             label: Extra te leveren diensten
             # todo het zou ook mogelijk moeten zijn om bepaalde frontend die regelmatig terugkomen in je project of in meerdere projecten
             # todo ergens te bewaren zodat je ze met een enkle keyword kan oproepen zodat je niet telkens zo'n paragraafje moet gaan copy pasten
-            formats:
+            format:
               - ref: name + price
           - fieldset: customer info
             label: klantinfo
@@ -105,36 +105,55 @@ components:
         - label: historiek
           icon: history
           component: history quotation
+          data:
+            - fields:
+                - field: groupId
         - label: status
           icon: pencil
           component: edit status quotation
       columns:
-        - # todo vergelijk dit is met het geld type waar herbruik van functies mogelijk is zonder telkens de functie te moeten aangeven
         - column: klant
           calc: return ${customerInfo.lastname} + ' ' + ${customerInfo.firstname}
-        - attr: type
+        - field: type
           column: product type
-        - attr: created at
+        - field: created at
           column: aangemaakt op
-          formats:
+          format:
             - ref: date
         - column: totaal (excl. BTW)
           calc: totalQuotation
-          formats:
+          format:
             - ref: money
         - column: totaal incl. BTW
           calc: return ${totalQuotation() * (1 + VAT/100)}
-          formats:
+          format:
             - ref: money
         - column: status
   - name: details quotation
     type: summary
-    # todo aanpassen route met id param er in
-    route: offertes/detail
+    route: offertes/detail/:ID
     configuration:
       - concept: quotation
       - action: get
       - header: Details product
+  - name: history quotation
+    type: prompt
+    configuration:
+      - concept: quotations
+      - action: get
+        data:
+          - fields:
+              - field: groupId
+      - header: Historiek offerte
+      - component:
+          - type: form
+            configuration:
+              - fields:
+                  - field: created at
+                    formats:
+                      - #todo
+      - toast:
+          summary: Oudere versie als huidige genomen
   - name: edit status quotation
     type: prompt
     configuration:
@@ -150,8 +169,7 @@ components:
           summary: Status succesvol aangepast
   - name: edit quotation
     type: form
-    # todo aanpassen route met id param er in
-    route: offertes/aanpassen
+    route: offertes/aanpassen/:ID
     configuration:
       - concept: quotation
       - action: create
@@ -161,7 +179,7 @@ components:
       - fields:
           - field: selected product
             label: Product
-            formats:
+            format:
               - name: show
                 values:
                   - value: identifying name
@@ -173,11 +191,11 @@ components:
             validation: restrict
           - field: selected options
             label: Opties
-            formats:
+            format:
               - ref: name + price
           - field: selected extra services
             label: Extra te leveren diensten
-            formats:
+            format:
               - ref: name + price
           - fieldset: customer info
             label: klantinfo

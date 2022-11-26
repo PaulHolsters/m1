@@ -32,15 +32,26 @@ concepts:
         type: tax
       - type: discount
       - name: status
+        # todo zorg dat je custom constraints kan maken voor een enum
         type: enum
-        values:
-           - goedgekeurd
-           - aangemaakt
-           - aangepast
-           - gefactureerd
-           - aan te passen
         constraints:
-          - # todo
+          - allowed values:
+              - goedgekeurd
+              - verstuurd
+              - aangemaakt
+              - aangepast
+              - gefactureerd
+              - aan te passen
+          - backend only:
+              - verstuurd
+              - gefactureerd
+              - aangepast
+              - aangemaakt
+          - relations:
+              - value: gefactureerd
+                previous value: goedgekeurd
+              - value: aangemaakt
+                precessor: false
       - name: selected options
         # dit betekent dat dit altijd een optie zal moeten zijn afkomstig van hey product uit selected product
         # als dit niet de bedoeling is dan ga je hier product options gebruiken zonder product -> of
