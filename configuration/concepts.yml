@@ -11,5 +11,5 @@ concepts:
         constraints:
           - from: 01/01/2000
           - from: 01/01/2010
-              condition: funcDate
+            condition: funcDate
         default: now

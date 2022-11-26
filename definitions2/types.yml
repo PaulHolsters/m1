@@ -98,9 +98,24 @@ types:
     constraints:
       - time: false
   - type: extension
+    base: enum
+    constraint functions:
+      - name: relations
+        params:
+          - paramset:
+              - name: value
+                type: enum -> value
+              - name: previous value
+                type: enum -> value
+          - paramset:
+              - name: value
+                type: enum -> value
+              - name: precessor
+                type: bool
+  - type: extension
     base: string
     constraint functions:
-      # wat is uniqueCI nu weer?
+      # todo wat is uniqueCI nu weer?
       - name: uniqueCI
         params:
           - type: bool
