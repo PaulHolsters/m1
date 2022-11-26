@@ -13,7 +13,7 @@ components:
             configuration:
               - fields:
                   - field: created at
-                    formats:
+                    format:
                       - #todo
       - toast:
           summary: Oudere versie als huidige genomen

@@ -11,7 +11,6 @@ concepts:
         type: tax
       - type: discount
       - name: status
-        # todo zorg dat je custom constraints kan maken voor een enum
         type: enum
         constraints:
           - allowed values:
@@ -21,11 +20,6 @@ concepts:
               - aangepast
               - gefactureerd
               - aan te passen
-          - backend only:
-              - verstuurd
-              - gefactureerd
-              - aangepast
-              - aangemaakt
           - relations:
               - value: gefactureerd
                 previous value: goedgekeurd
@@ -57,3 +51,5 @@ concepts:
       - name: groupId
         type: UUID
         default: new UUID()
+      - name: previousId
+        type: UUID
