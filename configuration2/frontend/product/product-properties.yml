@@ -1,0 +1,17 @@
+components:
+  - name: product properties
+    type: CRUD list
+    configuration:
+      - actions:
+          - action: update
+            icon: pencil
+          - action: delete
+            icon: trash
+          - action: create
+            accordeon: true
+            icon: plus
+            label: nieuwe eigenschap
+            component: new product property
+      - header: eigenschappen
+  - name: new product property
+    type: form

@@ -1,0 +1,20 @@
+components:
+  - name: history quotation
+    type: prompt
+    configuration:
+      - concept: quotations
+      - action: get
+        data:
+          - fields:
+              - field: groupId
+      - header: Historiek offerte
+      - component:
+          - type: form
+            configuration:
+              - fields:
+                  - field: created at
+                    formats:
+                      - #todo
+      - toast:
+          summary: Oudere versie als huidige genomen
+

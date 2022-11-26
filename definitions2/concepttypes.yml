@@ -1,16 +1,14 @@
 concepts:
   - name: product option
     plural: product options
-    attr:
+    fields:
       - type: identifying name
       - type: unitprice
     constraints:
-      # dit is in feite default dus kan weggelaten worden
-      # dit betekent dat elke optie binnen eenzelfde lijst van opties uniek moet zijn
       - uniqueInList: true
       - list: true
   - name: price
-    attr:
+    fields:
       - type: float
         constraints:
           - gt: 0

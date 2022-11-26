@@ -1,0 +1,21 @@
+components:
+  - name: product options
+    type: CRUD list
+    configuration:
+      - actions:
+          - action: update
+            icon: pencil
+          - action: delete
+            icon: trash
+          - action: create
+            accordeon: true
+            icon: plus
+            label: nieuwe optie
+            component: new product option
+      - header: opties
+  - name: new product option
+    type: form
+    configuration:
+      - fields:
+        - field: unitprice
+          validation: restrict

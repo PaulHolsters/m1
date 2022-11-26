@@ -1,0 +1,9 @@
+components:
+  - name: details quotation
+    type: summary
+    route: offertes/detail/:ID
+    configuration:
+      - concept: quotation
+      - action: get
+      - header: Details product
+

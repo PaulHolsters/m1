@@ -13,7 +13,7 @@ concepts:
         aliases:
           - singular: basisprijs
             plural: basisprijzen
-    attr:
+    fields:
       - type: float
         validation: restrict
         constraints:
@@ -42,7 +42,7 @@ concepts:
 #    label:
 #      singular: munteenheid
 #      plural: munteenheden
-#    attr:
+#    fields:
 #      - type: string
 #        ref:
 #          singular: code

@@ -1,0 +1,22 @@
+components:
+  - name: edit product
+    type: form
+    route: product/aanpassen/:ID
+    configuration:
+      - concept: product
+      - action: update
+      - fields:
+          - field: type
+          - field: unitprice
+            format:
+              - name: show cents
+                value: false
+            validation: restrict
+          - field: product properties
+            dialog: true
+            label: eigenschappen
+            component: product properties
+          - field: product options
+            dialog: true
+            label: opties
+            component: product options

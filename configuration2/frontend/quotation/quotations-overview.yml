@@ -1,0 +1,51 @@
+components:
+  - name: quotationsoverview
+    type: overview
+    route: offertes/overzicht
+    configuration:
+      action: get
+      concept: quotations
+      action menu:
+        - label: bekijken
+          icon: eye
+          component: details quotation
+        - label: download
+          icon: download
+          action: download
+        - label: aanpassen
+          icon: pencil
+          component: edit quotation
+          data:
+            - fields:
+                - field: groupId
+        - label: verwijderen
+          icon: trash
+          component: delete quotation
+        - label: historiek
+          icon: history
+          component: history quotation
+          data:
+            - fields:
+                - field: groupId
+        - label: status
+          icon: pencil
+          component: edit status quotation
+      columns:
+        - column: klant
+          calc: return ${customerInfo.lastname} + ' ' + ${customerInfo.firstname}
+        - field: type
+          column: product type
+        - field: created at
+          column: aangemaakt op
+          format:
+            - ref: date
+        - column: totaal (excl. BTW)
+          calc: totalQuotation
+          format:
+            - ref: money
+        - column: totaal incl. BTW
+          calc: return ${totalQuotation() * (1 + VAT/100)}
+          format:
+            - ref: money
+        - column: status
+

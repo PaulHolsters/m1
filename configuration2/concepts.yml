@@ -1,6 +1,6 @@
 concepts:
   - name: product
-    attr:
+    fields:
       # een name is niet verplicht, indien niet opgegeven dan wordt gewoon de naam van het type gebruikt als name
       - type: identifying name
       - name: type
@@ -21,7 +21,7 @@ concepts:
             cents: false
             currency: EUR
   - name: quotation
-    attr:
+    fields:
       - name: selected product
         # product -> ID kan je ook gebruiken, maar dan zal het product van een quotation mee veranderen met elke verandering van het hier gekoppelde achterliggende product
         # gebruik je hier de conceptnaam dan zullen de waarden apart gekopieerd worden en dus behouden ook als het achterliggende product zou wijzigen
@@ -62,12 +62,12 @@ concepts:
         type: services
       - name: customer info
         type: group
-        attr:
+        fields:
           - type: firstname
           - type: lastname
           - name: address
             type: group
-            attr:
+            fields:
               - name: street
                 type: name
               - type: housenumber

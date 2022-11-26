@@ -1,0 +1,51 @@
+components:
+  - name: edit quotation
+    type: form
+    route: offertes/aanpassen/:ID
+    configuration:
+      - concept: quotation
+      - action: create
+        data:
+          - fields:
+              - field: groupId
+      - fields:
+          - field: selected product
+            label: Product
+            format:
+              - name: show
+                values:
+                  - value: identifying name
+          - field: VAT
+            label: BTW
+            validation: restrict
+          - field: discount
+            label: Korting
+            validation: restrict
+          - field: selected options
+            label: Opties
+            format:
+              - ref: name + price
+          - field: selected extra services
+            label: Extra te leveren diensten
+            format:
+              - ref: name + price
+          - fieldset: customer info
+            label: klantinfo
+            fields:
+              - field: firstname
+                label: voornaam
+              - field: lastname
+                label: achternaam
+              - fieldset: address
+                label: adres
+                fields:
+                  - field: street
+                    label: straat
+                  - field: housenumber
+                    label: huisnummer
+                  - field: postalcode
+                    label: postcode
+                  - field: city
+                    label: gemeente
+              - field: e-mail
+

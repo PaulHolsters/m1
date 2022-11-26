@@ -1,0 +1,15 @@
+components:
+  - name: edit status quotation
+    type: prompt
+    configuration:
+      - concept: quotation
+      - action: update
+      - header: Aanpassen status offerte
+      - component:
+          - type: form
+            configuration:
+              - fields:
+                  - field: status
+      - toast:
+          summary: Status succesvol aangepast
+

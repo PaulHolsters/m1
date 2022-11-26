@@ -1,0 +1,28 @@
+components:
+  - name: productsoverview
+    type: overview
+    route: producten/overzicht
+    configuration:
+      action: get
+      concept: products
+      action menu:
+        - label: bekijken
+          icon: eye
+          component: details product
+        - label: aanpassen
+          icon: pencil
+          component: edit product
+        - label: verwijderen
+          icon: trash
+          component: delete product
+      columns:
+        - field: identifying name
+          column: product
+        - field: unitprice
+          column: eenheidsprijs (excl. BTW)
+          format:
+            - ref: money
+        - column: eenheidsprijs (excl. BTW) incl. opties
+          calc: totalProduct
+          format:
+            - ref: money
