@@ -7,7 +7,7 @@ formats:
         values:
             - value: identifying name
             - value: unitprice
-              formats:
+              format:
                 - name: show cents
                   value: false
 
