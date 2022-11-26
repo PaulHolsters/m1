@@ -1,0 +1,22 @@
+concepts:
+  - name: product
+    fields:
+      # een name is niet verplicht, indien niet opgegeven dan wordt gewoon de naam van het type gebruikt als name
+      - type: identifying name
+      - name: type
+        type: enum
+        values:
+           - hottub
+           - sauna
+           - tiny house
+      - type: unitprice
+        constraints:
+          - cents: false
+          - currency: EUR
+      - type: product properties
+      - type: product options
+        # indien er geen ambiguïteit is is het ook toegelaten om gewoon "constraints" te schrijven
+        constraints:
+          - for: unitprice
+            cents: false
+            currency: EUR
