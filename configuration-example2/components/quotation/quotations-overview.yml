@@ -12,7 +12,7 @@ components:
         - label: download
           icon: download
           action: download
-        - label: aanpassen
+        - label: nieuwe versie
           icon: pencil
           component: edit quotation
           data:
@@ -29,6 +29,7 @@ components:
                 - field: groupId
         - label: status
           icon: pencil
+          # de overview gaat automatisch het ObjectID doorgeven aan onderstaande component
           component: edit status quotation
       columns:
         - column: klant

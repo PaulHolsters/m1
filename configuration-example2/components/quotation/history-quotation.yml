@@ -2,19 +2,37 @@ components:
   - name: history quotation
     type: prompt
     configuration:
+      # de meervoudsvorm betekent dat er meerdere quotations opgehaald moeten worden
       - concept: quotations
       - action: get
+        # indien een objectID beschikbaar is wordt dit steeds automatisch doorgestuurd naar de backend
+        # bij custom components zou dit op de één of andere manier ook het geval moeten zijn/ kunnen zijn
         data:
           - fields:
               - field: groupId
       - header: Historiek offerte
       - component:
+          # deze component krijgt alle offertes binnen met hetzelfde groupId
+          # de form zal dan created at interpreteren als een dropdown omdat er sprake is van meerdere offertes met
+          # datzelfde veld created at
           - type: form
             configuration:
+              - concept: quotation
+                # door op save te klikken zal het id van de offerte waar de created at van is geselecteerd
+                # doorgestuurd worden naar de backend te samen met de info van de form
+                # deze actie zal dan zien dat er created at werd doorgestuurd en dus weten dat het gaat om
+                # een oudere versie de nieuwe te maken
+              - action: update
               - fields:
                   - field: created at
                     format:
-                      - #todo
+                      - name: time
+                        value:
+                          - name: format
+                            value: hh:mm:ss
+                      - name: date
+                        value:
+                          name: format
+                          value: dd/mm/yyyy
       - toast:
           summary: Oudere versie als huidige genomen
-

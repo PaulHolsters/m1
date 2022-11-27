@@ -3,11 +3,14 @@ components:
     type: prompt
     configuration:
       - concept: quotation
-      - action: update
+      - action: get
       - header: Aanpassen status offerte
       - component:
+          # elk form diens save button is standaard disabled zolang er niets is gewijzigd ten opzichte van de vorige toestand
           - type: form
             configuration:
+              - concept: quotation
+              - action: update
               - fields:
                   - field: status
       - toast:

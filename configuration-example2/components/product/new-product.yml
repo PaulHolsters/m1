@@ -19,3 +19,4 @@ configuration:
         dialog: true
         label: opties
         component: product options
+        # todo add button configuration

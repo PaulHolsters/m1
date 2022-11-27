@@ -1,4 +1,7 @@
 components:
+  # todo | nakijken hoe je configureert dat er teruggegaan kan worden naar een vorige toestand
+  # todo | alsook hoe er omgegaan moet worden met conflicterend options qua prijs en omschrijving
+  # todo | en met conflicterende product eigenschappen en product namen
   - name: edit quotation
     type: form
     route: offertes/aanpassen/:ID
@@ -21,6 +24,16 @@ components:
           - field: discount
             label: Korting
             validation: restrict
+            # todo
+            # de engine zal dit als een checkbox presenteren aan de frontend
+            # omdat in de concepttypes er staat list: true
+            # de bewaarde gegevens zullen daarbij gepresenteerd worden
+            # deze kunnen verschillen met de waarde zoals die gekend is voor een optie in de DB
+            # indien in de frontend niet voorzien is om de nieuwe naam te selecteren zal dit niet mogelijk zijn
+            # als dev kan je dit oplossen door de nieuwe opties te callen en zelf een systeem te voorzien
+            # ik ga dit dan ook zo laten => kan je opties verwijderen waar producten aan gekoppeld zijn? neen natuurlijk niet
+            # zijn de frontedn componenten hier automatisch op voorzien ????
+           # todo
           - field: selected options
             label: Opties
             format:
