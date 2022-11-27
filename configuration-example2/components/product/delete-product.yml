@@ -7,7 +7,7 @@ components:
       - header: Verwijderen product
       - message: Bent u zeker dat u dit product definitief wil verwijderen?
       # een taal feature is nice-to-have maar nu dus niet aan de orde
-      # Voorlopig zijn dus de enige standaard waarden in de frontend in het Engels
+      # Voorlopig zijn dus de enige standaard waarden in de components in het Engels
       # Indien je dus een andere taal hebt in je app zal je de default waarden, indien die er al zouden zijn
       # met je eigen tekst moeten vervangen
       - btn text: Ja

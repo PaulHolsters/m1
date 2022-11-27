@@ -31,7 +31,7 @@ const app = new App({
                     type: Price,
                     label: 'basis prijs',
                     ref: 'basePrice',
-                    // constraints bepalen ENKEL welke data toegelaten is in de database en deels in de frontend
+                    // constraints bepalen ENKEL welke data toegelaten is in de database en deels in de components
                     // niet HOE validatie moet gebeuren en slechts deels WELKE validatie in een front end formulier
                     constraints: {
                         // elke constraint resulteert in een bepaalde validatie, vandaar dat currency 'EUR' hier niet thuishoort!
@@ -55,7 +55,7 @@ const app = new App({
                     type: Date,
                     label: 'aangemaakt op',
                     ref: 'creationDate',
-                    // ook hier het formaat wordt bepaald in de frontend component, in de backend is dit steeds een datetime
+                    // ook hier het formaat wordt bepaald in de components component, in de backend is dit steeds een datetime
                     // voor een gewone datum zal de tijd dan overal 0 zijn
                     default: new Date()
                 }
@@ -306,7 +306,7 @@ const app = new App({
             ref: 'deleteProductForm',
             configuration: {
                 concept: 'product',
-                frontend: [
+                components: [
                     {
                         ref: 'basePrice',
                         format: [{name: 'currency', value: 'EUR'}, {

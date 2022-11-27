@@ -10,10 +10,6 @@ components:
             label: Product
             format:
               - name: show
-                # indien je de data gemanipuleerd wenst te tonen kan je hier ook een functienaam zetten
-                # in deze functie kan je dan automatisch gebruik maken van de attr van het desbetreffende concept
-                # deze format is in feite optioneel: standaard wordt het eerstvolgende veld genomen
-                # dat binnen het concept een unieke waarde is, verschillend van het objectID veld
                 values:
                   - value: identifying name
           - field: VAT
@@ -57,8 +53,6 @@ components:
                         value: false
           - field: selected extra services
             label: Extra te leveren diensten
-            # todo het zou ook mogelijk moeten zijn om bepaalde frontend die regelmatig terugkomen in je project of in meerdere projecten
-            # todo ergens te bewaren zodat je ze met een enkle keyword kan oproepen zodat je niet telkens zo'n paragraafje moet gaan copy pasten
             format:
               - ref: name + price
           - fieldset: customer info
@@ -79,4 +73,4 @@ components:
                     label: postcode
                   - field: city
                     label: gemeente
-              - field: e-mail # indien geen label wordt meegenomen wordt door de component automatisch de naam van het veld genomen uit het concept
+              - field: e-mail

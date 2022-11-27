@@ -8,11 +8,11 @@ components:
         action: get
         concept: product
         header: Details product
-        # zowel aan een component gekend binnen mouldit als bij een zelf gemaakte frontend component
+        # zowel aan een component gekend binnen mouldit als bij een zelf gemaakte components component
         # kan je customfields toevoegen indien dat zou uitkomen voor je project
         # op die manier kan je bestaande Mouldit componenten gaan customizen indien nodig
         # alsook je eigen componenten maken indien mouldit deze niet zou aanbieden
-        # qua styling van de frontend moet je gewoon de styling mogelijkheden van primeNG gebruiken
+        # qua styling van de components moet je gewoon de styling mogelijkheden van primeNG gebruiken
         # todo in een latere fase moet Mouldit een meer geïntegreerde aanpak voorzien (zodat hier later ook een no-code UI overheen geplaatst kan worden)
         custom fields:
           - name: some_fieldname # known to Mouldits GQL schema or a field registered by the dev that is associated with the correct GQL type

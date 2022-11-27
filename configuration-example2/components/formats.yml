@@ -1,5 +1,3 @@
-# deze formats kan je ook bewaren in de map definitions zodat ze beschikbaar zijn voor meerdere projecten
-# todo op termijn zou je dan mbv de CLI deze definitions map met een simpel commando aan je project moeten kunnen toevoegen
 formats:
   - ref: name + price
     format:

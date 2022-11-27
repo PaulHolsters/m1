@@ -11,7 +11,7 @@ module.exports = class Gear{
         return 'gearName'
     }
 
-    // dat dit zowel voor de frontend als de backend is is problematisch
+    // dat dit zowel voor de components als de backend is is problematisch
     static get staticConstraints(){
         return [
             {function:'unique',value:MoulditConstraints.unique}

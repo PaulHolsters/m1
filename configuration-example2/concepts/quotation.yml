@@ -2,10 +2,6 @@ concepts:
   - name: quotation
     fields:
       - name: selected product
-        # product -> ID kan je ook gebruiken, maar dan zal het product van een quotation mee veranderen met elke verandering van het hier gekoppelde achterliggende product
-        # gebruik je hier de conceptnaam dan zullen de waarden apart gekopieerd worden en dus behouden ook als het achterliggende product zou wijzigen
-        # als het onderstaande in meervoudsvorm zou staan (attribute plural) dan zou de engine automatisch veronderstellen
-        # dat het gaat om meerdere producten zodat in de db hier een lijst toegestaan zal worden
         type: product
       - name: VAT
         type: tax
@@ -26,10 +22,6 @@ concepts:
               - value: aangemaakt
                 precessor: false
       - name: selected options
-        # dit betekent dat dit altijd een optie zal moeten zijn afkomstig van hey product uit selected product
-        # als dit niet de bedoeling is dan ga je hier product options gebruiken zonder product -> of
-        # product options -> ID als het zuiver een referentie moet zijn
-        # of je moet de name van een attr gebruiken als het zou gaan om het product van een ander attr
         type: product -> product options
       - name: selected extra services
         type: services
@@ -51,5 +43,3 @@ concepts:
       - name: groupId
         type: UUID
         default: new UUID()
-      - name: previousId
-        type: UUID

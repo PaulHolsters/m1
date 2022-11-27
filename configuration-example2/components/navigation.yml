@@ -1,6 +1,5 @@
 components:
-  - name: menu
-    type: menu
+  - type: menu
     configuration:
       - menuitems:
           - label: producten
@@ -25,3 +24,5 @@ components:
             component: new quotation
           - label: Overzicht offertes
             component: quotationsoverview
+
+

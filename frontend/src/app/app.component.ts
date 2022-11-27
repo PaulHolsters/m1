@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Routes,Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {ConfigService} from "./initializer/config.service";
 
 @Component({
@@ -14,7 +14,6 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     this.config.startupData$.pipe(
     ).subscribe(startupData => {
-      console.log(startupData,'logging')
       if (startupData && startupData.routes)
         this.router.resetConfig(startupData.routes)
     }, err => {

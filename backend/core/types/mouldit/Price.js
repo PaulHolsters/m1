@@ -14,7 +14,7 @@ module.exports = class Price {
     }
 
     // je moet hiervoor iets steken in het backend schema
-    // dit heeft ook zijn equivalent in het frontend schema
+    // dit heeft ook zijn equivalent in het components schema
     static get staticConstraints(){
         return [
             {function:'maxDecimals',value:MoulditConstraints.maxDecimals}
