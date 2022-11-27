@@ -24,17 +24,18 @@ components:
           - field: discount
             label: Korting
             validation: restrict
-            # todo
-            # de engine zal dit als een checkbox presenteren aan de frontend
-            # omdat in de concepttypes er staat list: true
-            # de bewaarde gegevens zullen daarbij gepresenteerd worden
-            # deze kunnen verschillen met de waarde zoals die gekend is voor een optie in de DB
-            # indien in de frontend niet voorzien is om de nieuwe naam te selecteren zal dit niet mogelijk zijn
-            # als dev kan je dit oplossen door de nieuwe opties te callen en zelf een systeem te voorzien
-            # ik ga dit dan ook zo laten => kan je opties verwijderen waar producten aan gekoppeld zijn? neen natuurlijk niet
-            # zijn de frontend componenten hier automatisch op voorzien ????
-           # todo
           - field: selected options
+            # de backend geeft objectID + data ivm de reeds geselecteerde opties terug + de id's met data van de niet geselecteerde opties
+            # wat de frontend component daarmee doet in zijn zaak
+            # indien je in het datamodel koos voor enkel Id's bij te houden wordt steeds de meest recente data gegeven en wordt er in het concept
+            # zelf behalve ID's niets bijgehouden
+            # de frontend Mouldit checkbox component is dusdanig uitgerust dat het de bewaarde data gebruikt indien voorhanden
+            # deze data wordt dus nooit overschreven met meer recente data, als je dit gedrag zou willen moet je hier als dev zelf voor zorgen
+            # door de frontend component aan te passen: dat kan interessant zijn bij wijze van demonstratie om aan te tonen
+            # dat eigen code gemakkelijk met Mouldit kan samengaan
+            # je zou hiervoor bv. een volledige custom checkbox kunnen maken en deze in het form binnentrekken bij een veld als dit
+            # een andere optie is dat je een extra menu knop in de overview toevoegt waarbij je oudere opties kan verwisselen met de nieuwste
+            # gegevens => zeer goede demo
             label: Opties
             format:
               - ref: name + price

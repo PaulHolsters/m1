@@ -23,6 +23,10 @@ concepts:
                 precessor: false
       - name: selected options
         type: product -> product options
+        # dit wil zeggen dat de backend alle velden verwacht die horen bij een product option
+        # zijnde het ID, de naam en de prijs, alle drie deze velden worden dan opgeslagen als element in de lijst
+        # er wordt NIET gecontroleerd of de beschrijving en de prijs overeenkomen met de gegevens van de overeenkomstige
+        # tabel "product options". Er wordt enkel gecontroleerd of het ID daadwerkelijk bestaat in deze tabel.
       - name: selected extra services
         type: services
       - name: customer info
