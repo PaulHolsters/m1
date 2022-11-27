@@ -1,0 +1,6 @@
+types:
+  - type: constrained string
+    base: string
+    constraints:
+      - maxLength: 200
+      - required: true

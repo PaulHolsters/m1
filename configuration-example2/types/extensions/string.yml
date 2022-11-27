@@ -1,0 +1,11 @@
+types:
+  - type: extension
+    base: string
+    constraint functions:
+      # todo wat is uniqueCI nu weer?
+      - name: uniqueCI
+        params:
+          - type: bool
+      - name: e-mail
+        params:
+          - type: bool

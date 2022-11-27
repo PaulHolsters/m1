@@ -1,0 +1,7 @@
+types:
+  - type: name
+    base: constrained string
+    constraints:
+      - capitals:
+          - first
+

@@ -1,0 +1,5 @@
+types:
+  - type: date
+    base: datetime
+    constraints:
+      - time: false

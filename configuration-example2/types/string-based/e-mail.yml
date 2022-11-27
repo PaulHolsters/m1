@@ -1,0 +1,6 @@
+types:
+  - type: e-mail
+    base: string
+    constraints:
+      - e-mail: true
+

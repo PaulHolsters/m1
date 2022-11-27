@@ -1,0 +1,6 @@
+types:
+  - type: lastname
+    base: constrained string
+    constraints:
+      - only:
+          - alfabet

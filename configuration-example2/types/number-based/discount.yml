@@ -1,0 +1,9 @@
+types:
+  - type: discount
+    base: percentage
+    constraints:
+      - decimals: 0
+      - min: 0
+      - max: 100
+    model functions:
+      - name: getAmount

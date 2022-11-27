@@ -1,0 +1,10 @@
+types:
+  - type: unitprice
+    base: price
+    # model functies zijn functies die met een eenvoudige verwijzing aan binnen een concept gerelateerde data kan geraken
+    # de functie getAmount zal op die manier snel de nodige info kunnen geven betrekkende de bedragen
+    # die gemoeid zijn met een offerte zoals het totaal bedrag, het kortingsbedrag etc.
+    model functions:
+      - name: getAmount
+        params:
+          - type: unitprice amount params

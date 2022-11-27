@@ -1,0 +1,6 @@
+types:
+  - type: identifying name
+    base: name
+    constraints:
+      - unique: true
+

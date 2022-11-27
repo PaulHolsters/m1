@@ -1,0 +1,6 @@
+types:
+  - type: postalcode
+    base: nat
+    constraints:
+      - gt: 999
+      - lt: 100000

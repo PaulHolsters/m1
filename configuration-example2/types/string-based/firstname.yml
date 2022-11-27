@@ -1,0 +1,7 @@
+types:
+  - type: firstname
+    base: name
+    constraints:
+      - only:
+          - alfabet
+

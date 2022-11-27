@@ -1,0 +1,9 @@
+types:
+  - type: percentage
+    base: float
+    model functions:
+      - name: getAmount
+        params:
+          - type: number
+    # hoe ziet het gebruik van deze functie er uit?
+    # nameOfPercentageInConceptAttrProperty.getAmount(value of some attr that resolves to a number)

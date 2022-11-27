@@ -1,0 +1,16 @@
+concept types:
+  - name: price
+    fields:
+      - type: float
+        constraints:
+          - gt: 0
+          - maxDecimals: currency -> decimals
+      - type: currency
+    constraint functions:
+      - name: cents
+        params:
+          - type: bool
+      - name: currency
+        params:
+          type: currency -> code
+

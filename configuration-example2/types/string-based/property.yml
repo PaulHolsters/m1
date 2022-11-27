@@ -1,0 +1,11 @@
+types:
+  - type: property
+    plural: properties
+    base: string
+    constraints:
+      - uniqueInList: true
+        # dit type kan enkel voorkomen als lijst
+      - list: true
+      - minlength: 1
+      - uniqueList: true # een object met dezelfde set aan eigenschappen is PER DEFINITIE eenzelfde soort object (if it looks like a duck it is a duck)
+

@@ -32,7 +32,7 @@ components:
             # indien in de frontend niet voorzien is om de nieuwe naam te selecteren zal dit niet mogelijk zijn
             # als dev kan je dit oplossen door de nieuwe opties te callen en zelf een systeem te voorzien
             # ik ga dit dan ook zo laten => kan je opties verwijderen waar producten aan gekoppeld zijn? neen natuurlijk niet
-            # zijn de frontedn componenten hier automatisch op voorzien ????
+            # zijn de frontend componenten hier automatisch op voorzien ????
            # todo
           - field: selected options
             label: Opties

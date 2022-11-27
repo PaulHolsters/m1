@@ -1,0 +1,6 @@
+types:
+  - type: nat
+    name: natural number
+    base: int
+    constraints:
+      - gt: -1

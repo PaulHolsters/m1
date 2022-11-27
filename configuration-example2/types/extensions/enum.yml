@@ -1,0 +1,16 @@
+types:
+  - type: extension
+    base: enum
+    constraint functions:
+      - name: relations
+        params:
+          - paramset:
+              - name: value
+                type: enum -> value
+              - name: previous value
+                type: enum -> value
+          - paramset:
+              - name: value
+                type: enum -> value
+              - name: precessor
+                type: bool

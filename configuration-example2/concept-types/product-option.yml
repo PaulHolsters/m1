@@ -1,0 +1,9 @@
+concept types:
+  - name: product option
+    plural: product options
+    fields:
+      - type: identifying name
+      - type: unitprice
+    constraints:
+      - uniqueInList: true
+      - list: true

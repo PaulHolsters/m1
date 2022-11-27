@@ -1,0 +1,11 @@
+types:
+  - type: tax
+    base: percentage
+    constraints:
+      - decimals: 0
+      - min: 0
+      - max: 100
+    model functions:
+      - name: getAmount
+        params:
+          - type: tax amount params

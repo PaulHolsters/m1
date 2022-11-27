@@ -1,0 +1,5 @@
+types:
+  - type: int
+    base: number
+    constraints:
+      - decimals: 0

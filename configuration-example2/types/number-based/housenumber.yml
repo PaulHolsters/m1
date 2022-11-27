@@ -1,0 +1,6 @@
+types:
+  - type: housenumber
+    base: nat
+    constraints:
+      - gt: 0
+      - lt: 10000
